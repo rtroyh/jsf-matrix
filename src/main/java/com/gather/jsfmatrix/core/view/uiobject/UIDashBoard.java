@@ -12,6 +12,7 @@ import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 
+import com.gather.jsfmatrix.core.listener.DashBoardPanelCloseListener;
 import org.apache.log4j.Logger;
 import org.primefaces.component.commandlink.CommandLink;
 import org.primefaces.component.dashboard.Dashboard;
@@ -297,8 +298,13 @@ public class UIDashBoard implements UIJSFObject {
                                                                                                                                           "#{portalBean.dashboardBean.handleClose}",
                                                                                                                                           null,
                                                                                                                                           new Class[]{CloseEvent.class});
+                                    AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
+                                    ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
+                                    ab.setImmediate(true);
+                                    ab.setTransient(true);
 
-                                    //item.setCloseListener(methodExpression);
+                                    item.addClientBehavior("close",
+                                                           ab);
                                 }
                             } else {
                                 try {

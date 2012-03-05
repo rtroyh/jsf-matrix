@@ -103,8 +103,7 @@ public class DashBoardBean extends BaseJSFView {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
-            if (lb != null &&
-                    lb.getUser().getId() != null) {
+            if (lb != null && lb.getUser().getId() != null) {
                 this.getService().getApplicationsService().resetParameter();
                 this.getService().getApplicationsService().addParameter("1",
                                                                         lb.getUser().getId());

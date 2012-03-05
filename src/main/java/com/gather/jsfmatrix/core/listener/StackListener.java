@@ -24,16 +24,5 @@ public class StackListener implements ActionListener {
     public void processAction(ActionEvent event) throws
                                                  AbortProcessingException {
         Logger.getLogger(StackListener.class).info("INICIO EVENTO CLICK EN STACK");
-
-        UIComponent source = event.getComponent();
-        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-
-        PortalBean us = (PortalBean) ctx.getBean("portalBean");
-        us.getDashboardBean().addMatrixApplication((IMatrixApplication) ((CustomMenuItem) source).getUserObject(),
-                                                   ViewType.STACK);
-        us.getStackBean().populate(null);
-
-        RequestContext.getCurrentInstance().addPartialUpdateTarget("mainDashBoard");
-        RequestContext.getCurrentInstance().addPartialUpdateTarget("mainStack");
-    }
+  }
 }

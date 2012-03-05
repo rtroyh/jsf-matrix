@@ -24,7 +24,6 @@ public class PortalBean implements INavigation {
     private DataSource ds;
     private DashBoardBean dashboardBean;
     private DockBean dockBean;
-    private StackBean stackBean;
     private BreadCrumbBean breadCrumbBean;
     private boolean renderDock = true;
     private boolean renderStack = true;
@@ -91,7 +90,6 @@ public class PortalBean implements INavigation {
 
             if (javaID.equals(1)) {
                 this.getDashboardBean().populate(null);
-                this.getStackBean().populate(null);
 
                 this.setBody("desktop");
                 this.renderDock = true;
@@ -121,7 +119,6 @@ public class PortalBean implements INavigation {
         Logger.getLogger(PortalBean.class).info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
 
         try {
-            RequestContext.getCurrentInstance().addPartialUpdateTarget("mainStack");
             RequestContext.getCurrentInstance().addPartialUpdateTarget("mainBread");
             RequestContext.getCurrentInstance().addPartialUpdateTarget("mainDock");
             RequestContext.getCurrentInstance().addPartialUpdateTarget("principal");
@@ -210,7 +207,6 @@ public class PortalBean implements INavigation {
         this.getBreadCrumbBean().populate(null);
         this.getDockBean().populate(null);
         this.getDashboardBean().populate(null);
-        this.getStackBean().populate(null);
     }
 
     public DashBoardBean getDashboardBean() {
@@ -247,17 +243,5 @@ public class PortalBean implements INavigation {
 
     public void setDockBean(DockBean dockBean) {
         this.dockBean = dockBean;
-    }
-
-    public StackBean getStackBean() {
-        if (this.stackBean == null) {
-            this.stackBean = new StackBean(this.ds);
-        }
-
-        return stackBean;
-    }
-
-    public void setStackBean(StackBean stackBean) {
-        this.stackBean = stackBean;
     }
 }

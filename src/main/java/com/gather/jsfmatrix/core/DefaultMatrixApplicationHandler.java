@@ -67,28 +67,7 @@ class DefaultMatrixApplicationHandler implements IMatrixApplicationHandler {
 
     @Override
     public void generateInstance(Object... parameters) {
-        try {
-            WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-            PortalBean us = (PortalBean) ctx.getBean("portalBean");
 
-            this.setLastGenerateInstanceMessage("");
-            us.getStackBean().getStackServices().getAddService().resetParameter();
-
-            for (int x = 0; x < parameters.length; x++) {
-                us.getStackBean().getStackServices().getAddService().addParameter(String.valueOf(x + 1),
-                                                                                  parameters[x]);
-            }
-
-            us.getStackBean().getStackServices().getAddService().executeQuery();
-
-            if (us.getStackBean().getStackServices().getAddService().getResultSetasListofList() != null) {
-                this.setLastGenerateInstanceMessage((String) us.getStackBean().getStackServices().getAddService().getResultSetasListofList().get(0).get(1));
-            }
-        } catch (BeansException e) {
-            Logger.getLogger(DefaultMatrixApplicationHandler.class).error(e.getMessage());
-        } catch (DataAccessException e) {
-            Logger.getLogger(DefaultMatrixApplicationHandler.class).error(e.getMessage());
-        }
     }
 
     @Override
