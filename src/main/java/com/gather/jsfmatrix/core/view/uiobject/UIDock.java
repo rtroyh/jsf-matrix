@@ -82,11 +82,9 @@ public class UIDock implements UIJSFObject {
                         item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
 
                         ResourceHandler rh = fc.getApplication().getResourceHandler();
-
                         Resource r = rh.createResource("images/" +
                                                                ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.ICON_PATH),
                                                        "gather");
-
 
                         item.setIcon(r.getRequestPath());
                         item.addActionListener(new DockListener());

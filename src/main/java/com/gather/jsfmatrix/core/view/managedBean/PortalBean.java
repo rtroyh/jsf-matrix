@@ -20,10 +20,11 @@ import com.gather.jsfmatrix.util.MapPropertyUtil;
 import com.gather.jsfspringcommons.utils.BeanUtil;
 
 public class PortalBean implements INavigation {
+    private static final Logger LOG = Logger.getLogger(PortalBean.class);
 
     private DataSource ds;
-    private DashBoardBean dashboardBean;
     private DockBean dockBean;
+    private DashBoardBean dashboardBean;
     private BreadCrumbBean breadCrumbBean;
     private boolean renderDock = true;
     private boolean renderStack = true;
@@ -61,7 +62,7 @@ public class PortalBean implements INavigation {
     }
 
     public void onClickHeader(ActionEvent event) {
-        Logger.getLogger(PortalBean.class).info("INICIO EVENTO IR A HOME");
+        LOG.info("INICIO EVENTO IR A HOME");
 
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
         IUserBean lb = (IUserBean) ctx.getBean("userBean");
@@ -74,7 +75,7 @@ public class PortalBean implements INavigation {
     public void updateThroughBreadCrumb(Object sesion,
                                         Object matrixID,
                                         Object javaID) {
-        Logger.getLogger(PortalBean.class).info("INICIO METODO SURF");
+        LOG.info("INICIO METODO SURF");
 
         try {
             this.getDashboardBean().getService().getDirectoryService().resetParameter();
@@ -96,16 +97,16 @@ public class PortalBean implements INavigation {
                 this.renderStack = true;
             }
         } catch (DataAccessException e) {
-            Logger.getLogger(PortalBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(PortalBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
 
         this.updateView();
     }
 
     public void updateThroughBreadCrumb(IMatrixApplication ma) {
-        Logger.getLogger(PortalBean.class).info("INICIO METODO SURF");
+        LOG.info("INICIO METODO SURF");
 
         if (ma != null && ma.updateBreadCrumb()) {
             this.updateThroughBreadCrumb(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION),
@@ -115,19 +116,19 @@ public class PortalBean implements INavigation {
     }
 
     public void updateView() {
-        Logger.getLogger(PortalBean.class).info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
+        LOG.info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
 
         try {
             RequestContext.getCurrentInstance().addPartialUpdateTarget("mainBread");
             RequestContext.getCurrentInstance().addPartialUpdateTarget("mainDock");
             RequestContext.getCurrentInstance().addPartialUpdateTarget("principal");
         } catch (Exception e) {
-            Logger.getLogger(PortalBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
     public void handleTitleChange(ActionEvent event) {
-        Logger.getLogger(PortalBean.class).info("INICIO EVENTO CLICK EN GUARDAR NUEVO TITULO");
+        LOG.info("INICIO EVENTO CLICK EN GUARDAR NUEVO TITULO");
 
         for (IMatrixApplication ma : this.getDashboardBean().getMatrix().getApplications()) {
             if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JSF_CLIENT_ID).equals(this.getDashboardBean().getSelectedPanel().getId())) {
@@ -148,7 +149,7 @@ public class PortalBean implements INavigation {
     }
 
     public void handleView(ActionEvent event) { //LLAMADO POR EL COMMANDLINK "INGRESAR", CREADO EN EL UIDASHBOARD.
-        Logger.getLogger(PortalBean.class).info("INICIO EVENTO HANDLE VIEW");
+        LOG.info("INICIO EVENTO HANDLE VIEW");
 
         Panel d = null;
         if (event.getComponent().getParent() instanceof Panel) {
@@ -156,7 +157,7 @@ public class PortalBean implements INavigation {
         } else if (event.getComponent().getParent().getParent() instanceof Panel) {
             d = (Panel) event.getComponent().getParent().getParent();
         } else {
-            Logger.getLogger(PortalBean.class).warn("PANEL NO ENCONTRADO");
+            LOG.info("PANEL NO ENCONTRADO");
             return;
         }
 
@@ -180,16 +181,16 @@ public class PortalBean implements INavigation {
                             this.setRenderDock(lb.showDock());
                             this.setRenderStack(lb.showStack());
 
-                            Logger.getLogger(PortalBean.class).info("LLAMANDO A METODO ONSTART ESPECIFICO DEL BEAN: " +
-                                                                            ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString());
+                            LOG.info("LLAMANDO A METODO ONSTART ESPECIFICO DEL BEAN: " +
+                                             ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString());
                             lb.onStart();
                         }
                     } catch (BeanCreationException e) {
-                        Logger.getLogger(PortalBean.class).warn(e.getMessage());
+                        LOG.warn(e.getMessage());
                     } catch (NoSuchBeanDefinitionException e) {
-                        Logger.getLogger(PortalBean.class).warn(e.getMessage());
+                        LOG.warn(e.getMessage());
                     } catch (Exception e) {
-                        Logger.getLogger(PortalBean.class).error(e.getMessage());
+                        LOG.error(e.getMessage());
                     }
 
                     this.updateView();

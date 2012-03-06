@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.el.MethodExpression;
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlGraphicImage;
@@ -71,14 +73,7 @@ public class UIDashBoard implements UIJSFObject {
                                          "_" +
                                          java.util.Calendar.getInstance().getTimeInMillis());
             this.dashBoard.setModel(this.getDashBoardModel());
-            //this.dashBoard.setOnReorderUpdate("mainDashBoard");
             this.dashBoard.setTransient(true);
-
-            /*
-             * FacesContext fc = FacesContext.getCurrentInstance(); MethodExpression methodExpression = fc.getApplication().getExpressionFactory().createMethodExpression(
-             * fc.getELContext(), "#{portalBean.dashboardBean.handleReorder}", null, new Class[] { DashboardReorderEvent.class });
-             * this.dashBoard.setReorderListener(methodExpression);
-             */
         }
 
         return this.dashBoard;
@@ -149,6 +144,20 @@ public class UIDashBoard implements UIJSFObject {
                             image.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
                             image.setTransient(true);
 
+                            ResourceHandler rh = fc.getApplication().getResourceHandler();
+
+                            if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
+                                Resource r = rh.createResource("images/borrar.png",
+                                                               "gather");
+
+                                image.setUrl(r.getRequestPath());
+                            } else {
+                                Resource r = rh.createResource("images/vacio5x5.png",
+                                                               "gather");
+
+                                image.setUrl(r.getRequestPath());
+                            }
+
                             CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
                             botonQuitar.setId("botonQuitarWidget_" +
                                                       FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
@@ -162,10 +171,7 @@ public class UIDashBoard implements UIJSFObject {
                             botonQuitar.setTransient(true);
                             botonQuitar.getChildren().add(image);
 
-                            if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
-                                image.setUrl("./images/borrar.png");
-                            } else {
-                                image.setUrl("./images/vacio5x5.png");
+                            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
                                 botonQuitar.setDisabled(true);
                             }
 

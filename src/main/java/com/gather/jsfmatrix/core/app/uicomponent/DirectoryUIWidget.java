@@ -3,6 +3,8 @@ package com.gather.jsfmatrix.core.app.uicomponent;
 import java.util.Map;
 
 import javax.el.MethodExpression;
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.component.html.HtmlPanelGrid;
@@ -81,40 +83,43 @@ public class DirectoryUIWidget implements UIJSFObject {
 
     public CommandLink getBotonIngresar() {
         if (this.botonIngresar == null) {
-            this.botonIngresar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
+            FacesContext fc = FacesContext.getCurrentInstance();
+            this.botonIngresar = PrimeFacesUIComponentsFactory.createCommandLink(fc);
             this.botonIngresar.setId("botonIngresar_" +
-                                             FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
+                                             fc.getViewRoot().createUniqueId() +
                                              "_" +
                                              java.util.Calendar.getInstance().getTimeInMillis());
-            this.botonIngresar.setOnstart("cargaDialogWV.show();");
-            this.botonIngresar.setOncomplete("cargaDialogWV.hide();");
             this.botonIngresar.setTransient(true);
 
-            HtmlGraphicImage image = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
+            HtmlGraphicImage image = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(fc);
             image.setId("image_DirectoryUIWidget_" +
-                                FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
+                                fc.getViewRoot().createUniqueId() +
                                 java.util.Calendar.getInstance().getTimeInMillis());
             image.setTitle(Validator.validateString(this.getApplicationModel().getPropertyValue(Property.TITLE))
                                    ? this.getApplicationModel().getPropertyValue(Property.TITLE).toString()
                                    : "");
             image.setTransient(true);
 
+            ResourceHandler rh = fc.getApplication().getResourceHandler();
             if (Validator.validateInteger(this.getApplicationModel().getPropertyValue(Property.VIEW_TYPE),
                                           2)) {
                 this.botonIngresar.setStyle("margin: 0; border:0; text-decoration: none;");
                 image.setStyle("border:0; margin: 0; text-decoration: none;");
-                image.setUrl("./images/" +
-                                     this.getApplicationModel().getPropertyValue(Property.ICON_PATH));
+                Resource r = rh.createResource("images/" + this.getApplicationModel().getPropertyValue(Property.ICON_PATH),
+                                               "gather");
+                image.setUrl(r.getRequestPath());
             } else {
                 this.botonIngresar.setStyle("margin: 0; float: right; border:0; text-decoration: none;");
                 image.setStyle("border:0; margin: 0; width: 35px; height: 35px; text-decoration: none;");
-                image.setUrl("./images/ingresar.png");
+                Resource r = rh.createResource("images/ingresar.png",
+                                               "gather");
+                image.setUrl(r.getRequestPath());
             }
 
             this.botonIngresar.getChildren().add(image);
 
-            MethodExpression methodExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory().createMethodExpression(
-                    FacesContext.getCurrentInstance().getELContext(),
+            MethodExpression methodExpression = fc.getApplication().getExpressionFactory().createMethodExpression(
+                    fc.getELContext(),
                     "#{portalBean.handleView}",
                     null,
                     new Class[]{ActionEvent.class});
