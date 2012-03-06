@@ -28,6 +28,7 @@ import com.gather.jsfmatrix.core.view.uiobject.UIBreadCrumb;
 import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 
 public class BreadCrumbBean extends BaseJSFView {
+    private static final Logger LOG = Logger.getLogger(PortalBean.class);
 
     private DataSource ds;
     private Matrix matrix;
@@ -68,14 +69,13 @@ public class BreadCrumbBean extends BaseJSFView {
     }
 
     private void build() {
-        Logger.getLogger(BreadCrumbBean.class).info("INICIO CONSTRUCCION BREADCRUMB");
+        LOG.info("INICIO CONSTRUCCION BREADCRUMB");
 
         try {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
-            if (lb != null &&
-                    lb.getUser().getId() != null) {
+            if (lb != null && lb.getUser().getId() != null) {
                 this.getBreadCrumbService().getHistorialService().resetParameter();
                 this.getBreadCrumbService().getHistorialService().addParameter("1",
                                                                                lb.getUser().getId());
@@ -104,9 +104,9 @@ public class BreadCrumbBean extends BaseJSFView {
                 }
             }
         } catch (BeansException e) {
-            Logger.getLogger(BreadCrumbBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (DataAccessException e) {
-            Logger.getLogger(BreadCrumbBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 

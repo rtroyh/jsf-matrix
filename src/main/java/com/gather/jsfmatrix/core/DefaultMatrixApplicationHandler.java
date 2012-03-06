@@ -60,8 +60,7 @@ class DefaultMatrixApplicationHandler implements IMatrixApplicationHandler {
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
 
         INavigation us = (INavigation) ctx.getBean("portalBean");
-        us.setBody("apps/" +
-                           url);
+        us.setBody("apps/" + url);
         us.updateView();
     }
 

@@ -12,12 +12,4 @@ public class MatrixApplicationHandlerFactory {
                                          new DefaultWidgetView());
         return ma;
     }
-
-    public static IMatrixApplicationHandler createNoMatrixApplicationHandler() {
-        IMatrixApplicationHandler ma = new NoMatrixApplicationHandler(ApplicationModelFactory.createDefaultApplicationModel());
-
-        ma.getIApplicationView().addView("0",
-                                         new DefaultWidgetView());
-        return ma;
-    }
 }

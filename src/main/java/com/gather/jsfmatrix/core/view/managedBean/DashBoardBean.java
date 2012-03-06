@@ -235,7 +235,7 @@ public class DashBoardBean extends BaseJSFView {
 
     public void addMatrixApplication(IMatrixApplication ma,
                                      ViewType viewType) {
-        LOG.info("INICIO INSERCION DE APPLICACION DESDE DOCK O STACK");
+        LOG.info("INICIO INSERCION DE APPLICACION DESDE DOCK o STACK");
 
         try {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());

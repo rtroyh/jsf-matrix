@@ -204,6 +204,8 @@ public class PortalBean implements INavigation {
     @SuppressWarnings("unused")
     @PostConstruct
     private final void build() {
+        LOG.info("INICIO CARGA COMPONENTES MATRIZ");
+
         this.getBreadCrumbBean().populate(null);
         this.getDockBean().populate(null);
         this.getDashboardBean().populate(null);

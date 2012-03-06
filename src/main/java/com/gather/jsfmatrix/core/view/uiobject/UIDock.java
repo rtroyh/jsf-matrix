@@ -23,7 +23,7 @@ import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
 
 public class UIDock implements UIJSFObject {
-    private static final Logger LOG = Logger.getLogger(UIDashBoard.class);
+    private static final Logger LOG = Logger.getLogger(UIDock.class);
 
     private Dock component;
     private MenuModel menuModel;
@@ -69,6 +69,8 @@ public class UIDock implements UIJSFObject {
 
     @SuppressWarnings("unchecked")
     public void populate(Map<Ingredients, Object> recipe) {
+        LOG.info("INICIO POBLAMIENTO DOCK");
+
         try {
             if (!recipe.isEmpty()) {
                 if (recipe.containsKey(Ingredients.APPLICATION_LIST)) {
@@ -77,19 +79,21 @@ public class UIDock implements UIJSFObject {
                     for (IMatrixApplication ma : data) {
                         FacesContext fc = FacesContext.getCurrentInstance();
                         MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(fc);
+                        item.setTransient(true);
                         item.setId("dock_" +
-                                           FacesContext.getCurrentInstance().getViewRoot().createUniqueId());
-                        item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
+                                           fc.getViewRoot().createUniqueId());
+                        item.setValue(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE));
 
                         ResourceHandler rh = fc.getApplication().getResourceHandler();
                         Resource r = rh.createResource("images/" +
-                                                               ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.ICON_PATH),
+                                                               ma.getMatrixApplicationHandler().getPropertyValue(Property.ICON_PATH),
                                                        "gather");
 
                         item.setIcon(r.getRequestPath());
-                        item.addActionListener(new DockListener());
                         item.getAttributes().put("ma",
                                                  ma);
+                        item.addActionListener(new DockListener());
+                        item.setUpdate("principal");
 
                         this.getMenuModel().addMenuItem(item);
                         this.getDock().getChildren().add(item);

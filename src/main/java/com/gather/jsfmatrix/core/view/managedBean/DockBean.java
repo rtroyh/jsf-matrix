@@ -30,7 +30,7 @@ import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 import com.gather.jsfmatrix.core.view.uiobject.UIObjectType;
 
 public class DockBean extends BaseJSFView {
-
+    private static final Logger LOG = Logger.getLogger(DockBean.class);
     public static final String BASE_COMPONENT = "basedock";
     private DataSource ds;
     private IApplicationModel applicationModel;
@@ -83,14 +83,13 @@ public class DockBean extends BaseJSFView {
     }
 
     private void build() {
-        Logger.getLogger(DockBean.class).info("INICIO CONSTRUCCION DOCK");
+        LOG.info("INICIO CONSTRUCCION DOCK");
 
         try {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
-            if (lb != null &&
-                    lb.getUser().getId() != null) {
+            if (lb != null && lb.getUser().getId() != null) {
                 this.getDockServices().getList().resetParameter();
                 this.getDockServices().getList().addParameter("1",
                                                               lb.getUser().getId());
@@ -99,27 +98,25 @@ public class DockBean extends BaseJSFView {
                 List<List<Object>> data = this.getDockServices().getList().getResultSetasListofList();
 
                 this.getMatrix().getApplications().clear();
-                for (List<Object> lo : data) {
-                    if (Validator.validateLong(lo.get(0)) ||
-                            Validator.validateInteger(lo.get(0))) {
-                        IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
-                        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
-                                                                                           lo.get(0));
-                        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
-                                                                                           lo.get(1));
-                        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
-                                                                                           lo.get(2));
 
-                        this.getMatrix().getApplications().add(ma);
-                    }
+                for (List<Object> lo : data) {
+                    IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
+                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
+                                                                                       lo.get(0));
+                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
+                                                                                       lo.get(1));
+                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
+                                                                                       lo.get(2));
+
+                    this.getMatrix().getApplications().add(ma);
                 }
             }
         } catch (BeansException e) {
-            Logger.getLogger(DockBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (DataAccessException e) {
-            Logger.getLogger(DockBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(DockBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 

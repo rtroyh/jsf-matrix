@@ -17,13 +17,11 @@ import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
 
 public class DockListener implements ActionListener {
-
-    public DockListener() {
-    }
+    private static final Logger LOG = Logger.getLogger(DockListener.class);
 
     public void processAction(ActionEvent event) throws
                                                  AbortProcessingException {
-        Logger.getLogger(DockListener.class).info("INICIO EVENTO CLICK EN DOCK");
+        LOG.info("INICIO EVENTO CLICK EN DOCK");
 
         UIComponent source = event.getComponent();
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
