@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.stack.Stack;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
@@ -17,7 +18,6 @@ import com.gather.jsfmatrix.core.listener.StackListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.uicomponent.CustomMenuItem;
 
 public class UIStack implements UIJSFObject {
 
@@ -71,7 +71,7 @@ public class UIStack implements UIJSFObject {
                 List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
 
                 for (IMatrixApplication ma : data) {
-                    CustomMenuItem item = new CustomMenuItem();
+                    MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(FacesContext.getCurrentInstance());
                     item.setId("stack_item_" +
                                        FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
                                        "_" +
@@ -80,10 +80,8 @@ public class UIStack implements UIJSFObject {
                     item.setIcon("./images/" +
                                          ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.ICON_PATH));
                     item.addActionListener(new StackListener());
-                    item.setUserObject(ma);
-                    item.setOnstart("cargaDialogWV.show()");
-                    item.setOnerror("cargaDialogWV.hide()");
-                    item.setOncomplete("cargaDialogWV.hide()");
+                    item.getAttributes().put("ma",
+                                             ma);
                     item.setTransient(true);
 
                     this.getMenuModel().addMenuItem(item);

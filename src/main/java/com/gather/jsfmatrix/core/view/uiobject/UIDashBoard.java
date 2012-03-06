@@ -38,7 +38,7 @@ import com.gather.jsfmatrix.util.MapPropertyUtil;
 import com.gather.jsfspringcommons.utils.BeanUtil;
 
 public class UIDashBoard implements UIJSFObject {
-
+    private static final Logger LOG = Logger.getLogger(UIDashBoard.class);
     private IApplicationModel applicationModel;
     private Dashboard dashBoard;
     private DashboardModel dashBoardModel;
@@ -101,9 +101,10 @@ public class UIDashBoard implements UIJSFObject {
     @SuppressWarnings("unchecked")
     @Override
     public void populate(Map<Ingredients, Object> recipe) {
+        LOG.info("INICIO POBLAMIENTO DASHBOARD");
+
         if (!recipe.isEmpty()) {
-            if (recipe.containsKey(Ingredients.APPLICATION_LIST) &&
-                    recipe.containsKey(Ingredients.UNIDIMENSIONAL_LIST)) {
+            if (recipe.containsKey(Ingredients.APPLICATION_LIST) && recipe.containsKey(Ingredients.UNIDIMENSIONAL_LIST)) {
 
                 this.resetState();
 
@@ -154,8 +155,6 @@ public class UIDashBoard implements UIJSFObject {
                                                       "_" +
                                                       java.util.Calendar.getInstance().getTimeInMillis());
                             botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
-                            botonQuitar.setOnstart("cargaDialogWV.show();");
-                            botonQuitar.setOncomplete("cargaDialogWV.hide();");
                             botonQuitar.addActionListener(new CMDeleteWidgetListener());
                             botonQuitar.getAttributes().put("IMatrixApplicationModel",
                                                             ma);
@@ -192,11 +191,11 @@ public class UIDashBoard implements UIJSFObject {
                                 //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
                                 if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
                                     try {
-                                        if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                             ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
+                                        Object maBean = BeanUtil.getBean(FacesContext.getCurrentInstance(),
+                                                                         ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
+                                        if (maBean != null) {
 
-                                            IMatrixApplication maInst = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                                                                              ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
+                                            IMatrixApplication maInst = (IMatrixApplication) maBean;
 
                                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
                                                                            maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
@@ -255,11 +254,11 @@ public class UIDashBoard implements UIJSFObject {
                                             item.getChildren().add(panelTexto);
                                         }
                                     } catch (BeanCreationException e) {
-                                        Logger.getLogger(UIDashBoard.class).warn(e.getMessage());
+                                        LOG.warn(e.getMessage());
                                     } catch (NoSuchBeanDefinitionException e) {
-                                        Logger.getLogger(UIDashBoard.class).warn(e.getMessage());
+                                        LOG.warn(e.getMessage());
                                     } catch (Exception e) {
-                                        Logger.getLogger(UIDashBoard.class).error(e.getMessage());
+                                        LOG.error(e.getMessage());
                                     }
                                 }
                             }
@@ -294,10 +293,7 @@ public class UIDashBoard implements UIJSFObject {
                                                       " background: white;");
                                 if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
                                     item.setClosable(true);
-                                    MethodExpression methodExpression = fc.getApplication().getExpressionFactory().createMethodExpression(fc.getELContext(),
-                                                                                                                                          "#{portalBean.dashboardBean.handleClose}",
-                                                                                                                                          null,
-                                                                                                                                          new Class[]{CloseEvent.class});
+
                                     AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
                                     ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
                                     ab.setImmediate(true);
@@ -320,7 +316,7 @@ public class UIDashBoard implements UIJSFObject {
                                                           "px; margin: 5px;");
                                     item.setTransient(true);
                                 } catch (Exception e) {
-                                    Logger.getLogger(UIDashBoard.class).error(e.getMessage());
+                                    LOG.error(e.getMessage());
                                 }
                             }
 
@@ -349,11 +345,11 @@ public class UIDashBoard implements UIJSFObject {
                                             item.getChildren().add((UIComponent) v.getUIObject().getComponent());
                                         }
                                     } catch (BeanCreationException e) {
-                                        Logger.getLogger(UIDashBoard.class).warn(e.getMessage());
+                                        LOG.warn(e.getMessage());
                                     } catch (NoSuchBeanDefinitionException e) {
-                                        Logger.getLogger(UIDashBoard.class).warn(e.getMessage());
+                                        LOG.warn(e.getMessage());
                                     } catch (Exception e) {
-                                        Logger.getLogger(UIDashBoard.class).error(e.getMessage());
+                                        LOG.error(e.getMessage());
                                     }
                                 }
                             }

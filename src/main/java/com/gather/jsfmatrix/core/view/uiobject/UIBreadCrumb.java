@@ -8,19 +8,20 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.breadcrumb.BreadCrumb;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.core.listener.BreadListener;
+import com.gather.jsfmatrix.core.listener.BreadCrumbListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.uicomponent.CustomMenuItem;
 
 public class UIBreadCrumb implements UIJSFObject {
+    private static final Logger LOG = Logger.getLogger(UIBreadCrumb.class);
 
     private BreadCrumb component;
     private MenuModel menuModel;
@@ -74,17 +75,17 @@ public class UIBreadCrumb implements UIJSFObject {
                     List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
 
                     for (IMatrixApplication ma : data) {
-                        CustomMenuItem item = new CustomMenuItem();
+                        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(FacesContext.getCurrentInstance());
                         item.setId("breadcrumb_item_" +
                                            FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
                                            "_" +
                                            java.util.Calendar.getInstance().getTimeInMillis());
                         item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
                         item.setTransient(true);
-                        item.setUserObject(ma);
-                        item.addActionListener(new BreadListener());
-                        item.setOnstart("cargaDialogWV.show();");
-                        item.setOncomplete("cargaDialogWV.hide();");
+                        item.setUpdate("principal");
+                        item.addActionListener(new BreadCrumbListener());
+                        item.getAttributes().put("ma",
+                                                 ma);
 
                         this.getMenuModel().addMenuItem(item);
                         this.getBreadCrumb().getChildren().add(item);
@@ -92,7 +93,7 @@ public class UIBreadCrumb implements UIJSFObject {
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(UIBreadCrumb.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 

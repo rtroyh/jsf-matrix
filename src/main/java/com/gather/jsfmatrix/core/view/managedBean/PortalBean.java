@@ -107,8 +107,7 @@ public class PortalBean implements INavigation {
     public void updateThroughBreadCrumb(IMatrixApplication ma) {
         Logger.getLogger(PortalBean.class).info("INICIO METODO SURF");
 
-        if (ma != null &&
-                ma.updateBreadCrumb()) {
+        if (ma != null && ma.updateBreadCrumb()) {
             this.updateThroughBreadCrumb(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION),
                                          ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.MATRIX_ID),
                                          ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JAVA_ID));

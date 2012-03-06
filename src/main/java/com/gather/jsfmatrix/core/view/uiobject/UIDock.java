@@ -3,10 +3,14 @@ package com.gather.jsfmatrix.core.view.uiobject;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
 import org.primefaces.component.dock.Dock;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 
@@ -17,9 +21,9 @@ import com.gather.jsfmatrix.core.listener.DockListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.uicomponent.CustomMenuItem;
 
 public class UIDock implements UIJSFObject {
+    private static final Logger LOG = Logger.getLogger(UIDashBoard.class);
 
     private Dock component;
     private MenuModel menuModel;
@@ -65,25 +69,37 @@ public class UIDock implements UIJSFObject {
 
     @SuppressWarnings("unchecked")
     public void populate(Map<Ingredients, Object> recipe) {
-        if (!recipe.isEmpty()) {
-            if (recipe.containsKey(Ingredients.APPLICATION_LIST)) {
-                List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
+        try {
+            if (!recipe.isEmpty()) {
+                if (recipe.containsKey(Ingredients.APPLICATION_LIST)) {
+                    List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
 
-                for (IMatrixApplication ma : data) {
-                    CustomMenuItem item = new CustomMenuItem();
-                    item.setId("dock_" +
-                                       FacesContext.getCurrentInstance().getViewRoot().createUniqueId());
-                    item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
-                    item.setIcon("./images/" +
-                                         ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.ICON_PATH));
-                    item.addActionListener(new DockListener());
-                    item.setUserObject(ma);
-                    item.setOnstart("cargaDialogWV.show();");
-                    item.setOncomplete("cargaDialogWV.hide();");
-                    this.getMenuModel().addMenuItem(item);
-                    this.getDock().getChildren().add(item);
+                    for (IMatrixApplication ma : data) {
+                        FacesContext fc = FacesContext.getCurrentInstance();
+                        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(fc);
+                        item.setId("dock_" +
+                                           FacesContext.getCurrentInstance().getViewRoot().createUniqueId());
+                        item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
+
+                        ResourceHandler rh = fc.getApplication().getResourceHandler();
+
+                        Resource r = rh.createResource("images/" +
+                                                               ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.ICON_PATH),
+                                                       "gather");
+
+
+                        item.setIcon(r.getRequestPath());
+                        item.addActionListener(new DockListener());
+                        item.getAttributes().put("ma",
+                                                 ma);
+
+                        this.getMenuModel().addMenuItem(item);
+                        this.getDock().getChildren().add(item);
+                    }
                 }
             }
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
         }
     }
 

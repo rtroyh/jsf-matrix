@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -22,12 +21,12 @@ import javax.faces.event.AjaxBehaviorListener;
  * To change this template use File | Settings | File Templates.
  */
 public class DashBoardPanelCloseListener implements AjaxBehaviorListener {
+    private static final Logger LOG = Logger.getLogger(DashBoardPanelCloseListener.class);
     @Override
     public void processAjaxBehavior(AjaxBehaviorEvent event) throws
                                                              AbortProcessingException {
-        Logger.getLogger(TitlePopupListener.class).info("INICIO EVENTO EDITAR TITULO WIDGET");
+        LOG.info("INICIO EVENTO EDITAR TITULO WIDGET");
 
-        UIComponent source = event.getComponent().getChildren().get(0);
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
 
         PortalBean us = (PortalBean) ctx.getBean("portalBean");

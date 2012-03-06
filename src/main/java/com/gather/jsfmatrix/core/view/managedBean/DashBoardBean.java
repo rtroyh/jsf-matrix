@@ -33,6 +33,7 @@ import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
 import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 
 public class DashBoardBean extends BaseJSFView {
+    private static final Logger LOG = Logger.getLogger(DashBoardBean.class);
 
     private DataSource ds;
     private IApplicationModel applicationModel;
@@ -95,7 +96,7 @@ public class DashBoardBean extends BaseJSFView {
     }
 
     private void build() {
-        Logger.getLogger(DashBoardBean.class).info("INICIO CONSTRUCCION DASHBOARD");
+        LOG.info("INICIO CONSTRUCCION DASHBOARD");
 
         try {
             this.getMatrix().getApplications().clear();
@@ -112,10 +113,9 @@ public class DashBoardBean extends BaseJSFView {
                 List<List<Object>> properties = this.getService().getApplicationsService().getResultSetasListofList(1);
                 List<List<Object>> data = this.getService().getApplicationsService().getResultSetasListofList(2);
 
-                if (Validator.validateList(data) &&
-                        Validator.validateList(properties)) {
-
+                if (Validator.validateList(data) && Validator.validateList(properties)) {
                     this.getMatrix().setProperties(properties);
+
                     for (List<Object> lo : data) {
                         if (Validator.validateLong(lo.get(0)) ||
                                 Validator.validateInteger(lo.get(0))) {
@@ -146,17 +146,16 @@ public class DashBoardBean extends BaseJSFView {
                             ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.VIEW_TYPE,
                                                                                                properties.get(0).get(0));
                             this.getMatrix().getApplications().add(ma);
-
                         }
                     }
                 }
             }
         } catch (BeansException e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (DataAccessException e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
@@ -179,12 +178,12 @@ public class DashBoardBean extends BaseJSFView {
             this.getUIObject().resetState();
             this.getUIObject().populate(theRecipe);
         } catch (Exception e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 
     public void handleReorder(DashboardReorderEvent event) {
-        Logger.getLogger(DashBoardBean.class).info("INICIO EVENTO REORDER");
+        LOG.info("INICIO EVENTO REORDER");
 
         try {
             Dashboard d = (Dashboard) event.getComponent();
@@ -211,22 +210,9 @@ public class DashBoardBean extends BaseJSFView {
                 }
             }
         } catch (DataAccessException e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
-        }
-
-    }
-
-    public void handleClose(CloseEvent event) {
-        Logger.getLogger(DashBoardBean.class).info("INICIO EVENTO QUITAR WIDGET");
-        Panel d = (Panel) event.getComponent();
-
-        for (IMatrixApplication ma : this.getMatrix().getApplications()) {
-            if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JSF_CLIENT_ID).equals(d.getId())) {
-                this.removeWidget(ma);
-                return;
-            }
+            LOG.error(e.getMessage());
         }
     }
 
@@ -237,22 +223,19 @@ public class DashBoardBean extends BaseJSFView {
                                                                    ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION));
             this.getService().getCloseWidgetService().addParameter("2",
                                                                    ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.MATRIX_ID));
-
             this.getService().getCloseWidgetService().executeQuery();
 
             this.populate(null);
         } catch (DataAccessException e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
-
-        RequestContext.getCurrentInstance().addPartialUpdateTarget("mainDashBoard");
     }
 
     public void addMatrixApplication(IMatrixApplication ma,
                                      ViewType viewType) {
-        Logger.getLogger(DashBoardBean.class).info("INICIO METODO addMatrixApplication");
+        LOG.info("INICIO INSERCION DE APPLICACION DESDE DOCK O STACK");
 
         try {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
@@ -283,11 +266,11 @@ public class DashBoardBean extends BaseJSFView {
                 this.populate(null);
             }
         } catch (BeansException e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (DataAccessException e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(DashBoardBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 

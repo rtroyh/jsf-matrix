@@ -14,13 +14,11 @@ import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
 
 public class CMDeleteWidgetListener implements ActionListener {
-
-    public CMDeleteWidgetListener() {
-    }
+    private static final Logger LOG = Logger.getLogger(CMDeleteWidgetListener.class);
 
     public void processAction(ActionEvent event) throws
                                                  AbortProcessingException {
-        Logger.getLogger(CMDeleteWidgetListener.class).info("INICIO EVENTO BORRAR EN CONTEXT MENU");
+        LOG.info("INICIO EVENTO BORRAR EN CONTEXT MENU");
 
         UIComponent source = event.getComponent();
 
@@ -28,5 +26,6 @@ public class CMDeleteWidgetListener implements ActionListener {
 
         PortalBean us = (PortalBean) ctx.getBean("portalBean");
         us.getDashboardBean().removeWidget((IMatrixApplication) source.getAttributes().get("IMatrixApplicationModel"));
+        us.updateView();
     }
 }

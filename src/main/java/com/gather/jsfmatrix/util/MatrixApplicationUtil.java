@@ -3,13 +3,13 @@ package com.gather.jsfmatrix.util;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.component.contextmenu.ContextMenu;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.panel.Panel;
 
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Property;
 import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.uicomponent.CustomMenuItem;
 
 public class MatrixApplicationUtil {
 
@@ -21,26 +21,29 @@ public class MatrixApplicationUtil {
                          fc.getViewRoot().createUniqueId());
         cm.setFor(item.getClientId(fc));
 
-        CustomMenuItem cmi = new CustomMenuItem();
+        MenuItem cmi = PrimeFacesUIComponentsFactory.createMenuItem(fc);
         cmi.setId("cmi_" +
                           fc.getViewRoot().createUniqueId());
         cmi.setValue("Copiar");
-        cmi.setUserObject(ma);
+        cmi.getAttributes().put("ma",
+                                 ma);
         cm.getChildren().add(cmi);
 
-        CustomMenuItem cmi2 = new CustomMenuItem();
+        MenuItem cmi2 = PrimeFacesUIComponentsFactory.createMenuItem(fc);
         cmi2.setId("cmi_" +
                            fc.getViewRoot().createUniqueId());
         cmi2.setValue("Pegar");
-        cmi2.setUserObject(ma);
+        cmi.getAttributes().put("ma",
+                                ma);
         cm.getChildren().add(cmi2);
 
         if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
-            CustomMenuItem cmi3 = new CustomMenuItem();
+            MenuItem cmi3 = PrimeFacesUIComponentsFactory.createMenuItem(fc);
             cmi3.setId("cmi_" +
                                fc.getViewRoot().createUniqueId());
             cmi3.setValue("Borrar");
-            cmi3.setUserObject(ma);
+            cmi.getAttributes().put("ma",
+                                    ma);
             cmi3.addActionListener(new CMDeleteWidgetListener());
             cm.getChildren().add(cmi3);
         }
