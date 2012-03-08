@@ -72,6 +72,23 @@ public class PortalBean implements INavigation {
                                      1);
     }
 
+    public void updateThroughBreadCrumbHome(Object sesion)     {
+        this.getDashboardBean().getService().getDirectoryService().resetParameter();
+        this.getDashboardBean().getService().getDirectoryService().addParameter("1",
+                                                                                sesion);
+        this.getDashboardBean().getService().getDirectoryService().addParameter("2",
+                                                                                0);
+        this.getDashboardBean().getService().getDirectoryService().addParameter("3",
+                                                                                "");
+        this.getDashboardBean().getService().getDirectoryService().executeQuery();
+
+        this.getDashboardBean().populate(null);
+
+        this.setBody("desktop");
+        this.renderDock = true;
+        this.renderStack = true;
+    }
+
     public void updateThroughBreadCrumb(Object sesion,
                                         Object matrixID,
                                         Object javaID) {
@@ -119,9 +136,9 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
 
         try {
-            RequestContext.getCurrentInstance().addPartialUpdateTarget("mainBread");
-            RequestContext.getCurrentInstance().addPartialUpdateTarget("mainDock");
-            RequestContext.getCurrentInstance().addPartialUpdateTarget("principal");
+            RequestContext.getCurrentInstance().addPartialUpdateTarget("myForm:mainBread");
+            RequestContext.getCurrentInstance().addPartialUpdateTarget("myForm:principal");
+            RequestContext.getCurrentInstance().addPartialUpdateTarget("myForm:mainDock");
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -206,7 +223,10 @@ public class PortalBean implements INavigation {
     private final void build() {
         LOG.info("INICIO CARGA COMPONENTES MATRIZ");
 
-        this.getBreadCrumbBean().populate(null);
+        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
+        IUserBean lb = (IUserBean) ctx.getBean("userBean");
+
+        this.updateThroughBreadCrumbHome(lb.getUser().getId());
         this.getDockBean().populate(null);
         this.getDashboardBean().populate(null);
     }

@@ -116,8 +116,7 @@ public class UIDashBoard implements UIJSFObject {
                             Validator.validateInteger(properties.get(0).get(1)) &&
                             properties.get(0).get(0).equals(2)) {//1=widget, 2=iconos
 
-                        Integer total = (Integer) properties.get(0).get(1) -
-                                this.getDashBoardModel().getColumnCount();
+                        Integer total = (Integer) properties.get(0).get(1) - this.getDashBoardModel().getColumnCount();
 
                         for (int x = 0; x < total; x++) {
                             this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
