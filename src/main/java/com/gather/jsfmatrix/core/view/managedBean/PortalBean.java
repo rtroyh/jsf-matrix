@@ -82,8 +82,6 @@ public class PortalBean implements INavigation {
                                                                                 "");
         this.getDashboardBean().getService().getDirectoryService().executeQuery();
 
-        this.getDashboardBean().populate(null);
-
         this.setBody("desktop");
         this.renderDock = true;
         this.renderStack = true;
@@ -227,6 +225,7 @@ public class PortalBean implements INavigation {
         IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
         this.updateThroughBreadCrumbHome(lb.getUser().getId());
+        this.getBreadCrumbBean().populate(null);
         this.getDockBean().populate(null);
         this.getDashboardBean().populate(null);
     }
