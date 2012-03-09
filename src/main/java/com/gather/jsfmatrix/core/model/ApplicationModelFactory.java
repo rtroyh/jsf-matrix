@@ -13,8 +13,6 @@ public class ApplicationModelFactory {
     }
 
     public static IApplicationModel createDefaultApplicationModel() {
-        IApplicationModel am = new DefaultApplicationModel();
-
-        return am;
+        return new DefaultApplicationModel();
     }
 }

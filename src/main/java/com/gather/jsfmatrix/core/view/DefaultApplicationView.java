@@ -12,7 +12,7 @@ public class DefaultApplicationView implements IApplicationView {
     @Override
     public void addView(String key,
                         Viewer ui) {
-        LOG.info("INICIO ADDVIEW CON KEY = " +
+        LOG.debug("INICIO ADDVIEW CON KEY = " +
                          key +
                          " EN UN TOTAL DE " +
                          this.getViews().size());
@@ -23,20 +23,20 @@ public class DefaultApplicationView implements IApplicationView {
 
     @Override
     public Viewer getView(String key) {
-        LOG.info("INICIO GETVIEW CON KEY = " +
+        LOG.debug("INICIO GETVIEW CON KEY = " +
                          key +
                          " EN UN TOTAL DE " +
                          this.getViews().size());
         try {
             if (this.getViews().get(key) == null) {
-                LOG.info("VIEW NO ENCONTRADA...");
-                LOG.info("AGREGANDO NUEVO VIEW CON KEY = " +
+                LOG.debug("VIEW NO ENCONTRADA...");
+                LOG.debug("AGREGANDO NUEVO VIEW CON KEY = " +
                                  key);
                 this.getViews().put(key,
                                     this.getViews().get("0").getClass().newInstance());
                 return this.getView(key);
             } else {
-                LOG.info("VIEW CON KEY = " +
+                LOG.debug("VIEW CON KEY = " +
                                  key +
                                  " ENCONTRADA");
                 return this.getViews().get(key);

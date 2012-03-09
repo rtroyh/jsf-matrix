@@ -8,6 +8,4 @@ public interface Viewer extends IPopulable {
     public UIObject getUIObject();
 
     public void setUIObject(UIObject ui);
-
-    public ViewType getViewType();
 }

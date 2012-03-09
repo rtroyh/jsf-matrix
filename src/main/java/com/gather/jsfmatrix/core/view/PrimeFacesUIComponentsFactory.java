@@ -191,14 +191,6 @@ public class PrimeFacesUIComponentsFactory {
         return (HtmlGraphicImage) application.createComponent(HtmlGraphicImage.COMPONENT_TYPE);
     }
 
-    public static Editor createEditor(FacesContext fc,
-                                      Integer width,
-                                      Integer height) {
-        Editor e = PrimeFacesUIComponentsFactory.createEditor(fc);
-
-        return e;
-    }
-
     public static Dock createDock(FacesContext fc) {
         Application application = fc.getApplication();
 
@@ -252,7 +244,7 @@ public class PrimeFacesUIComponentsFactory {
                                                                                        ? title.substring(0,
                                                                                                          29) +
                                                                                        "..."
-                                                                                       : title.toString());
+                                                                                       : title);
         ot.setId(fc.getViewRoot().createUniqueId() +
                          "_" +
                          java.util.Calendar.getInstance().getTimeInMillis());

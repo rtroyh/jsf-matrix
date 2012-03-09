@@ -6,7 +6,7 @@ import com.gather.springcommons.services.AdvancedSSPService;
 
 public class MatrixService {
 
-    private DataSource ds;
+    private final DataSource ds;
 
     private AdvancedSSPService headerService;
     private AdvancedSSPService applicationsService;

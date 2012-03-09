@@ -8,18 +8,13 @@ import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 
 public class DefaultJSFView extends BaseJSFView {
 
-    public DefaultJSFView(UIJSFObject uiObject) {
+    DefaultJSFView(UIJSFObject uiObject) {
         super(uiObject);
     }
 
     @Override
     public void populate(Map<Ingredients, Object> recipe) {
         this.getUIObject().populate(recipe);
-    }
-
-    @Override
-    public ViewType getViewType() {
-        return ViewType.APPLICATION;
     }
 
     @Override

@@ -2,9 +2,6 @@ package com.gather.jsfmatrix.core;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
@@ -13,7 +10,6 @@ import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.DefaultApplicationView;
 import com.gather.jsfmatrix.core.view.IApplicationView;
 import com.gather.jsfmatrix.core.view.managedBean.INavigation;
-import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
 
 class DefaultMatrixApplicationHandler implements IMatrixApplicationHandler {
 
@@ -62,19 +58,5 @@ class DefaultMatrixApplicationHandler implements IMatrixApplicationHandler {
         INavigation us = (INavigation) ctx.getBean("portalBean");
         us.setBody("apps/" + url);
         us.updateView();
-    }
-
-    @Override
-    public void generateInstance(Object... parameters) {
-
-    }
-
-    @Override
-    public String getLastGenerateInstanceMessage() {
-        return this.lastGenerateInstanceMessage;
-    }
-
-    public void setLastGenerateInstanceMessage(String lastGenerateInstanceMessage) {
-        this.lastGenerateInstanceMessage = lastGenerateInstanceMessage;
     }
 }

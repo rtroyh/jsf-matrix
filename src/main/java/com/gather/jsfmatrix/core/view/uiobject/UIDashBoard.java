@@ -3,7 +3,6 @@ package com.gather.jsfmatrix.core.view.uiobject;
 import java.util.List;
 import java.util.Map;
 
-import javax.el.MethodExpression;
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
@@ -19,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.component.commandlink.CommandLink;
 import org.primefaces.component.dashboard.Dashboard;
 import org.primefaces.component.panel.Panel;
-import org.primefaces.event.CloseEvent;
 import org.primefaces.model.DashboardModel;
 import org.primefaces.model.DefaultDashboardColumn;
 import org.primefaces.model.DefaultDashboardModel;
@@ -53,7 +51,7 @@ public class UIDashBoard implements UIJSFObject {
         return this.applicationModel;
     }
 
-    public DashboardModel getDashBoardModel() {
+    DashboardModel getDashBoardModel() {
         if (this.dashBoardModel == null) {
             this.dashBoardModel = new DefaultDashboardModel();
         }
@@ -61,11 +59,11 @@ public class UIDashBoard implements UIJSFObject {
         return dashBoardModel;
     }
 
-    public void setDashBoardModel(DashboardModel dashBoardModel) {
+    void setDashBoardModel(DashboardModel dashBoardModel) {
         this.dashBoardModel = dashBoardModel;
     }
 
-    public Dashboard getDashBoard() {
+    Dashboard getDashBoard() {
         if (this.dashBoard == null) {
             this.dashBoard = PrimeFacesUIComponentsFactory.createMainDashboard(FacesContext.getCurrentInstance());
             this.dashBoard.setId("myDashBoard" +
@@ -221,7 +219,7 @@ public class UIDashBoard implements UIJSFObject {
                                                                                                                            ? title.substring(0,
                                                                                                                                              19) +
                                                                                                                            "..."
-                                                                                                                           : title.toString());
+                                                                                                                           : title);
                                             ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
                                             ot.setTransient(true);
 

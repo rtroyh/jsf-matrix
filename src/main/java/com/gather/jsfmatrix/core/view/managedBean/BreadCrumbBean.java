@@ -23,14 +23,13 @@ import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.BreadCrumbService;
 import com.gather.jsfmatrix.core.view.BaseJSFView;
-import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.uiobject.UIBreadCrumb;
 import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 
 public class BreadCrumbBean extends BaseJSFView {
-    private static final Logger LOG = Logger.getLogger(PortalBean.class);
+    private static final Logger LOG = Logger.getLogger(BreadCrumbBean.class);
 
-    private DataSource ds;
+    private final DataSource ds;
     private Matrix matrix;
     private BreadCrumbService BreadCrumbService;
     private IApplicationModel applicationModel;
@@ -48,7 +47,7 @@ public class BreadCrumbBean extends BaseJSFView {
         return this.applicationModel;
     }
 
-    public Matrix getMatrix() {
+    Matrix getMatrix() {
         if (this.matrix == null) {
             this.matrix = new Matrix();
         }
@@ -108,11 +107,6 @@ public class BreadCrumbBean extends BaseJSFView {
         } catch (DataAccessException e) {
             LOG.error(e.getMessage());
         }
-    }
-
-    @Override
-    public ViewType getViewType() {
-        return ViewType.CORE;
     }
 
     @Override

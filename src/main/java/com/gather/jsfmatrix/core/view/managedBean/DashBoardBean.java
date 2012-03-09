@@ -9,8 +9,6 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.primefaces.component.dashboard.Dashboard;
 import org.primefaces.component.panel.Panel;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.CloseEvent;
 import org.primefaces.event.DashboardReorderEvent;
 import org.springframework.beans.BeansException;
 import org.springframework.dao.DataAccessException;
@@ -35,7 +33,7 @@ import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 public class DashBoardBean extends BaseJSFView {
     private static final Logger LOG = Logger.getLogger(DashBoardBean.class);
 
-    private DataSource ds;
+    private final DataSource ds;
     private IApplicationModel applicationModel;
     private MatrixService service;
     private Matrix matrix;
@@ -157,11 +155,6 @@ public class DashBoardBean extends BaseJSFView {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
-    }
-
-    @Override
-    public ViewType getViewType() {
-        return ViewType.CORE;
     }
 
     @Override

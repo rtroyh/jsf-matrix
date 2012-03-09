@@ -111,17 +111,9 @@ public class UIDock implements UIJSFObject {
         this.getDock().getChildren().clear();
     }
 
-    public boolean isPopulated() {
-        return false;
-    }
-
-    public void setPopulated(boolean value) {
-        // TODO Auto-generated method stub
-    }
-
     @Override
     public void setComponent(Object o) {
-        this.component = (Dock) component;
+        this.component = (Dock) o;
     }
 
     @Override

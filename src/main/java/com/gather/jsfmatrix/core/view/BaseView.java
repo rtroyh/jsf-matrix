@@ -6,11 +6,11 @@ public abstract class BaseView implements Viewer {
 
     protected UIObject uiObject;
 
-    public BaseView() {
+    BaseView() {
         super();
     }
 
-    public BaseView(UIObject uiObject) {
+    BaseView(UIObject uiObject) {
         super();
         this.uiObject = uiObject;
     }

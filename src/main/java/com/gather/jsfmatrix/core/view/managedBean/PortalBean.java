@@ -22,7 +22,7 @@ import com.gather.jsfspringcommons.utils.BeanUtil;
 public class PortalBean implements INavigation {
     private static final Logger LOG = Logger.getLogger(PortalBean.class);
 
-    private DataSource ds;
+    private final DataSource ds;
     private DockBean dockBean;
     private DashBoardBean dashboardBean;
     private BreadCrumbBean breadCrumbBean;
@@ -166,7 +166,7 @@ public class PortalBean implements INavigation {
     public void handleView(ActionEvent event) { //LLAMADO POR EL COMMANDLINK "INGRESAR", CREADO EN EL UIDASHBOARD.
         LOG.info("INICIO EVENTO HANDLE VIEW");
 
-        Panel d = null;
+        Panel d;
         if (event.getComponent().getParent() instanceof Panel) {
             d = (Panel) event.getComponent().getParent();
         } else if (event.getComponent().getParent().getParent() instanceof Panel) {
@@ -218,7 +218,7 @@ public class PortalBean implements INavigation {
 
     @SuppressWarnings("unused")
     @PostConstruct
-    private final void build() {
+    private void build() {
         LOG.info("INICIO CARGA COMPONENTES MATRIZ");
 
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());

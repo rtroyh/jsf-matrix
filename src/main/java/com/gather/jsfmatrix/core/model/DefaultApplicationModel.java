@@ -9,12 +9,11 @@ public class DefaultApplicationModel implements IApplicationModel {
     private EnumMap<Property, Object> propertyMap;
 
     @Override
-    public IApplicationModel addProperty(Property property,
-                                         Object value) {
+    public void addProperty(Property property,
+                            Object value) {
         this.getPropertyMap().put(property,
                                   value);
 
-        return this;
     }
 
     @Override

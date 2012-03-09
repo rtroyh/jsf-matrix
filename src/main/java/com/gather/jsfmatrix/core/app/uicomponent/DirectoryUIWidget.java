@@ -143,7 +143,7 @@ public class DirectoryUIWidget implements UIJSFObject {
     }
 
     public void setComponent(Object o) {
-        this.component = (HtmlPanelGrid) component;
+        this.component = (HtmlPanelGrid) o;
     }
 
     public UIComponent getComponent() {

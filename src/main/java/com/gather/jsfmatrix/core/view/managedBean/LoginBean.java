@@ -12,9 +12,10 @@ import com.gather.gathercommons.util.Validator;
 import com.gather.jsfmatrix.core.service.LoginService;
 import com.gather.springcommons.services.IResultSetProvider;
 
-public class LoginBean {
+class LoginBean {
+    private static final Logger LOG = Logger.getLogger(LoginBean.class);
 
-    private DataSource ds;
+    private final DataSource ds;
     private LoginService loginService;
     private String userName;
     private String password;
@@ -48,9 +49,9 @@ public class LoginBean {
             }
 
         } catch (DataAccessException e) {
-            Logger.getLogger(LoginBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         } catch (Exception e) {
-            Logger.getLogger(LoginBean.class).error(e.getMessage());
+            LOG.error(e.getMessage());
         }
 
         return "/login.jsf?faces-redirect=true";

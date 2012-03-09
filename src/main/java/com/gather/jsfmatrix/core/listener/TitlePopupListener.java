@@ -36,7 +36,7 @@ public class TitlePopupListener implements AjaxBehaviorListener {
 
         if (source instanceof HtmlOutputText &&
                 ((HtmlOutputText) source).getTitle() != null) {
-            us.getDashboardBean().setTitleSelectedPanel(((HtmlOutputText) source).getTitle().toString());
+            us.getDashboardBean().setTitleSelectedPanel(((HtmlOutputText) source).getTitle());
         }
 
         RequestContext.getCurrentInstance().addPartialUpdateTarget("innerTitleDialog");

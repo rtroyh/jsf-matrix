@@ -35,7 +35,7 @@ public class UIBreadCrumb implements UIJSFObject {
         return this.applicationModel;
     }
 
-    public MenuModel getMenuModel() {
+    MenuModel getMenuModel() {
         if (this.menuModel == null) {
             this.menuModel = new DefaultMenuModel();
         }
@@ -43,7 +43,7 @@ public class UIBreadCrumb implements UIJSFObject {
         return menuModel;
     }
 
-    public void setMenuModel(MenuModel menuModel) {
+    void setMenuModel(MenuModel menuModel) {
         this.menuModel = menuModel;
     }
 
@@ -51,7 +51,7 @@ public class UIBreadCrumb implements UIJSFObject {
         return this.getBreadCrumb();
     }
 
-    public BreadCrumb getBreadCrumb() {
+    BreadCrumb getBreadCrumb() {
         if (this.component == null) {
             this.component = PrimeFacesUIComponentsFactory.createbreadCrumb(FacesContext.getCurrentInstance());
             this.component.setStyle("width: 990px;");

@@ -1,7 +1,6 @@
 package com.gather.jsfmatrix.util;
 
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,11 +18,9 @@ public class MapPropertyUtil {
                     origin != destiny) {
                 destiny.clear();
                 Set<?> set = origin.entrySet();
-                Iterator<?> i = set.iterator();
 
-                while (i.hasNext()) {
+                for (Object next : set) {
 
-                    Object next = i.next();
                     if (next != null) {
                         Map.Entry<Property, Object> me = (Map.Entry<Property, Object>) next;
                         destiny.put(me.getKey(),

@@ -1,6 +1,5 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import com.gather.gathercommons.util.Validator;
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Matrix;
@@ -24,19 +22,16 @@ import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.DockServices;
 import com.gather.jsfmatrix.core.view.BaseJSFView;
-import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.uiobject.UIDock;
 import com.gather.jsfmatrix.core.view.uiobject.UIObject;
-import com.gather.jsfmatrix.core.view.uiobject.UIObjectType;
 
 public class DockBean extends BaseJSFView {
     private static final Logger LOG = Logger.getLogger(DockBean.class);
     public static final String BASE_COMPONENT = "basedock";
-    private DataSource ds;
+    private final DataSource ds;
     private IApplicationModel applicationModel;
     private Matrix matrix;
     private DockServices dockService;
-    private EnumMap<UIObjectType, String> map = new EnumMap<UIObjectType, String>(UIObjectType.class);
 
     public DockBean(DataSource ds) {
         super(new UIDock());
@@ -51,7 +46,7 @@ public class DockBean extends BaseJSFView {
         return this.applicationModel;
     }
 
-    public Matrix getMatrix() {
+    Matrix getMatrix() {
         if (this.matrix == null) {
             this.matrix = new Matrix();
         }
@@ -60,18 +55,6 @@ public class DockBean extends BaseJSFView {
 
     public void setMatrixBean(Matrix matrix) {
         this.matrix = matrix;
-    }
-
-    public EnumMap<UIObjectType, String> getMap() {
-        if (this.map.get(UIObjectType.JSF) == null) {
-            this.map.put(UIObjectType.JSF,
-                         "FUNCIONA");
-        }
-        return map;
-    }
-
-    public void setMap(EnumMap<UIObjectType, String> map) {
-        this.map = map;
     }
 
     private DockServices getDockServices() {
@@ -118,11 +101,6 @@ public class DockBean extends BaseJSFView {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
-    }
-
-    @Override
-    public ViewType getViewType() {
-        return ViewType.CORE;
     }
 
     @Override

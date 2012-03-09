@@ -4,7 +4,7 @@ import com.gather.jsfmatrix.core.view.uiobject.UIJSFObject;
 
 public abstract class BaseJSFView extends BaseView {
 
-    public BaseJSFView() {
+    protected BaseJSFView() {
         super();
     }
 

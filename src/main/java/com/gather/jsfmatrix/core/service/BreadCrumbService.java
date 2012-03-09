@@ -6,7 +6,7 @@ import com.gather.springcommons.services.AdvancedSSPService;
 
 public class BreadCrumbService {
 
-    private DataSource ds;
+    private final DataSource ds;
     private AdvancedSSPService historialService;
 
     public BreadCrumbService(DataSource ds) {

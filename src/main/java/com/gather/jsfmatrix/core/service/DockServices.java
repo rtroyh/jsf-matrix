@@ -6,7 +6,7 @@ import com.gather.springcommons.services.AdvancedSSPService;
 
 public class DockServices {
 
-    public DataSource ds;
+    private final DataSource ds;
     private AdvancedSSPService list;
 
     public DockServices(DataSource ds) {

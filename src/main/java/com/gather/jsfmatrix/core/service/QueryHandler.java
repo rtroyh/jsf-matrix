@@ -1,5 +1,6 @@
 package com.gather.jsfmatrix.core.service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,7 @@ public final class QueryHandler {
                                                       DataAccessException {
         Logger.getLogger(this.getClass()).debug(query +
                                                         " " +
-                                                        param);
+                                                        Arrays.toString(param));
 
         if (Validator.validateString(query) &&
                 param != null) {
@@ -115,7 +116,7 @@ public final class QueryHandler {
                                                   DataAccessException {
         Logger.getLogger(this.getClass()).debug(query +
                                                         " " +
-                                                        param);
+                                                        Arrays.toString(param));
 
         if (Validator.validateString(query) &&
                 param != null) {
@@ -187,7 +188,7 @@ public final class QueryHandler {
                                           DataAccessException {
         Logger.getLogger(this.getClass()).debug(query +
                                                         " " +
-                                                        param);
+                                                        Arrays.toString(param));
 
         if (Validator.validateString(query) &&
                 param != null) {

@@ -15,7 +15,7 @@ import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
 
-public class DirectoryListener implements ActionListener {
+class DirectoryListener implements ActionListener {
     private static final Logger LOG = Logger.getLogger(DirectoryListener.class);
 
     public void processAction(ActionEvent event) throws

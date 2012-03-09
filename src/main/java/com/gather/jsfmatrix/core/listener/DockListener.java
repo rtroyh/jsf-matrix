@@ -8,7 +8,6 @@ import javax.faces.event.ActionListener;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.context.RequestContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 

@@ -9,8 +9,8 @@ public interface IApplicationModel extends IValueHolder {
 
     public EnumMap<Property, Object> getPropertyMap();
 
-    public IApplicationModel addProperty(Property property,
-                                         Object value);
+    public void addProperty(Property property,
+                            Object value);
 
     public void removeProperty(Property property);
 }

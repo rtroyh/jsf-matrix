@@ -1,7 +1,5 @@
 package com.gather.jsfmatrix.core.service;
 
-import java.io.Serializable;
-
 import javax.sql.DataSource;
 
 import org.springframework.dao.DataAccessException;
@@ -9,11 +7,9 @@ import org.springframework.dao.DataAccessException;
 import com.gather.springcommons.services.AdvancedSSPService;
 import com.gather.springcommons.services.IResultSetProvider;
 
-public class LoginService implements Serializable {
+public class LoginService {
 
-    private static final long serialVersionUID = -7628409413703647022L;
-
-    private DataSource ds;
+    private final DataSource ds;
 
     private AdvancedSSPService seguridadService;
     private AdvancedSSPService sesionService;
@@ -55,8 +51,7 @@ public class LoginService implements Serializable {
     }
 
     public IResultSetProvider sesionService(Object userName) throws
-                                                             DataAccessException,
-                                                             Exception {
+                                                             DataAccessException {
 
         this.getSesionService().resetParameter();
         this.getSesionService().addParameter("1",
@@ -67,8 +62,7 @@ public class LoginService implements Serializable {
     }
 
     public IResultSetProvider claveUsuarioService(Object sesion) throws
-                                                                 DataAccessException,
-                                                                 Exception {
+                                                                 DataAccessException {
         this.getClaveUsuarioService().resetParameter();
         this.getClaveUsuarioService().addParameter("1",
                                                    sesion);
@@ -80,8 +74,7 @@ public class LoginService implements Serializable {
     public IResultSetProvider seguridadService(Object puerta,
                                                Object instancia,
                                                Object usuario) throws
-                                                               DataAccessException,
-                                                               Exception {
+                                                               DataAccessException {
         this.getSeguridadService().resetParameter();
         this.getSeguridadService().addParameter("1",
                                                 puerta);
