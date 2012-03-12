@@ -8,7 +8,7 @@ public abstract class BaseJSFView extends BaseView {
         super();
     }
 
-    public BaseJSFView(UIJSFObject uiObject) {
+    protected BaseJSFView(UIJSFObject uiObject) {
         super(uiObject);
     }
 

@@ -10,7 +10,7 @@ import org.springframework.web.jsf.FacesContextUtils;
 
 import com.gather.gathercommons.enums.DS;
 
-public final class CustomDataSourceFactory {
+final class CustomDataSourceFactory {
 
     public static synchronized DataSource getDriverManagerDataSource(WebApplicationContext ctx,
                                                                      DS conexion) {
