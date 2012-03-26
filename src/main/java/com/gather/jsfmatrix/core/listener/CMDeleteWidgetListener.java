@@ -26,6 +26,5 @@ public class CMDeleteWidgetListener implements ActionListener {
 
         PortalBean us = (PortalBean) ctx.getBean("portalBean");
         us.getDashboardBean().removeWidget((IMatrixApplication) source.getAttributes().get("IMatrixApplicationModel"));
-        us.updateView();
     }
 }

@@ -90,6 +90,8 @@ public class DirectoryUIWidget implements UIJSFObject {
                                              "_" +
                                              java.util.Calendar.getInstance().getTimeInMillis());
             this.botonIngresar.setTransient(true);
+            this.botonIngresar.setProcess("@this");
+            this.botonIngresar.setUpdate(":myForm:principal");
 
             HtmlGraphicImage image = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(fc);
             image.setId("image_DirectoryUIWidget_" +

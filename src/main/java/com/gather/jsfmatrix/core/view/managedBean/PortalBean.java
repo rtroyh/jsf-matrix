@@ -134,8 +134,7 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
 
         try {
-            RequestContext.getCurrentInstance().addPartialUpdateTarget("myForm:principal");
-            RequestContext.getCurrentInstance().addPartialUpdateTarget("myForm:mainDock");
+            RequestContext.getCurrentInstance().addPartialUpdateTarget(":myForm:principal");
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }

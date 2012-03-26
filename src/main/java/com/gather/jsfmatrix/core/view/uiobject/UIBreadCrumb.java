@@ -82,10 +82,11 @@ public class UIBreadCrumb implements UIJSFObject {
                                            java.util.Calendar.getInstance().getTimeInMillis());
                         item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
                         item.setTransient(true);
-                        item.setUpdate("principal");
-                        item.addActionListener(new BreadCrumbListener());
+                        item.setUpdate(":myForm:principal");
+                        item.setProcess("@this");
                         item.getAttributes().put("ma",
                                                  ma);
+                        item.addActionListener(new BreadCrumbListener());
 
                         this.getMenuModel().addMenuItem(item);
                         this.getBreadCrumb().getChildren().add(item);

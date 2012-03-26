@@ -93,7 +93,8 @@ public class UIDock implements UIJSFObject {
                         item.getAttributes().put("ma",
                                                  ma);
                         item.addActionListener(new DockListener());
-                        item.setUpdate("principal");
+                        item.setUpdate(":myForm:principal");
+                        item.setProcess("@this");
 
                         this.getMenuModel().addMenuItem(item);
                         this.getDock().getChildren().add(item);

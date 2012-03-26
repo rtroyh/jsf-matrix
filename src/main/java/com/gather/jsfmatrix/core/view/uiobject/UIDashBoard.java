@@ -39,6 +39,7 @@ import com.gather.jsfspringcommons.utils.BeanUtil;
 
 public class UIDashBoard implements UIJSFObject {
     private static final Logger LOG = Logger.getLogger(UIDashBoard.class);
+
     private IApplicationModel applicationModel;
     private Dashboard dashBoard;
     private DashboardModel dashBoardModel;
@@ -167,6 +168,8 @@ public class UIDashBoard implements UIJSFObject {
                             botonQuitar.setTitle("Quitar icono");
                             botonQuitar.setTransient(true);
                             botonQuitar.getChildren().add(image);
+                            botonQuitar.setUpdate(":myForm:principal");
+                            botonQuitar.setProcess("@this");
 
                             if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
                                 botonQuitar.setDisabled(true);
