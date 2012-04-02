@@ -1,19 +1,18 @@
 package com.gather.jsfmatrix.core.listener;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlOutputText;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.AjaxBehaviorListener;
-
+import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
 import org.apache.log4j.Logger;
 import org.primefaces.component.panel.Panel;
 import org.primefaces.context.RequestContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
+import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlOutputText;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.AjaxBehaviorListener;
 
 public class TitlePopupListener implements AjaxBehaviorListener {
 
@@ -39,7 +38,7 @@ public class TitlePopupListener implements AjaxBehaviorListener {
             us.getDashboardBean().setTitleSelectedPanel(((HtmlOutputText) source).getTitle());
         }
 
-        RequestContext.getCurrentInstance().addPartialUpdateTarget("innerTitleDialog");
+        RequestContext.getCurrentInstance().update("innerTitleDialog");
     }
 
 }

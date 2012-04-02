@@ -1,10 +1,9 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
-import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.sql.DataSource;
-
+import com.gather.jsfmatrix.core.IMatrixApplication;
+import com.gather.jsfmatrix.core.Property;
+import com.gather.jsfmatrix.util.MapPropertyUtil;
+import com.gather.jsfspringcommons.utils.BeanUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.component.panel.Panel;
 import org.primefaces.context.RequestContext;
@@ -14,10 +13,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import com.gather.jsfmatrix.core.IMatrixApplication;
-import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.util.MapPropertyUtil;
-import com.gather.jsfspringcommons.utils.BeanUtil;
+import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.sql.DataSource;
 
 public class PortalBean implements INavigation {
     private static final Logger LOG = Logger.getLogger(PortalBean.class);
@@ -134,7 +133,7 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
 
         try {
-            RequestContext.getCurrentInstance().addPartialUpdateTarget(":myForm:principal");
+            RequestContext.getCurrentInstance().update(":myForm:principal");
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -182,7 +181,7 @@ public class PortalBean implements INavigation {
 
                     try {
                         if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                             ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
+                                                                               ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
                             IMatrixApplication lb = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
                                                                                           ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
 

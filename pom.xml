@@ -17,36 +17,6 @@
 
     <dependencies>
         <dependency>
-            <artifactId>jsf-api</artifactId>
-            <groupId>com.sun.faces</groupId>
-            <type>jar</type>
-            <version>2.1.6</version>
-        </dependency>
-        <dependency>
-            <artifactId>jsf-impl</artifactId>
-            <groupId>com.sun.faces</groupId>
-            <type>jar</type>
-            <version>2.1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>2.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>el-impl</artifactId>
-            <version>2.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jsfspringcommons</artifactId>
             <version>${project.version}</version>
@@ -55,103 +25,12 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>3.1.1</version>
+            <version>3.2</version>
         </dependency>
         <dependency>
-            <artifactId>gathercommons</artifactId>
-            <groupId>${project.groupId}</groupId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>aopalliance</artifactId>
-            <groupId>aopalliance</groupId>
-            <type>jar</type>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <artifactId>commons-logging</artifactId>
-            <groupId>commons-logging</groupId>
-            <type>jar</type>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <artifactId>jsfcommons</artifactId>
-            <groupId>${project.groupId}</groupId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>springcommons</artifactId>
-            <groupId>${project.groupId}</groupId>
-            <type>jar</type>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>log4j</artifactId>
-            <groupId>log4j</groupId>
-            <type>jar</type>
-            <version>1.2.16</version>
-        </dependency>
-        <dependency>
-            <artifactId>servlet-api</artifactId>
-            <groupId>javax.servlet</groupId>
-            <type>jar</type>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-aop</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-asm</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-beans</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-context</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-core</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-expression</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-jdbc</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-tx</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-web</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-            <version>3.1.0.RELEASE</version>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>2.1.6</version>
         </dependency>
     </dependencies>
 
