@@ -15,11 +15,12 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.AjaxBehaviorListener;
 
 public class TitlePopupListener implements AjaxBehaviorListener {
+    private static final Logger LOG = Logger.getLogger(TitlePopupListener.class);
 
     @Override
     public void processAjaxBehavior(AjaxBehaviorEvent event) throws
                                                              AbortProcessingException {
-        Logger.getLogger(TitlePopupListener.class).info("INICIO EVENTO EDITAR TITULO WIDGET");
+        LOG.info("INICIO EVENTO EDITAR TITULO WIDGET");
 
         UIComponent source = event.getComponent().getChildren().get(0);
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
@@ -33,8 +34,7 @@ public class TitlePopupListener implements AjaxBehaviorListener {
 
         us.getDashboardBean().setSelectedPanel((Panel) panel);
 
-        if (source instanceof HtmlOutputText &&
-                ((HtmlOutputText) source).getTitle() != null) {
+        if (source instanceof HtmlOutputText && ((HtmlOutputText) source).getTitle() != null) {
             us.getDashboardBean().setTitleSelectedPanel(((HtmlOutputText) source).getTitle());
         }
 

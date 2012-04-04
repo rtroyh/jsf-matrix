@@ -13,15 +13,9 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.AjaxBehaviorListener;
 
-/**
- * Created by IntelliJ IDEA.
- * User: rodrigotroy
- * Date: 3/5/12
- * Time: 7:57 PM
- * To change this template use File | Settings | File Templates.
- */
 public class DashBoardPanelCloseListener implements AjaxBehaviorListener {
     private static final Logger LOG = Logger.getLogger(DashBoardPanelCloseListener.class);
+
     @Override
     public void processAjaxBehavior(AjaxBehaviorEvent event) throws
                                                              AbortProcessingException {

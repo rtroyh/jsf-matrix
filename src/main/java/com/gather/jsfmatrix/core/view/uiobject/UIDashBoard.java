@@ -1,19 +1,18 @@
 package com.gather.jsfmatrix.core.view.uiobject;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.application.Resource;
-import javax.faces.application.ResourceHandler;
-import javax.faces.component.UIComponent;
-import javax.faces.component.behavior.AjaxBehavior;
-import javax.faces.component.html.HtmlGraphicImage;
-import javax.faces.component.html.HtmlOutputLink;
-import javax.faces.component.html.HtmlOutputText;
-import javax.faces.component.html.HtmlPanelGrid;
-import javax.faces.context.FacesContext;
-
+import com.gather.gathercommons.util.Validator;
+import com.gather.jsfmatrix.core.IMatrixApplication;
+import com.gather.jsfmatrix.core.Ingredients;
+import com.gather.jsfmatrix.core.Property;
+import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
 import com.gather.jsfmatrix.core.listener.DashBoardPanelCloseListener;
+import com.gather.jsfmatrix.core.listener.TitlePopupListener;
+import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
+import com.gather.jsfmatrix.core.model.IApplicationModel;
+import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
+import com.gather.jsfmatrix.core.view.Viewer;
+import com.gather.jsfmatrix.util.MapPropertyUtil;
+import com.gather.jsfspringcommons.utils.BeanUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.component.commandlink.CommandLink;
 import org.primefaces.component.dashboard.Dashboard;
@@ -24,18 +23,17 @@ import org.primefaces.model.DefaultDashboardModel;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.IMatrixApplication;
-import com.gather.jsfmatrix.core.Ingredients;
-import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
-import com.gather.jsfmatrix.core.listener.TitlePopupListener;
-import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
-import com.gather.jsfmatrix.core.model.IApplicationModel;
-import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.Viewer;
-import com.gather.jsfmatrix.util.MapPropertyUtil;
-import com.gather.jsfspringcommons.utils.BeanUtil;
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
+import javax.faces.component.UIComponent;
+import javax.faces.component.behavior.AjaxBehavior;
+import javax.faces.component.html.HtmlGraphicImage;
+import javax.faces.component.html.HtmlOutputLink;
+import javax.faces.component.html.HtmlOutputText;
+import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.context.FacesContext;
+import java.util.List;
+import java.util.Map;
 
 public class UIDashBoard implements UIJSFObject {
     private static final Logger LOG = Logger.getLogger(UIDashBoard.class);
@@ -127,9 +125,10 @@ public class UIDashBoard implements UIJSFObject {
                                                fc.getViewRoot().createUniqueId() +
                                                "_" +
                                                java.util.Calendar.getInstance().getTimeInMillis());
-                            item.setStyle("border: 0px solid #ABABAB; padding: 0px; height: 140px; width: " +
+                            item.setStyle("height: 140px; width: " +
                                                   (950 / Integer.valueOf(properties.get(0).get(1).toString()) - 10) +
                                                   "px; margin: 2px;");
+                            item.setStyleClass("ui-dashboard-icon-panel");
                             item.setClosable(false);
                             item.setTransient(true);
                             item.setToggleable(false);
@@ -224,6 +223,8 @@ public class UIDashBoard implements UIJSFObject {
                                                                                                                            "..."
                                                                                                                            : title);
                                             ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
+                                            ot.setStyleClass("ui-dashboard-icon-panel");
+
                                             ot.setTransient(true);
 
                                             AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
