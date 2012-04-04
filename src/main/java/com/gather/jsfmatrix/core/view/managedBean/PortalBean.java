@@ -2,6 +2,7 @@ package com.gather.jsfmatrix.core.view.managedBean;
 
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Property;
+import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.util.MapPropertyUtil;
 import com.gather.jsfspringcommons.utils.BeanUtil;
 import org.apache.log4j.Logger;
@@ -64,42 +65,40 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO EVENTO IR A HOME");
 
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-        IUserBean lb = (IUserBean) ctx.getBean("userBean");
+        IUserBean userBean = (IUserBean) ctx.getBean("userBean");
 
-        this.updateThroughBreadCrumb(lb.getUser().getId(),
+        this.updateThroughBreadCrumb(userBean.getUser().getId(),
                                      0,
                                      1);
     }
 
-    public void updateThroughBreadCrumbHome(Object sesion)     {
-        this.getDashboardBean().getService().getDirectoryService().resetParameter();
-        this.getDashboardBean().getService().getDirectoryService().addParameter("1",
-                                                                                sesion);
-        this.getDashboardBean().getService().getDirectoryService().addParameter("2",
-                                                                                0);
-        this.getDashboardBean().getService().getDirectoryService().addParameter("3",
-                                                                                "");
-        this.getDashboardBean().getService().getDirectoryService().executeQuery();
+    public void updateThroughBreadCrumbHome(Object sesion) {
+        LOG.info("INICIO METODO SURF");
 
-        this.setBody("desktop");
-        this.renderDock = true;
-        this.renderStack = true;
+        try {
+            this.getDashboardBean().getService().updateThroughBreadCrumb(sesion,
+                                                                         0,
+                                                                         "");
+
+            this.setBody("desktop");
+            this.renderDock = true;
+            this.renderStack = true;
+        } catch (DataAccessException e) {
+            LOG.error(e.getMessage());
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
     }
 
-    public void updateThroughBreadCrumb(Object sesion,
+    private void updateThroughBreadCrumb(Object sesion,
                                         Object matrixID,
                                         Object javaID) {
         LOG.info("INICIO METODO SURF");
 
         try {
-            this.getDashboardBean().getService().getDirectoryService().resetParameter();
-            this.getDashboardBean().getService().getDirectoryService().addParameter("1",
-                                                                                    sesion);
-            this.getDashboardBean().getService().getDirectoryService().addParameter("2",
-                                                                                    matrixID);
-            this.getDashboardBean().getService().getDirectoryService().addParameter("3",
-                                                                                    "");
-            this.getDashboardBean().getService().getDirectoryService().executeQuery();
+            this.getDashboardBean().getService().updateThroughBreadCrumb(sesion,
+                                                                         matrixID,
+                                                                         "");
 
             this.getBreadCrumbBean().populate(null);
 
@@ -143,16 +142,13 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO EVENTO CLICK EN GUARDAR NUEVO TITULO");
 
         for (IMatrixApplication ma : this.getDashboardBean().getMatrix().getApplications()) {
-            if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JSF_CLIENT_ID).equals(this.getDashboardBean().getSelectedPanel().getId())) {
+            IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
+
+            if (model.getPropertyValue(Property.JSF_CLIENT_ID).equals(this.getDashboardBean().getSelectedPanel().getId())) {
                 if (this.getDashboardBean().getTitleSelectedPanel() != null) {
-                    this.getDashboardBean().getService().getTitleRenameService().resetParameter();
-                    this.getDashboardBean().getService().getTitleRenameService().addParameter("1",
-                                                                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION));
-                    this.getDashboardBean().getService().getTitleRenameService().addParameter("2",
-                                                                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.MATRIX_ID));
-                    this.getDashboardBean().getService().getTitleRenameService().addParameter("3",
-                                                                                              this.getDashboardBean().getTitleSelectedPanel());
-                    this.getDashboardBean().getService().getTitleRenameService().executeQuery();
+                    this.getDashboardBean().getService().titleRename(model.getPropertyValue(Property.SESION),
+                                                                     model.getPropertyValue(Property.MATRIX_ID),
+                                                                     this.getDashboardBean().getTitleSelectedPanel());
                     this.getDashboardBean().populate(null);
                     return;
                 }
@@ -181,7 +177,7 @@ public class PortalBean implements INavigation {
 
                     try {
                         if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                                               ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
+                                             ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
                             IMatrixApplication lb = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
                                                                                           ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
 

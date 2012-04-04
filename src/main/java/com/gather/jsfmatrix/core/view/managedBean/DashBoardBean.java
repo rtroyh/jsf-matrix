@@ -1,11 +1,15 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
-
+import com.gather.gathercommons.util.Validator;
+import com.gather.jsfmatrix.core.*;
+import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
+import com.gather.jsfmatrix.core.model.IApplicationModel;
+import com.gather.jsfmatrix.core.service.MatrixService;
+import com.gather.jsfmatrix.core.view.BaseJSFView;
+import com.gather.jsfmatrix.core.view.ViewType;
+import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
+import com.gather.jsfmatrix.core.view.uiobject.UIObject;
+import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
 import org.primefaces.component.dashboard.Dashboard;
 import org.primefaces.component.panel.Panel;
@@ -15,20 +19,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.IMatrixApplication;
-import com.gather.jsfmatrix.core.Ingredients;
-import com.gather.jsfmatrix.core.Matrix;
-import com.gather.jsfmatrix.core.MatrixApplicationFactory;
-import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.core.RecipeFactory;
-import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
-import com.gather.jsfmatrix.core.model.IApplicationModel;
-import com.gather.jsfmatrix.core.service.MatrixService;
-import com.gather.jsfmatrix.core.view.BaseJSFView;
-import com.gather.jsfmatrix.core.view.ViewType;
-import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
-import com.gather.jsfmatrix.core.view.uiobject.UIObject;
+import javax.faces.context.FacesContext;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Map;
 
 public class DashBoardBean extends BaseJSFView {
     private static final Logger LOG = Logger.getLogger(DashBoardBean.class);
@@ -100,49 +94,47 @@ public class DashBoardBean extends BaseJSFView {
             this.getMatrix().getApplications().clear();
 
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-            IUserBean lb = (IUserBean) ctx.getBean("userBean");
+            IUserBean userBean = (IUserBean) ctx.getBean("userBean");
 
-            if (lb != null && lb.getUser().getId() != null) {
-                this.getService().getApplicationsService().resetParameter();
-                this.getService().getApplicationsService().addParameter("1",
-                                                                        lb.getUser().getId());
-                this.getService().getApplicationsService().executeQuery();
+            if (userBean != null && userBean.getUser().getId() != null) {
+                IResultSetProvider resultSetProvider = this.getService().getApplications(userBean.getUser().getId());
 
-                List<List<Object>> properties = this.getService().getApplicationsService().getResultSetasListofList(1);
-                List<List<Object>> data = this.getService().getApplicationsService().getResultSetasListofList(2);
+                List<List<Object>> properties = resultSetProvider.getResultSetasListofList(1);
+                List<List<Object>> data = resultSetProvider.getResultSetasListofList(2);
 
                 if (Validator.validateList(data) && Validator.validateList(properties)) {
                     this.getMatrix().setProperties(properties);
 
                     for (List<Object> lo : data) {
-                        if (Validator.validateLong(lo.get(0)) ||
-                                Validator.validateInteger(lo.get(0))) {
+                        if (Validator.validateLong(lo.get(0)) || Validator.validateInteger(lo.get(0))) {
                             IMatrixApplication ma = null;
 
                             if (ma == null) {
                                 ma = MatrixApplicationFactory.createGeneric();
                             }
 
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.SESION,
-                                                                                               lb.getUser().getId());
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.POSITION,
-                                                                                               lo.get(0));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.MATRIX_ID,
-                                                                                               lo.get(1));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JAVA_ID,
-                                                                                               lo.get(3));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.INSTANCE,
-                                                                                               lo.get(4));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
-                                                                                               lo.get(5));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.BORRABLE,
-                                                                                               lo.get(7));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.VIEW_PATH,
-                                                                                               lo.get(8));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
-                                                                                               lo.get(9));
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.VIEW_TYPE,
-                                                                                               properties.get(0).get(0));
+                            IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
+
+                            model.addProperty(Property.SESION,
+                                              userBean.getUser().getId());
+                            model.addProperty(Property.POSITION,
+                                              lo.get(0));
+                            model.addProperty(Property.MATRIX_ID,
+                                              lo.get(1));
+                            model.addProperty(Property.JAVA_ID,
+                                              lo.get(3));
+                            model.addProperty(Property.INSTANCE,
+                                              lo.get(4));
+                            model.addProperty(Property.TITLE,
+                                              lo.get(5));
+                            model.addProperty(Property.BORRABLE,
+                                              lo.get(7));
+                            model.addProperty(Property.VIEW_PATH,
+                                              lo.get(8));
+                            model.addProperty(Property.ICON_PATH,
+                                              lo.get(9));
+                            model.addProperty(Property.VIEW_TYPE,
+                                              properties.get(0).get(0));
                             this.getMatrix().getApplications().add(ma);
                         }
                     }
@@ -182,22 +174,18 @@ public class DashBoardBean extends BaseJSFView {
             Dashboard d = (Dashboard) event.getComponent();
 
             for (IMatrixApplication ma : this.getMatrix().getApplications()) {
-                if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JSF_CLIENT_ID).equals(event.getWidgetId())) {
-                    this.getService().getMoveWidgetService().resetParameter();
-                    this.getService().getMoveWidgetService().addParameter("1",
-                                                                          ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION));
-                    this.getService().getMoveWidgetService().addParameter("2",
-                                                                          ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.MATRIX_ID));
+                IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
+
+                if (model.getPropertyValue(Property.JSF_CLIENT_ID).equals(event.getWidgetId())) {
 
                     Integer pos = d.getModel().getColumnCount() *
                             event.getItemIndex() +
                             event.getColumnIndex() +
                             1;
 
-                    this.getService().getMoveWidgetService().addParameter("3",
-                                                                          pos);
-
-                    this.getService().getMoveWidgetService().executeQuery();
+                    this.getService().moveWidget(model.getPropertyValue(Property.SESION),
+                                                 model.getPropertyValue(Property.MATRIX_ID),
+                                                 pos);
                     this.populate(null);
                     return;
                 }
@@ -211,12 +199,9 @@ public class DashBoardBean extends BaseJSFView {
 
     public void removeWidget(IMatrixApplication ma) {
         try {
-            this.getService().getCloseWidgetService().resetParameter();
-            this.getService().getCloseWidgetService().addParameter("1",
-                                                                   ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION));
-            this.getService().getCloseWidgetService().addParameter("2",
-                                                                   ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.MATRIX_ID));
-            this.getService().getCloseWidgetService().executeQuery();
+            IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
+            this.getService().closeWidget(model.getPropertyValue(Property.SESION),
+                                          model.getPropertyValue(Property.MATRIX_ID));
 
             this.populate(null);
         } catch (DataAccessException e) {
@@ -234,26 +219,16 @@ public class DashBoardBean extends BaseJSFView {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
-            if (lb != null &&
-                    ma != null &&
-                    viewType != null) {
-                if (viewType.equals(ViewType.DOCK)) {
-                    this.getService().getAddApplicationFromDockService().resetParameter();
-                    this.getService().getAddApplicationFromDockService().addParameter("1",
-                                                                                      lb.getUser().getId());
-                    this.getService().getAddApplicationFromDockService().addParameter("2",
-                                                                                      -1);
-                    this.getService().getAddApplicationFromDockService().addParameter("3",
-                                                                                      ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.PAQUETE));
-                    this.getService().getAddApplicationFromDockService().executeQuery();
-                } else if (viewType.equals(ViewType.STACK)) {
-                    this.getService().getAddApplicationFromStackService().resetParameter();
-                    this.getService().getAddApplicationFromStackService().addParameter("1",
-                                                                                       lb.getUser().getId());
-                    this.getService().getAddApplicationFromStackService().addParameter("2",
-                                                                                       ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.CLAVE));
+            if (lb != null && ma != null && viewType != null) {
+                IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
 
-                    this.getService().getAddApplicationFromStackService().executeQuery();
+                if (viewType.equals(ViewType.DOCK)) {
+                    this.getService().addApplicationFromDock(lb.getUser().getId(),
+                                                             -1,
+                                                             model.getPropertyValue(Property.PAQUETE));
+                } else if (viewType.equals(ViewType.STACK)) {
+                    this.getService().addApplicationFromStack(lb.getUser().getId(),
+                                                              model.getPropertyValue(Property.CLAVE));
                 }
 
                 this.populate(null);
