@@ -1,8 +1,8 @@
 package com.gather.jsfmatrix.core.service;
 
-import javax.sql.DataSource;
-
 import com.gather.springcommons.services.AdvancedSSPService;
+
+import javax.sql.DataSource;
 
 public class DockServices {
 
@@ -14,7 +14,7 @@ public class DockServices {
         this.ds = ds;
     }
 
-    public synchronized AdvancedSSPService getList() {
+    public AdvancedSSPService getList() {
         if (this.list == null) {
             this.list = new AdvancedSSPService(ds,
                                                "PORTAL.DOCK",

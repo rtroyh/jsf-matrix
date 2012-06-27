@@ -1,17 +1,5 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.jsf.FacesContextUtils;
-
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Matrix;
@@ -24,6 +12,16 @@ import com.gather.jsfmatrix.core.service.DockServices;
 import com.gather.jsfmatrix.core.view.BaseJSFView;
 import com.gather.jsfmatrix.core.view.uiobject.UIDock;
 import com.gather.jsfmatrix.core.view.uiobject.UIObject;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.jsf.FacesContextUtils;
+
+import javax.faces.context.FacesContext;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Map;
 
 public class DockBean extends BaseJSFView {
     private static final Logger LOG = Logger.getLogger(DockBean.class);
@@ -50,6 +48,7 @@ public class DockBean extends BaseJSFView {
         if (this.matrix == null) {
             this.matrix = new Matrix();
         }
+
         return this.matrix;
     }
 
