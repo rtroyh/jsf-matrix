@@ -23,6 +23,7 @@ import org.primefaces.model.DefaultDashboardModel;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
@@ -103,11 +104,32 @@ public class UIDashBoard implements UIJSFObject {
                 List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
                 List<List<Object>> properties = (List<List<Object>>) recipe.get(Ingredients.UNIDIMENSIONAL_LIST);
 
+                if (Validator.validateList(properties)) {
+                    if (Validator.validateList(properties.get(0),
+                                               4)) {
+                        if (Validator.validateString(properties.get(0).get(2))) {
+                            FacesContext context = FacesContext.getCurrentInstance();
+
+                            final String title = properties.get(0).get(2).toString();
+
+                            String summary = "";
+                            if (Validator.validateString(properties.get(0).get(3))) {
+                                summary = properties.get(0).get(3).toString();
+                            }
+
+                            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                                                title,
+                                                                summary);
+                            context.addMessage("noticia",
+                                               msg);
+                        }
+                    }
+                }
+
+
                 FacesContext fc = FacesContext.getCurrentInstance();
 
-                if (Validator.validateList(data) &&
-                        Validator.validateList(properties) &&
-                        Validator.validateList(properties.get(0))) {
+                if (Validator.validateList(data) && Validator.validateList(properties) && Validator.validateList(properties.get(0))) {
 
                     if (Validator.validateInteger(properties.get(0).get(0)) &&
                             Validator.validateInteger(properties.get(0).get(1)) &&
@@ -224,7 +246,6 @@ public class UIDashBoard implements UIJSFObject {
                                                                                                                            : title);
                                             ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
                                             ot.setStyleClass("ui-dashboard-icon-panel");
-
                                             ot.setTransient(true);
 
                                             AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
@@ -241,7 +262,6 @@ public class UIDashBoard implements UIJSFObject {
                                             ol.setValue("#");
                                             ol.setStyle("text-decoration: none;");
                                             ol.setOnmouseup("titleChangeWidgetdialog.show(); return false;");
-
                                             ol.addClientBehavior("click",
                                                                  ab);
                                             ol.getChildren().add(ot);

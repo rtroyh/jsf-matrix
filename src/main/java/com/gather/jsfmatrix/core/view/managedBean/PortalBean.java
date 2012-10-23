@@ -91,8 +91,8 @@ public class PortalBean implements INavigation {
     }
 
     private void updateThroughBreadCrumb(Object sesion,
-                                        Object matrixID,
-                                        Object javaID) {
+                                         Object matrixID,
+                                         Object javaID) {
         LOG.info("INICIO METODO SURF");
 
         try {
@@ -221,6 +221,8 @@ public class PortalBean implements INavigation {
         this.getBreadCrumbBean().populate(null);
         this.getDockBean().populate(null);
         this.getDashboardBean().populate(null);
+
+        this.updateView();
     }
 
     public DashBoardBean getDashboardBean() {
