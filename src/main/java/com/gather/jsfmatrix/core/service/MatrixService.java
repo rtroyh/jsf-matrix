@@ -200,7 +200,7 @@ public class MatrixService {
         if (this.applicationsService == null) {
             this.applicationsService = new AdvancedSSPService(ds,
                                                               "PORTAL.MATRIZ",
-                                                              2);
+                                                              3);
         }
 
         return this.applicationsService;
