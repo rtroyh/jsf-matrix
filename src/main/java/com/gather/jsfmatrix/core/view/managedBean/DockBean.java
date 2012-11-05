@@ -1,5 +1,6 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
+import com.gather.gathercommons.util.Validator;
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Matrix;
@@ -81,16 +82,18 @@ public class DockBean extends BaseJSFView {
 
                 this.getMatrix().getApplications().clear();
 
-                for (List<Object> lo : data) {
-                    IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
-                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
-                                                                                       lo.get(0));
-                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
-                                                                                       lo.get(1));
-                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
-                                                                                       lo.get(2));
+                if (Validator.validateList(data)) {
+                    for (List<Object> lo : data) {
+                        IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
+                        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
+                                                                                           lo.get(0));
+                        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
+                                                                                           lo.get(1));
+                        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
+                                                                                           lo.get(2));
 
-                    this.getMatrix().getApplications().add(ma);
+                        this.getMatrix().getApplications().add(ma);
+                    }
                 }
             }
         } catch (BeansException e) {
