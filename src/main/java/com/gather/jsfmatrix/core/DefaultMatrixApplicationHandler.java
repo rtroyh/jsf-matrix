@@ -1,19 +1,17 @@
 package com.gather.jsfmatrix.core;
 
-import javax.faces.context.FacesContext;
-
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.jsf.FacesContextUtils;
-
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.DefaultApplicationView;
 import com.gather.jsfmatrix.core.view.IApplicationView;
 import com.gather.jsfmatrix.core.view.managedBean.INavigation;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.jsf.FacesContextUtils;
+
+import javax.faces.context.FacesContext;
 
 class DefaultMatrixApplicationHandler implements IMatrixApplicationHandler {
 
-    private String lastGenerateInstanceMessage = "";
     private IApplicationModel applicationModel;
     private IApplicationView applicationView;
 
