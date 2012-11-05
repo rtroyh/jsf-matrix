@@ -1,19 +1,5 @@
 package com.gather.jsfmatrix.core.view.uiobject;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.application.Resource;
-import javax.faces.application.ResourceHandler;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-
-import org.apache.log4j.Logger;
-import org.primefaces.component.dock.Dock;
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
-
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
@@ -21,6 +7,18 @@ import com.gather.jsfmatrix.core.listener.DockListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
+import org.apache.log4j.Logger;
+import org.primefaces.component.dock.Dock;
+import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
+
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import java.util.List;
+import java.util.Map;
 
 public class UIDock implements UIJSFObject {
     private static final Logger LOG = Logger.getLogger(UIDock.class);
@@ -88,6 +86,11 @@ public class UIDock implements UIJSFObject {
                         Resource r = rh.createResource("images/" +
                                                                ma.getMatrixApplicationHandler().getPropertyValue(Property.ICON_PATH),
                                                        "gather");
+
+                        if (r == null) {
+                            r = rh.createResource("images/vacio5x5.png",
+                                                  "gather");
+                        }
 
                         item.setIcon(r.getRequestPath());
                         item.getAttributes().put("ma",

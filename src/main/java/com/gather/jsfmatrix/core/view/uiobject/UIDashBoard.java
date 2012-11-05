@@ -169,12 +169,16 @@ public class UIDashBoard implements UIJSFObject {
                                 Resource r = rh.createResource("images/borrar.png",
                                                                "gather");
 
-                                image.setUrl(r.getRequestPath());
+                                if (r != null) {
+                                    image.setUrl(r.getRequestPath());
+                                }
                             } else {
                                 Resource r = rh.createResource("images/vacio5x5.png",
                                                                "gather");
 
-                                image.setUrl(r.getRequestPath());
+                                if (r != null) {
+                                    image.setUrl(r.getRequestPath());
+                                }
                             }
 
                             CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
