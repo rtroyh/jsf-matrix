@@ -12,7 +12,6 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <prime.version>3.4.1</prime.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -26,7 +25,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>${prime.version}</version>
+            <version>3.4.1</version>
         </dependency>
     </dependencies>
 
@@ -47,7 +46,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
