@@ -78,13 +78,11 @@ public class UIDock implements UIJSFObject {
                         FacesContext fc = FacesContext.getCurrentInstance();
                         MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(fc);
                         item.setTransient(true);
-                        item.setId("dock_" +
-                                           fc.getViewRoot().createUniqueId());
+                        item.setId("dock_" + fc.getViewRoot().createUniqueId());
                         item.setValue(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE));
 
                         ResourceHandler rh = fc.getApplication().getResourceHandler();
-                        Resource r = rh.createResource("images/" +
-                                                               ma.getMatrixApplicationHandler().getPropertyValue(Property.ICON_PATH),
+                        Resource r = rh.createResource("images/" + ma.getMatrixApplicationHandler().getPropertyValue(Property.ICON_PATH),
                                                        "gather");
 
                         if (r == null) {

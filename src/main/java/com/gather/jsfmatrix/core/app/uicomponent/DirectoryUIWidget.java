@@ -1,6 +1,13 @@
 package com.gather.jsfmatrix.core.app.uicomponent;
 
-import java.util.Map;
+import com.gather.gathercommons.util.Validator;
+import com.gather.jsfmatrix.core.Ingredients;
+import com.gather.jsfmatrix.core.Property;
+import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
+import com.gather.jsfmatrix.core.model.IApplicationModel;
+import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
+import com.gather.jsfmatrix.core.view.uiobject.UIJSFObject;
+import org.primefaces.component.commandlink.CommandLink;
 
 import javax.el.MethodExpression;
 import javax.faces.application.Resource;
@@ -11,16 +18,7 @@ import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.MethodExpressionActionListener;
-
-import org.primefaces.component.commandlink.CommandLink;
-
-import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.Ingredients;
-import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
-import com.gather.jsfmatrix.core.model.IApplicationModel;
-import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.uiobject.UIJSFObject;
+import java.util.Map;
 
 public class DirectoryUIWidget implements UIJSFObject {
 
