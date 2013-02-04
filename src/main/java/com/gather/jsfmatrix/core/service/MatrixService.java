@@ -38,17 +38,17 @@ public class MatrixService {
                                                 Object matrixID,
                                                 Object title) throws
                                                               DataAccessException {
+        final AdvancedSSPService ssp = this.getTitleRenameService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.addParameter("2",
+                         matrixID);
+        ssp.addParameter("3",
+                         title);
+        ssp.executeQuery();
 
-        this.getTitleRenameService().resetParameter();
-        this.getTitleRenameService().addParameter("1",
-                                                  sesion);
-        this.getTitleRenameService().addParameter("2",
-                                                  matrixID);
-        this.getTitleRenameService().addParameter("3",
-                                                  title);
-        this.getTitleRenameService().executeQuery();
-
-        return this.getTitleRenameService();
+        return ssp;
     }
 
     private AdvancedSSPService getHeaderService() {
@@ -63,12 +63,13 @@ public class MatrixService {
 
     public final IResultSetProvider getHeader(Object sesion) throws
                                                              DataAccessException {
-        this.getHeaderService().resetParameter();
-        this.getHeaderService().addParameter("1",
-                                             sesion);
-        this.getHeaderService().executeQuery();
+        final AdvancedSSPService ssp = this.getHeaderService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.executeQuery();
 
-        return this.getHeaderService();
+        return ssp;
     }
 
     private AdvancedSSPService getDirectoryService() {
@@ -85,16 +86,17 @@ public class MatrixService {
                                                             Object matrixID,
                                                             Object javaID) throws
                                                                            DataAccessException {
-        this.getDirectoryService().resetParameter();
-        this.getDirectoryService().addParameter("1",
-                                                sesion);
-        this.getDirectoryService().addParameter("2",
-                                                matrixID);
-        this.getDirectoryService().addParameter("3",
-                                                javaID);
-        this.getDirectoryService().executeQuery();
+        final AdvancedSSPService ssp = this.getDirectoryService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.addParameter("2",
+                         matrixID);
+        ssp.addParameter("3",
+                         javaID);
+        ssp.executeQuery();
 
-        return this.getDirectoryService();
+        return ssp;
     }
 
     private AdvancedSSPService getAddApplicationFromDockService() {
@@ -111,16 +113,17 @@ public class MatrixService {
                                                            Object matrixID,
                                                            Object paquete) throws
                                                                            DataAccessException {
-        this.getAddApplicationFromDockService().resetParameter();
-        this.getAddApplicationFromDockService().addParameter("1",
-                                                             sesion);
-        this.getAddApplicationFromDockService().addParameter("2",
-                                                             matrixID);
-        this.getAddApplicationFromDockService().addParameter("3",
-                                                             paquete);
-        this.getAddApplicationFromDockService().executeQuery();
+        final AdvancedSSPService ssp = this.getAddApplicationFromDockService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.addParameter("2",
+                         matrixID);
+        ssp.addParameter("3",
+                         paquete);
+        ssp.executeQuery();
 
-        return this.getAddApplicationFromDockService();
+        return ssp;
     }
 
 
@@ -137,14 +140,15 @@ public class MatrixService {
     public final IResultSetProvider addApplicationFromStack(Object sesion,
                                                             Object stack) throws
                                                                           DataAccessException {
-        this.getAddApplicationFromStackService().resetParameter();
-        this.getAddApplicationFromStackService().addParameter("1",
-                                                              sesion);
-        this.getAddApplicationFromStackService().addParameter("2",
-                                                              stack);
-        this.getAddApplicationFromStackService().executeQuery();
+        final AdvancedSSPService ssp = this.getAddApplicationFromStackService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.addParameter("2",
+                         stack);
+        ssp.executeQuery();
 
-        return this.getAddApplicationFromStackService();
+        return ssp;
     }
 
     private AdvancedSSPService getMoveWidgetService() {
@@ -161,16 +165,17 @@ public class MatrixService {
                                                Object matriz,
                                                Object posicion) throws
                                                                 DataAccessException {
-        this.getMoveWidgetService().resetParameter();
-        this.getMoveWidgetService().addParameter("1",
-                                                 sesion);
-        this.getMoveWidgetService().addParameter("2",
-                                                 matriz);
-        this.getMoveWidgetService().addParameter("3",
-                                                 posicion);
-        this.getMoveWidgetService().executeQuery();
+        final AdvancedSSPService ssp = this.getMoveWidgetService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.addParameter("2",
+                         matriz);
+        ssp.addParameter("3",
+                         posicion);
+        ssp.executeQuery();
 
-        return this.getMoveWidgetService();
+        return ssp;
     }
 
     private AdvancedSSPService getCloseWidgetService() {
@@ -186,14 +191,15 @@ public class MatrixService {
     public final IResultSetProvider closeWidget(Object sesion,
                                                 Object matriz) throws
                                                                DataAccessException {
-        this.getCloseWidgetService().resetParameter();
-        this.getCloseWidgetService().addParameter("1",
-                                                  sesion);
-        this.getCloseWidgetService().addParameter("2",
-                                                  matriz);
-        this.getCloseWidgetService().executeQuery();
+        final AdvancedSSPService ssp = this.getCloseWidgetService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.addParameter("2",
+                         matriz);
+        ssp.executeQuery();
 
-        return this.getCloseWidgetService();
+        return ssp;
     }
 
     private AdvancedSSPService getApplicationsService() {
@@ -208,11 +214,12 @@ public class MatrixService {
 
     public final IResultSetProvider getApplications(Object sesion) throws
                                                                    DataAccessException {
-        this.getApplicationsService().resetParameter();
-        this.getApplicationsService().addParameter("1",
-                                                   sesion);
-        this.getApplicationsService().executeQuery();
+        final AdvancedSSPService ssp = this.getApplicationsService();
+        ssp.resetParameter();
+        ssp.addParameter("1",
+                         sesion);
+        ssp.executeQuery();
 
-        return this.getApplicationsService();
+        return ssp;
     }
 }
