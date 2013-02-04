@@ -118,11 +118,10 @@ public class DirectoryUIWidget implements UIJSFObject {
 
             this.botonIngresar.getChildren().add(image);
 
-            MethodExpression methodExpression = fc.getApplication().getExpressionFactory().createMethodExpression(
-                    fc.getELContext(),
-                    "#{portalBean.handleView}",
-                    null,
-                    new Class[]{ActionEvent.class});
+            MethodExpression methodExpression = fc.getApplication().getExpressionFactory().createMethodExpression(fc.getELContext(),
+                                                                                                                  "#{portalBean.handleView}",
+                                                                                                                  null,
+                                                                                                                  new Class[]{ActionEvent.class});
 
             this.botonIngresar.addActionListener(new MethodExpressionActionListener(methodExpression));
         }
