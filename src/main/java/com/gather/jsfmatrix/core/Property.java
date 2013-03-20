@@ -1,7 +1,6 @@
 package com.gather.jsfmatrix.core;
 
 public enum Property {
-
     ICON_PATH,
     VIEW_TYPE,
     VIEW_PATH,

@@ -5,10 +5,9 @@ import com.gather.jsfmatrix.core.*;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.MatrixService;
-import com.gather.jsfmatrix.core.view.BaseJSFView;
+import com.gather.jsfmatrix.core.view.JSFViewer;
 import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
-import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
 import org.primefaces.component.dashboard.Dashboard;
@@ -24,7 +23,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
-public class DashBoardBean extends BaseJSFView {
+public class DashBoardBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(DashBoardBean.class);
 
     private final DataSource ds;
@@ -107,12 +106,7 @@ public class DashBoardBean extends BaseJSFView {
 
                     for (List<Object> lo : data) {
                         if (Validator.validateLong(lo.get(0)) || Validator.validateInteger(lo.get(0))) {
-                            IMatrixApplication ma = null;
-
-                            if (ma == null) {
-                                ma = MatrixApplicationFactory.createGeneric();
-                            }
-
+                            IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
                             IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
 
                             model.addProperty(Property.SESION,
@@ -135,6 +129,7 @@ public class DashBoardBean extends BaseJSFView {
                                               lo.get(9));
                             model.addProperty(Property.VIEW_TYPE,
                                               properties.get(0).get(0));
+
                             this.getMatrix().getApplications().add(ma);
                         }
                     }
@@ -151,6 +146,7 @@ public class DashBoardBean extends BaseJSFView {
 
     @Override
     public void populate(Map<Ingredients, Object> recipe) {
+        LOG.info("INICIO POBLAMIENTO DASHBOARD");
         try {
             this.build();
 
@@ -160,8 +156,8 @@ public class DashBoardBean extends BaseJSFView {
             theRecipe.put(Ingredients.UNIDIMENSIONAL_LIST,
                           this.getMatrix().getProperties());
 
-            this.getUIObject().resetState();
-            this.getUIObject().populate(theRecipe);
+            this.getUIJSFObject().resetState();
+            this.getUIJSFObject().populate(theRecipe);
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -240,10 +236,5 @@ public class DashBoardBean extends BaseJSFView {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
-    }
-
-    @Override
-    public void setUIObject(UIObject ui) {
-        this.uiObject = ui;
     }
 }

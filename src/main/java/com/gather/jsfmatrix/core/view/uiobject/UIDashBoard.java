@@ -9,8 +9,8 @@ import com.gather.jsfmatrix.core.listener.DashBoardPanelCloseListener;
 import com.gather.jsfmatrix.core.listener.TitlePopupListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
+import com.gather.jsfmatrix.core.view.IViewer;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
-import com.gather.jsfmatrix.core.view.Viewer;
 import com.gather.jsfmatrix.util.MapPropertyUtil;
 import com.gather.jsfspringcommons.utils.BeanUtil;
 import org.apache.log4j.Logger;
@@ -33,6 +33,7 @@ import javax.faces.component.html.HtmlOutputLink;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -98,44 +99,45 @@ public class UIDashBoard implements UIJSFObject {
 
         if (!recipe.isEmpty()) {
             if (recipe.containsKey(Ingredients.APPLICATION_LIST) && recipe.containsKey(Ingredients.UNIDIMENSIONAL_LIST)) {
-
                 this.resetState();
+
+                FacesContext fc = FacesContext.getCurrentInstance();
 
                 List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
                 List<List<Object>> properties = (List<List<Object>>) recipe.get(Ingredients.UNIDIMENSIONAL_LIST);
 
-                if (Validator.validateList(properties)) {
-                    if (Validator.validateList(properties.get(0),
-                                               4)) {
-                        if (Validator.validateString(properties.get(0).get(2))) {
-                            FacesContext context = FacesContext.getCurrentInstance();
+                final List<Object> propertiesList = properties.get(0);
+                final Boolean validateData = Validator.validateList(data);
+                final Boolean validateProperties = Validator.validateList(properties);
+                final Boolean validatePropertiesList = Validator.validateList(propertiesList);
 
-                            final String title = properties.get(0).get(2).toString();
+                if (validateProperties) {
+                    if (Validator.validateList(propertiesList,
+                                               4)) {
+                        if (Validator.validateString(propertiesList.get(2))) {
+
+                            final String title = propertiesList.get(2).toString();
 
                             String summary = "";
-                            if (Validator.validateString(properties.get(0).get(3))) {
-                                summary = properties.get(0).get(3).toString();
+                            if (Validator.validateString(propertiesList.get(3))) {
+                                summary = propertiesList.get(3).toString();
                             }
 
                             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
                                                                 title,
                                                                 summary);
-                            context.addMessage("noticia",
-                                               msg);
+                            fc.addMessage("noticia",
+                                          msg);
                         }
                     }
                 }
 
+                if (validateData && validateProperties && validatePropertiesList) {
 
-                FacesContext fc = FacesContext.getCurrentInstance();
+                    final long timeInMillis = Calendar.getInstance().getTimeInMillis();
+                    if (Validator.validateInteger(propertiesList.get(0)) && Validator.validateInteger(propertiesList.get(1)) && propertiesList.get(0).equals(2)) {//1=widget, 2=iconos
 
-                if (Validator.validateList(data) && Validator.validateList(properties) && Validator.validateList(properties.get(0))) {
-
-                    if (Validator.validateInteger(properties.get(0).get(0)) &&
-                            Validator.validateInteger(properties.get(0).get(1)) &&
-                            properties.get(0).get(0).equals(2)) {//1=widget, 2=iconos
-
-                        Integer total = (Integer) properties.get(0).get(1) - this.getDashBoardModel().getColumnCount();
+                        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
 
                         for (int x = 0; x < total; x++) {
                             this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
@@ -143,23 +145,15 @@ public class UIDashBoard implements UIJSFObject {
 
                         for (IMatrixApplication ma : data) {
                             Panel item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-                            item.setId("WIDGET_" +
-                                               fc.getViewRoot().createUniqueId() +
-                                               "_" +
-                                               java.util.Calendar.getInstance().getTimeInMillis());
-                            item.setStyle("height: 140px; width: " +
-                                                  (950 / Integer.valueOf(properties.get(0).get(1).toString()) - 10) +
-                                                  "px; margin: 2px;");
+                            item.setId("WIDGET_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+                            item.setStyle("height: 140px; width: " + (950 / Integer.valueOf(propertiesList.get(1).toString()) - 10) + "px; margin: 2px;");
                             item.setStyleClass("ui-dashboard-icon-panel");
                             item.setClosable(false);
                             item.setTransient(true);
                             item.setToggleable(false);
 
                             HtmlGraphicImage image = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
-                            image.setId("imagenQuitarWG_" +
-                                                FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                                "_" +
-                                                java.util.Calendar.getInstance().getTimeInMillis());
+                            image.setId("imagenQuitarWG_" + FacesContext.getCurrentInstance().getViewRoot().createUniqueId() + "_" + timeInMillis);
                             image.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
                             image.setTransient(true);
 
@@ -185,7 +179,7 @@ public class UIDashBoard implements UIJSFObject {
                             botonQuitar.setId("botonQuitarWidget_" +
                                                       FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
                                                       "_" +
-                                                      java.util.Calendar.getInstance().getTimeInMillis());
+                                                      timeInMillis);
                             botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
                             botonQuitar.addActionListener(new CMDeleteWidgetListener());
                             botonQuitar.getAttributes().put("IMatrixApplicationModel",
@@ -204,7 +198,7 @@ public class UIDashBoard implements UIJSFObject {
                             panelLink.setId("panelBotones_" +
                                                     FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
                                                     "_" +
-                                                    java.util.Calendar.getInstance().getTimeInMillis());
+                                                    timeInMillis);
                             panelLink.setColumns(1);
                             panelLink.setCellpadding("0");
                             panelLink.setCellspacing("0");
@@ -231,23 +225,19 @@ public class UIDashBoard implements UIJSFObject {
                                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
                                                                            maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
 
-                                            Viewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(
-                                                    Property.MATRIX_ID).toString());
+                                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
 
                                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                                           v.getUIObject().getApplicationModel().getPropertyMap());
+                                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
 
-                                            v.getUIObject().populate(null);
+                                            v.getUIJSFObject().populate(null);
 
-                                            item.getChildren().add((UIComponent) v.getUIObject().getComponent());
+                                            item.getChildren().add(v.getUIJSFObject().getComponent());
 
                                             String title = ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString();
                                             HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
-                                                                                                                   title.length() > 20
-                                                                                                                           ? title.substring(0,
-                                                                                                                                             19) +
-                                                                                                                           "..."
-                                                                                                                           : title);
+                                                                                                                   title.length() > 20 ? title.substring(0,
+                                                                                                                                                         19) + "..." : title);
                                             ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
                                             ot.setStyleClass("ui-dashboard-icon-panel");
                                             ot.setTransient(true);
@@ -258,10 +248,7 @@ public class UIDashBoard implements UIJSFObject {
                                             ab.setTransient(true);
 
                                             HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
-                                            ol.setId("link_de_panelcito_cli" +
-                                                             fc.getViewRoot().createUniqueId() +
-                                                             "_" +
-                                                             java.util.Calendar.getInstance().getTimeInMillis());
+                                            ol.setId("link_de_panelcito_cli" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
                                             ol.setTransient(true);
                                             ol.setValue("#");
                                             ol.setStyle("text-decoration: none;");
@@ -271,10 +258,7 @@ public class UIDashBoard implements UIJSFObject {
                                             ol.getChildren().add(ot);
 
                                             HtmlPanelGrid panelTexto = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
-                                            panelTexto.setId("panelTexto_" +
-                                                                     FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                                                     "_" +
-                                                                     java.util.Calendar.getInstance().getTimeInMillis());
+                                            panelTexto.setId("panelTexto_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
                                             panelTexto.setColumns(1);
                                             panelTexto.setCellpadding("0");
                                             panelTexto.setCellspacing("0");
@@ -297,17 +281,14 @@ public class UIDashBoard implements UIJSFObject {
                             this.getDashBoard().getChildren().add(item);
 
                             Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
-                            Integer col_index = item_pos %
-                                    (Integer) properties.get(0).get(1);
-                            Integer item_index = (item_pos - col_index) /
-                                    (Integer) properties.get(0).get(1);
+                            Integer col_index = item_pos % (Integer) propertiesList.get(1);
+                            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
 
                             this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
                                                                                     item.getId());
                         }
                     } else {
-                        Integer total = (Integer) properties.get(0).get(1) -
-                                this.getDashBoardModel().getColumnCount();
+                        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
 
                         for (int x = 0; x < total; x++) {
                             this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
@@ -320,8 +301,7 @@ public class UIDashBoard implements UIJSFObject {
                                 item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc,
                                                                                               ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE).toString());
 
-                                item.setStyle(item.getStyle() +
-                                                      " background: white;");
+                                item.setStyle(item.getStyle() + " background: white;");
                                 if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
                                     item.setClosable(true);
 
@@ -336,15 +316,8 @@ public class UIDashBoard implements UIJSFObject {
                             } else {
                                 try {
                                     item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-                                    item.setId("hidden_panels_" +
-                                                       fc.getViewRoot().createUniqueId() +
-                                                       "_" +
-                                                       java.util.Calendar.getInstance().getTimeInMillis());
-                                    item.setStyle("border: 0; height: " +
-                                                          PrimeFacesUIComponentsFactory.WIDGET_HEIGHT +
-                                                          "px; width: " +
-                                                          PrimeFacesUIComponentsFactory.WIDGET_WIDTH +
-                                                          "px; margin: 5px;");
+                                    item.setId("hidden_panels_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+                                    item.setStyle("border: 0; height: " + PrimeFacesUIComponentsFactory.WIDGET_HEIGHT + "px; width: " + PrimeFacesUIComponentsFactory.WIDGET_WIDTH + "px; margin: 5px;");
                                     item.setTransient(true);
                                 } catch (Exception e) {
                                     LOG.error(e.getMessage());
@@ -365,15 +338,14 @@ public class UIDashBoard implements UIJSFObject {
                                                                                                               ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
                                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
                                                                            maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
-                                            Viewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(
-                                                    Property.MATRIX_ID).toString());
+                                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
 
                                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                                           v.getUIObject().getApplicationModel().getPropertyMap());
+                                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
 
-                                            v.getUIObject().populate(null);
+                                            v.getUIJSFObject().populate(null);
 
-                                            item.getChildren().add((UIComponent) v.getUIObject().getComponent());
+                                            item.getChildren().add(v.getUIJSFObject().getComponent());
                                         }
                                     } catch (BeanCreationException e) {
                                         LOG.warn(e.getMessage());
@@ -388,18 +360,14 @@ public class UIDashBoard implements UIJSFObject {
                             this.getDashBoard().getChildren().add(item);
 
                             Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
-                            Integer col_index = item_pos %
-                                    (Integer) properties.get(0).get(1);
-                            Integer item_index = (item_pos - col_index) /
-                                    (Integer) properties.get(0).get(1);
+                            Integer col_index = item_pos % (Integer) propertiesList.get(1);
+                            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
 
                             this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
                                                                                     item.getId());
                         }
                     }
-
                 }
-
             }
         }
     }
@@ -409,11 +377,6 @@ public class UIDashBoard implements UIJSFObject {
         this.getDashBoard().getChildren().clear();
         this.setDashBoardModel(null);
         this.getDashBoard().setModel(this.getDashBoardModel());
-    }
-
-    @Override
-    public void setComponent(Object o) {
-        this.dashBoard = (Dashboard) o;
     }
 
     @Override

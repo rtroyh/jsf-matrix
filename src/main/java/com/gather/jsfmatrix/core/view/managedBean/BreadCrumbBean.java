@@ -5,9 +5,8 @@ import com.gather.jsfmatrix.core.*;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.BreadCrumbService;
-import com.gather.jsfmatrix.core.view.BaseJSFView;
+import com.gather.jsfmatrix.core.view.JSFViewer;
 import com.gather.jsfmatrix.core.view.uiobject.UIBreadCrumb;
-import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.dao.DataAccessException;
@@ -19,7 +18,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
-public class BreadCrumbBean extends BaseJSFView {
+public class BreadCrumbBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(BreadCrumbBean.class);
 
     private final DataSource ds;
@@ -108,13 +107,8 @@ public class BreadCrumbBean extends BaseJSFView {
     public void populate(Map<Ingredients, Object> recipe) {
         this.build();
 
-        this.getUIObject().resetState();
-        this.getUIObject().populate(RecipeFactory.createRecipe(Ingredients.APPLICATION_LIST,
+        this.getUIJSFObject().resetState();
+        this.getUIJSFObject().populate(RecipeFactory.createRecipe(Ingredients.APPLICATION_LIST,
                                                                this.getMatrix().getApplications()));
-    }
-
-    @Override
-    public void setUIObject(UIObject ui) {
-        this.uiObject = ui;
     }
 }

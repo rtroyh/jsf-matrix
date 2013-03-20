@@ -114,11 +114,6 @@ public class UIDock implements UIJSFObject {
     }
 
     @Override
-    public void setComponent(Object o) {
-        this.component = (Dock) o;
-    }
-
-    @Override
     public void setComponent(UIComponent component) {
         this.component = (Dock) component;
     }

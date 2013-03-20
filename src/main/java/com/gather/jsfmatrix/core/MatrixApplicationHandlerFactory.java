@@ -1,7 +1,7 @@
 package com.gather.jsfmatrix.core;
 
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
-import com.gather.jsfmatrix.core.view.DefaultWidgetView;
+import com.gather.jsfmatrix.core.view.DefaultWidgetViewer;
 
 public class MatrixApplicationHandlerFactory {
 
@@ -9,7 +9,7 @@ public class MatrixApplicationHandlerFactory {
         IMatrixApplicationHandler ma = new DefaultMatrixApplicationHandler(ApplicationModelFactory.createDefaultApplicationModel());
 
         ma.getIApplicationView().addView("0",
-                                         new DefaultWidgetView());
+                                         new DefaultWidgetViewer());
         return ma;
     }
 }

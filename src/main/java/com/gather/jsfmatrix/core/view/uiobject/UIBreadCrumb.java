@@ -1,17 +1,5 @@
 package com.gather.jsfmatrix.core.view.uiobject;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-
-import org.apache.log4j.Logger;
-import org.primefaces.component.breadcrumb.BreadCrumb;
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
-
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
@@ -19,6 +7,16 @@ import com.gather.jsfmatrix.core.listener.BreadCrumbListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
+import org.apache.log4j.Logger;
+import org.primefaces.component.breadcrumb.BreadCrumb;
+import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import java.util.List;
+import java.util.Map;
 
 public class UIBreadCrumb implements UIJSFObject {
     private static final Logger LOG = Logger.getLogger(UIBreadCrumb.class);
@@ -102,11 +100,6 @@ public class UIBreadCrumb implements UIJSFObject {
         this.getBreadCrumb().getChildren().clear();
         this.setMenuModel(null);
         this.getBreadCrumb().setModel(this.getMenuModel());
-    }
-
-    @Override
-    public void setComponent(Object component) {
-        this.component = (BreadCrumb) component;
     }
 
     @Override

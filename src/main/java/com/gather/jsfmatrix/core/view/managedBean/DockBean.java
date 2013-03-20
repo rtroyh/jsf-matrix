@@ -1,18 +1,12 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
 import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.IMatrixApplication;
-import com.gather.jsfmatrix.core.Ingredients;
-import com.gather.jsfmatrix.core.Matrix;
-import com.gather.jsfmatrix.core.MatrixApplicationFactory;
-import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.core.RecipeFactory;
+import com.gather.jsfmatrix.core.*;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.DockServices;
-import com.gather.jsfmatrix.core.view.BaseJSFView;
+import com.gather.jsfmatrix.core.view.JSFViewer;
 import com.gather.jsfmatrix.core.view.uiobject.UIDock;
-import com.gather.jsfmatrix.core.view.uiobject.UIObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.dao.DataAccessException;
@@ -24,9 +18,9 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
-public class DockBean extends BaseJSFView {
+public class DockBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(DockBean.class);
-    public static final String BASE_COMPONENT = "basedock";
+
     private final DataSource ds;
     private IApplicationModel applicationModel;
     private Matrix matrix;
@@ -109,13 +103,8 @@ public class DockBean extends BaseJSFView {
     public void populate(Map<Ingredients, Object> recipe) {
         this.build();
 
-        this.getUIObject().resetState();
-        this.getUIObject().populate(RecipeFactory.createRecipe(Ingredients.APPLICATION_LIST,
+        this.getUIJSFObject().resetState();
+        this.getUIJSFObject().populate(RecipeFactory.createRecipe(Ingredients.APPLICATION_LIST,
                                                                this.getMatrix().getApplications()));
-    }
-
-    @Override
-    public void setUIObject(UIObject ui) {
-        this.uiObject = ui;
     }
 }

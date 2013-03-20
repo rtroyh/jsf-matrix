@@ -1,44 +1,36 @@
 package com.gather.jsfmatrix.core.view;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 public class DefaultApplicationView implements IApplicationView {
     private static final Logger LOG = Logger.getLogger(DefaultApplicationView.class);
-    private Map<String, Viewer> views;
+    private Map<String, IViewer> views;
 
     @Override
     public void addView(String key,
-                        Viewer ui) {
-        LOG.debug("INICIO ADDVIEW CON KEY = " +
-                         key +
-                         " EN UN TOTAL DE " +
-                         this.getViews().size());
+                        IViewer ui) {
+        LOG.debug("INICIO ADDVIEW CON KEY = " + key + " EN UN TOTAL DE " + this.getViews().size());
 
         this.getViews().put(key,
                             ui);
     }
 
     @Override
-    public Viewer getView(String key) {
-        LOG.debug("INICIO GETVIEW CON KEY = " +
-                         key +
-                         " EN UN TOTAL DE " +
-                         this.getViews().size());
+    public IViewer getView(String key) {
+        LOG.debug("INICIO GETVIEW CON KEY = " + key + " EN UN TOTAL DE " + this.getViews().size());
+
         try {
             if (this.getViews().get(key) == null) {
                 LOG.debug("VIEW NO ENCONTRADA...");
-                LOG.debug("AGREGANDO NUEVO VIEW CON KEY = " +
-                                 key);
+                LOG.debug("AGREGANDO NUEVO VIEW CON KEY = " + key);
                 this.getViews().put(key,
                                     this.getViews().get("0").getClass().newInstance());
                 return this.getView(key);
             } else {
-                LOG.debug("VIEW CON KEY = " +
-                                 key +
-                                 " ENCONTRADA");
+                LOG.debug("VIEW CON KEY = " + key + " ENCONTRADA");
                 return this.getViews().get(key);
             }
         } catch (InstantiationException e) {
@@ -53,9 +45,9 @@ public class DefaultApplicationView implements IApplicationView {
     }
 
     @Override
-    public Map<String, Viewer> getViews() {
+    public Map<String, IViewer> getViews() {
         if (this.views == null) {
-            this.views = new LinkedHashMap<String, Viewer>();
+            this.views = new LinkedHashMap<String, IViewer>();
         }
 
         return views;
@@ -65,5 +57,4 @@ public class DefaultApplicationView implements IApplicationView {
     public void removeView(String key) {
         this.getViews().remove(key);
     }
-
 }
