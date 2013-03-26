@@ -1,22 +1,7 @@
 package com.gather.jsfmatrix.core.view;
 
-import javax.faces.application.Application;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
-import javax.faces.component.UISelectItems;
-import javax.faces.component.behavior.AjaxBehavior;
-import javax.faces.component.html.HtmlCommandLink;
-import javax.faces.component.html.HtmlGraphicImage;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.component.html.HtmlInputTextarea;
-import javax.faces.component.html.HtmlOutcomeTargetLink;
-import javax.faces.component.html.HtmlOutputLabel;
-import javax.faces.component.html.HtmlOutputLink;
-import javax.faces.component.html.HtmlOutputText;
-import javax.faces.component.html.HtmlPanelGrid;
-import javax.faces.component.html.HtmlSelectOneMenu;
-import javax.faces.context.FacesContext;
-
+import com.gather.jsfmatrix.core.listener.TitlePopupListener;
+import com.sun.faces.application.ApplicationImpl;
 import org.primefaces.component.breadcrumb.BreadCrumb;
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.column.Column;
@@ -33,8 +18,13 @@ import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.panel.Panel;
 import org.primefaces.component.stack.Stack;
 
-import com.gather.jsfmatrix.core.listener.TitlePopupListener;
-import com.sun.faces.application.ApplicationImpl;
+import javax.faces.application.Application;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
+import javax.faces.component.UISelectItems;
+import javax.faces.component.behavior.AjaxBehavior;
+import javax.faces.component.html.*;
+import javax.faces.context.FacesContext;
 
 public class PrimeFacesUIComponentsFactory {
 
@@ -217,15 +207,8 @@ public class PrimeFacesUIComponentsFactory {
 
     public static Panel createDefaultWidgetPanel(FacesContext fc) {
         Panel p = PrimeFacesUIComponentsFactory.createPanel(fc);
-        p.setId("panel" +
-                        fc.getViewRoot().createUniqueId() +
-                        "_" +
-                        java.util.Calendar.getInstance().getTimeInMillis());
-        p.setStyle("height: " +
-                           WIDGET_HEIGHT +
-                           "px; width: " +
-                           WIDGET_WIDTH +
-                           "px; margin: 5px;");
+        p.setId("panel" + fc.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
+        p.setStyle("height: " + WIDGET_HEIGHT + "px; width: " + WIDGET_WIDTH + "px; margin: 5px;");
 
         return p;
     }
