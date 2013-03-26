@@ -67,7 +67,7 @@ public class DirectoryUIWidget implements UIJSFObject {
             this.matrix = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(FacesContext.getCurrentInstance());
             this.matrix.setId(FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
                                       java.util.Calendar.getInstance().getTimeInMillis());
-            this.matrix.setStyle("height:140px; width: 280px;");
+            this.matrix.setStyle("height: 140px; width: 280px;");
             this.matrix.setTransient(true);
             this.matrix.setColumns(3);
         }

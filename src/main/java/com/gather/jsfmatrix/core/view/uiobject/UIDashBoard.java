@@ -136,239 +136,252 @@ public class UIDashBoard implements UIJSFObject {
 
                     final long timeInMillis = Calendar.getInstance().getTimeInMillis();
                     if (Validator.validateInteger(propertiesList.get(0)) && Validator.validateInteger(propertiesList.get(1)) && propertiesList.get(0).equals(2)) {//1=widget, 2=iconos
-
-                        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
-
-                        for (int x = 0; x < total; x++) {
-                            this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
-                        }
-
-                        for (IMatrixApplication ma : data) {
-                            Panel item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-                            item.setId("WIDGET_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                            item.setStyle("height: 140px; width: " + (950 / Integer.valueOf(propertiesList.get(1).toString()) - 10) + "px; margin: 2px;");
-                            item.setStyleClass("ui-dashboard-icon-panel");
-                            item.setClosable(false);
-                            item.setTransient(true);
-                            item.setToggleable(false);
-
-                            HtmlGraphicImage image = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
-                            image.setId("imagenQuitarWG_" + FacesContext.getCurrentInstance().getViewRoot().createUniqueId() + "_" + timeInMillis);
-                            image.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
-                            image.setTransient(true);
-
-                            ResourceHandler rh = fc.getApplication().getResourceHandler();
-
-                            if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
-                                Resource r = rh.createResource("images/borrar.png",
-                                                               "gather");
-
-                                if (r != null) {
-                                    image.setUrl(r.getRequestPath());
-                                }
-                            } else {
-                                Resource r = rh.createResource("images/vacio5x5.png",
-                                                               "gather");
-
-                                if (r != null) {
-                                    image.setUrl(r.getRequestPath());
-                                }
-                            }
-
-                            CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
-                            botonQuitar.setId("botonQuitarWidget_" +
-                                                      FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                                      "_" +
-                                                      timeInMillis);
-                            botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
-                            botonQuitar.addActionListener(new CMDeleteWidgetListener());
-                            botonQuitar.getAttributes().put("IMatrixApplicationModel",
-                                                            ma);
-                            botonQuitar.setTitle("Quitar icono");
-                            botonQuitar.setTransient(true);
-                            botonQuitar.getChildren().add(image);
-                            botonQuitar.setUpdate(":myForm:principal");
-                            botonQuitar.setProcess("@this");
-
-                            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
-                                botonQuitar.setDisabled(true);
-                            }
-
-                            HtmlPanelGrid panelLink = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
-                            panelLink.setId("panelBotones_" +
-                                                    FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                                    "_" +
-                                                    timeInMillis);
-                            panelLink.setColumns(1);
-                            panelLink.setCellpadding("0");
-                            panelLink.setCellspacing("0");
-                            panelLink.setStyle("float: right; margin: 0px; border:0; width: 15px; height: 15px; text-align: center;");
-                            panelLink.setTransient(true);
-                            panelLink.getChildren().add(botonQuitar);
-
-                            item.getChildren().add(panelLink);
-
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
-                                                                                               item.getId());
-
-                            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).equals(0)) {
-
-                                //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
-                                if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
-                                    try {
-                                        Object maBean = BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                                         ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
-                                        if (maBean != null) {
-
-                                            IMatrixApplication maInst = (IMatrixApplication) maBean;
-
-                                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                                           maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
-
-                                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
-
-                                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
-
-                                            v.getUIJSFObject().populate(null);
-
-                                            item.getChildren().add(v.getUIJSFObject().getComponent());
-
-                                            String title = ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString();
-                                            HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
-                                                                                                                   title.length() > 20 ? title.substring(0,
-                                                                                                                                                         19) + "..." : title);
-                                            ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
-                                            ot.setStyleClass("ui-dashboard-icon-panel");
-                                            ot.setTransient(true);
-
-                                            AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
-                                            ab.addAjaxBehaviorListener(new TitlePopupListener());
-                                            ab.setImmediate(true);
-                                            ab.setTransient(true);
-
-                                            HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
-                                            ol.setId("link_de_panelcito_cli" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                                            ol.setTransient(true);
-                                            ol.setValue("#");
-                                            ol.setStyle("text-decoration: none;");
-                                            ol.setOnmouseup("titleChangeWidgetdialog.show(); return false;");
-                                            ol.addClientBehavior("click",
-                                                                 ab);
-                                            ol.getChildren().add(ot);
-
-                                            HtmlPanelGrid panelTexto = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
-                                            panelTexto.setId("panelTexto_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                                            panelTexto.setColumns(1);
-                                            panelTexto.setCellpadding("0");
-                                            panelTexto.setCellspacing("0");
-                                            panelTexto.setTransient(true);
-                                            panelTexto.setStyle("width: 100%; text-align: center;");
-                                            panelTexto.getChildren().add(ol);
-
-                                            item.getChildren().add(panelTexto);
-                                        }
-                                    } catch (BeanCreationException e) {
-                                        LOG.warn(e.getMessage());
-                                    } catch (NoSuchBeanDefinitionException e) {
-                                        LOG.warn(e.getMessage());
-                                    } catch (Exception e) {
-                                        LOG.error(e.getMessage());
-                                    }
-                                }
-                            }
-
-                            this.getDashBoard().getChildren().add(item);
-
-                            Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
-                            Integer col_index = item_pos % (Integer) propertiesList.get(1);
-                            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
-
-                            this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
-                                                                                    item.getId());
-                        }
+                        populateWithIcon(fc,
+                                         data,
+                                         propertiesList,
+                                         timeInMillis);
                     } else {
-                        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
-
-                        for (int x = 0; x < total; x++) {
-                            this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
-                        }
-
-                        for (IMatrixApplication ma : data) {
-                            Panel item = null;
-
-                            if (!ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JAVA_ID).equals(0)) {
-                                item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc,
-                                                                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE).toString());
-
-                                item.setStyle(item.getStyle() + " background: white;");
-                                if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
-                                    item.setClosable(true);
-
-                                    AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
-                                    ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
-                                    ab.setImmediate(true);
-                                    ab.setTransient(true);
-
-                                    item.addClientBehavior("close",
-                                                           ab);
-                                }
-                            } else {
-                                try {
-                                    item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-                                    item.setId("hidden_panels_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                                    item.setStyle("border: 0; height: " + PrimeFacesUIComponentsFactory.WIDGET_HEIGHT + "px; width: " + PrimeFacesUIComponentsFactory.WIDGET_WIDTH + "px; margin: 5px;");
-                                    item.setTransient(true);
-                                } catch (Exception e) {
-                                    LOG.error(e.getMessage());
-                                }
-                            }
-
-                            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
-                                                                                               item.getId());
-
-                            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).equals(0)) {
-
-                                //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
-                                if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
-                                    try {
-                                        if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                             ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
-                                            IMatrixApplication maInst = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                                                                              ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
-                                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                                           maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
-                                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
-
-                                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
-
-                                            v.getUIJSFObject().populate(null);
-
-                                            item.getChildren().add(v.getUIJSFObject().getComponent());
-                                        }
-                                    } catch (BeanCreationException e) {
-                                        LOG.warn(e.getMessage());
-                                    } catch (NoSuchBeanDefinitionException e) {
-                                        LOG.warn(e.getMessage());
-                                    } catch (Exception e) {
-                                        LOG.error(e.getMessage());
-                                    }
-                                }
-                            }
-
-                            this.getDashBoard().getChildren().add(item);
-
-                            Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
-                            Integer col_index = item_pos % (Integer) propertiesList.get(1);
-                            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
-
-                            this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
-                                                                                    item.getId());
-                        }
+                        populateWithPanels(fc,
+                                           data,
+                                           propertiesList,
+                                           timeInMillis);
                     }
                 }
             }
+        }
+    }
+
+    private void populateWithPanels(FacesContext fc,
+                                    List<IMatrixApplication> data,
+                                    List<Object> propertiesList,
+                                    long timeInMillis) {
+        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
+
+        for (int x = 0; x < total; x++) {
+            this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
+        }
+
+        for (IMatrixApplication ma : data) {
+            Panel item = null;
+
+            if (!ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JAVA_ID).equals(0)) {
+                item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc,
+                                                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE).toString());
+
+                item.setStyle(item.getStyle() + " background: white;");
+                if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
+                    item.setClosable(true);
+
+                    AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
+                    ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
+                    ab.setImmediate(true);
+                    ab.setTransient(true);
+
+                    item.addClientBehavior("close",
+                                           ab);
+                }
+            } else {
+                try {
+                    item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
+                    item.setId("hidden_panels_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+                    item.setStyle("border: 0; height: " + PrimeFacesUIComponentsFactory.WIDGET_HEIGHT + "px; width: " + PrimeFacesUIComponentsFactory.WIDGET_WIDTH + "px; margin: 5px;");
+                    item.setTransient(true);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage());
+                }
+            }
+
+            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
+                                                                               item.getId());
+
+            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).equals(0)) {
+
+                //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
+                if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
+                    try {
+                        if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
+                                             ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
+                            IMatrixApplication maInst = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
+                                                                                              ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
+                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
+                                                           maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
+                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
+
+                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
+                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
+
+                            v.getUIJSFObject().populate(null);
+
+                            item.getChildren().add(v.getUIJSFObject().getComponent());
+                        }
+                    } catch (BeanCreationException e) {
+                        LOG.warn(e.getMessage());
+                    } catch (NoSuchBeanDefinitionException e) {
+                        LOG.warn(e.getMessage());
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage());
+                    }
+                }
+            }
+
+            this.getDashBoard().getChildren().add(item);
+
+            Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
+            Integer col_index = item_pos % (Integer) propertiesList.get(1);
+            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
+
+            this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
+                                                                    item.getId());
+        }
+    }
+
+    private void populateWithIcon(FacesContext fc,
+                                  List<IMatrixApplication> data,
+                                  List<Object> propertiesList,
+                                  long timeInMillis) {
+        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
+
+        for (int x = 0; x < total; x++) {
+            this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
+        }
+
+        for (IMatrixApplication ma : data) {
+            Panel item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
+            item.setId("WIDGET_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+            item.setStyle("height: 140px; width: " + (950 / Integer.valueOf(propertiesList.get(1).toString()) - 10) + "px; margin: 2px;");
+            item.setStyleClass("ui-dashboard-icon-panel");
+            item.setClosable(false);
+            item.setTransient(true);
+            item.setToggleable(false);
+
+            HtmlGraphicImage imageBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
+            imageBotonQuitar.setId("imagenQuitarWG_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+            imageBotonQuitar.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
+            imageBotonQuitar.setTransient(true);
+
+            ResourceHandler rh = fc.getApplication().getResourceHandler();
+
+            if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
+                Resource r = rh.createResource("images/borrar.png",
+                                               "gather");
+
+                if (r != null) {
+                    imageBotonQuitar.setUrl(r.getRequestPath());
+                }
+            } else {
+                Resource r = rh.createResource("images/vacio5x5.png",
+                                               "gather");
+
+                if (r != null) {
+                    imageBotonQuitar.setUrl(r.getRequestPath());
+                }
+            }
+
+            CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
+            botonQuitar.setId("botonQuitarWidget_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+            botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
+            botonQuitar.addActionListener(new CMDeleteWidgetListener());
+            botonQuitar.getAttributes().put("IMatrixApplicationModel",
+                                            ma);
+            botonQuitar.setTitle("Quitar icono");
+            botonQuitar.setTransient(true);
+            botonQuitar.setUpdate(":myForm:principal");
+            botonQuitar.setProcess("@this");
+            botonQuitar.getChildren().add(imageBotonQuitar);
+
+            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
+                botonQuitar.setDisabled(true);
+            }
+
+            HtmlPanelGrid panelBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
+            panelBotonQuitar.setId("panelBotones_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+            panelBotonQuitar.setStyle("float: right; margin: 0px; border:0; width: 15px; height: 15px; text-align: center;");
+            panelBotonQuitar.setColumns(1);
+            panelBotonQuitar.setCellpadding("0");
+            panelBotonQuitar.setCellspacing("0");
+            panelBotonQuitar.setTransient(true);
+            panelBotonQuitar.getChildren().add(botonQuitar);
+
+            item.getChildren().add(panelBotonQuitar);
+
+            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
+                                                                               item.getId());
+
+            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).equals(0)) {
+
+                //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
+                if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
+                    try {
+                        Object maBean = BeanUtil.getBean(FacesContext.getCurrentInstance(),
+                                                         ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
+                        if (maBean != null) {
+
+                            IMatrixApplication maInst = (IMatrixApplication) maBean;
+
+                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
+                                                           maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
+
+                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
+
+                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
+                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
+
+                            v.getUIJSFObject().populate(null);
+
+                            item.getChildren().add(v.getUIJSFObject().getComponent());
+
+                            String title = ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString();
+                            HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
+                                                                                                   title.length() > 20 ? title.substring(0,
+                                                                                                                                         19) + "..." : title);
+                            ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
+                            ot.setStyleClass("ui-dashboard-icon-panel");
+                            ot.setTransient(true);
+
+                            AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
+                            ab.addAjaxBehaviorListener(new TitlePopupListener());
+                            ab.setImmediate(true);
+                            ab.setTransient(true);
+
+                            HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
+                            ol.setId("link_de_panelcito_cli_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+                            ol.setStyle("text-decoration: none;");
+                            ol.setTransient(true);
+                            ol.setValue("#");
+                            ol.setOnmouseup("titleChangeWidgetdialog.show(); return false;");
+                            ol.addClientBehavior("click",
+                                                 ab);
+                            ol.getChildren().add(ot);
+
+                            HtmlPanelGrid panelTexto = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
+                            panelTexto.setId("panelTexto_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+                            panelTexto.setStyle("width: 100%; text-align: center;");
+                            panelTexto.setColumns(1);
+                            panelTexto.setCellpadding("0");
+                            panelTexto.setCellspacing("0");
+                            panelTexto.setTransient(true);
+                            panelTexto.getChildren().add(ol);
+
+                            item.getChildren().add(panelTexto);
+                        }
+                    } catch (BeanCreationException e) {
+                        LOG.warn(e.getMessage());
+                    } catch (NoSuchBeanDefinitionException e) {
+                        LOG.warn(e.getMessage());
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage());
+                    }
+                }
+            }
+
+            this.getDashBoard().getChildren().add(item);
+
+            Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
+            Integer col_index = item_pos % (Integer) propertiesList.get(1);
+            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
+
+            this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
+                                                                    item.getId());
         }
     }
 
