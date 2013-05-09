@@ -285,7 +285,7 @@ public class UIDashBoard implements UIJSFObject {
                                             ma);
             botonQuitar.setTitle("Quitar icono");
             botonQuitar.setTransient(true);
-            botonQuitar.setUpdate(":myForm:principal");
+            botonQuitar.setUpdate("myForm");
             botonQuitar.setProcess("@this");
             botonQuitar.getChildren().add(imageBotonQuitar);
 

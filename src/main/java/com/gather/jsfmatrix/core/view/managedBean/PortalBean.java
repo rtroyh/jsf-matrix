@@ -132,7 +132,9 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO LLAMADO AL REQUESTCONTEXT PARA ACTUALIZAR LA VISTA");
 
         try {
-            RequestContext.getCurrentInstance().update(":myForm:principal");
+            RequestContext.getCurrentInstance().update("myFormBread");
+            RequestContext.getCurrentInstance().update("myFormDock");
+            RequestContext.getCurrentInstance().update("myForm");
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
@@ -174,13 +176,11 @@ public class PortalBean implements INavigation {
                 this.updateThroughBreadCrumb(ma);
 
                 if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
-
                     try {
                         if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
                             IMatrixApplication lb = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
                                                                                           ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
-
                             lb.getMatrixApplicationHandler().getApplicationModel().getPropertyMap().clear();
 
                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
@@ -189,8 +189,7 @@ public class PortalBean implements INavigation {
                             this.setRenderDock(lb.showDock());
                             this.setRenderStack(lb.showStack());
 
-                            LOG.info("LLAMANDO A METODO ONSTART ESPECIFICO DEL BEAN: " +
-                                             ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString());
+                            LOG.info("LLAMANDO A METODO ONSTART ESPECIFICO DEL BEAN: " + ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString());
                             lb.onStart();
                         }
                     } catch (BeanCreationException e) {

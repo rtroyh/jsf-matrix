@@ -94,7 +94,7 @@ public class UIDock implements UIJSFObject {
                         item.getAttributes().put("ma",
                                                  ma);
                         item.addActionListener(new DockListener());
-                        item.setUpdate(":myForm:principal");
+                        item.setUpdate(":myForm");
                         item.setProcess("@this");
 
                         this.getMenuModel().addMenuItem(item);
