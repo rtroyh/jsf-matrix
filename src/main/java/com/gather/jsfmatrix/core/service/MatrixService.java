@@ -7,20 +7,16 @@ import org.springframework.dao.DataAccessException;
 import javax.sql.DataSource;
 
 public class MatrixService {
-
     private DataSource ds;
 
     private AdvancedSSPService headerService;
-    private AdvancedSSPService applicationsService;
-    private AdvancedSSPService moveWidgetService;
-    private AdvancedSSPService closeWidgetService;
-    private AdvancedSSPService addApplicationFromDockService;
-    private AdvancedSSPService addApplicationFromStackService;
     private AdvancedSSPService directoryService;
+    private AdvancedSSPService closeWidgetService;
     private AdvancedSSPService titleRenameService;
+    private AdvancedSSPService applicationsService;
+    private AdvancedSSPService addApplicationFromDockService;
 
     public MatrixService(DataSource ds) {
-        super();
         this.ds = ds;
     }
 
@@ -40,12 +36,9 @@ public class MatrixService {
                                                               DataAccessException {
         final AdvancedSSPService ssp = this.getTitleRenameService();
         ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
-        ssp.addParameter("2",
-                         matrixID);
-        ssp.addParameter("3",
-                         title);
+        ssp.addParameter(sesion);
+        ssp.addParameter(matrixID);
+        ssp.addParameter(title);
         ssp.executeQuery();
 
         return ssp;
@@ -65,8 +58,7 @@ public class MatrixService {
                                                              DataAccessException {
         final AdvancedSSPService ssp = this.getHeaderService();
         ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
+        ssp.addParameter(sesion);
         ssp.executeQuery();
 
         return ssp;
@@ -88,12 +80,9 @@ public class MatrixService {
                                                                            DataAccessException {
         final AdvancedSSPService ssp = this.getDirectoryService();
         ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
-        ssp.addParameter("2",
-                         matrixID);
-        ssp.addParameter("3",
-                         javaID);
+        ssp.addParameter(sesion);
+        ssp.addParameter(matrixID);
+        ssp.addParameter(javaID);
         ssp.executeQuery();
 
         return ssp;
@@ -115,64 +104,9 @@ public class MatrixService {
                                                                            DataAccessException {
         final AdvancedSSPService ssp = this.getAddApplicationFromDockService();
         ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
-        ssp.addParameter("2",
-                         matrixID);
-        ssp.addParameter("3",
-                         paquete);
-        ssp.executeQuery();
-
-        return ssp;
-    }
-
-
-    private AdvancedSSPService getAddApplicationFromStackService() {
-        if (this.addApplicationFromStackService == null) {
-            this.addApplicationFromStackService = new AdvancedSSPService(ds,
-                                                                         "PORTAL.STACK_MATRIZ",
-                                                                         1);
-        }
-
-        return this.addApplicationFromStackService;
-    }
-
-    public final IResultSetProvider addApplicationFromStack(Object sesion,
-                                                            Object stack) throws
-                                                                          DataAccessException {
-        final AdvancedSSPService ssp = this.getAddApplicationFromStackService();
-        ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
-        ssp.addParameter("2",
-                         stack);
-        ssp.executeQuery();
-
-        return ssp;
-    }
-
-    private AdvancedSSPService getMoveWidgetService() {
-        if (this.moveWidgetService == null) {
-            this.moveWidgetService = new AdvancedSSPService(ds,
-                                                            "PORTAL.MATRIZ_MOVE",
-                                                            1);
-        }
-
-        return this.moveWidgetService;
-    }
-
-    public final IResultSetProvider moveWidget(Object sesion,
-                                               Object matriz,
-                                               Object posicion) throws
-                                                                DataAccessException {
-        final AdvancedSSPService ssp = this.getMoveWidgetService();
-        ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
-        ssp.addParameter("2",
-                         matriz);
-        ssp.addParameter("3",
-                         posicion);
+        ssp.addParameter(sesion);
+        ssp.addParameter(matrixID);
+        ssp.addParameter(paquete);
         ssp.executeQuery();
 
         return ssp;
@@ -193,10 +127,8 @@ public class MatrixService {
                                                                DataAccessException {
         final AdvancedSSPService ssp = this.getCloseWidgetService();
         ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
-        ssp.addParameter("2",
-                         matriz);
+        ssp.addParameter(sesion);
+        ssp.addParameter(matriz);
         ssp.executeQuery();
 
         return ssp;
@@ -216,8 +148,7 @@ public class MatrixService {
                                                                    DataAccessException {
         final AdvancedSSPService ssp = this.getApplicationsService();
         ssp.resetParameter();
-        ssp.addParameter("1",
-                         sesion);
+        ssp.addParameter(sesion);
         ssp.executeQuery();
 
         return ssp;

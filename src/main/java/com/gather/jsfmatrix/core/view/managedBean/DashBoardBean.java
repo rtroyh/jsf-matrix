@@ -10,9 +10,7 @@ import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
 import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
-import org.primefaces.component.dashboard.Dashboard;
 import org.primefaces.component.panel.Panel;
-import org.primefaces.event.DashboardReorderEvent;
 import org.springframework.beans.BeansException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.WebApplicationContext;
@@ -163,36 +161,6 @@ public class DashBoardBean extends JSFViewer {
         }
     }
 
-    public void handleReorder(DashboardReorderEvent event) {
-        LOG.info("INICIO EVENTO REORDER");
-
-        try {
-            Dashboard d = (Dashboard) event.getComponent();
-
-            for (IMatrixApplication ma : this.getMatrix().getApplications()) {
-                IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
-
-                if (model.getPropertyValue(Property.JSF_CLIENT_ID).equals(event.getWidgetId())) {
-
-                    Integer pos = d.getModel().getColumnCount() *
-                            event.getItemIndex() +
-                            event.getColumnIndex() +
-                            1;
-
-                    this.getService().moveWidget(model.getPropertyValue(Property.SESION),
-                                                 model.getPropertyValue(Property.MATRIX_ID),
-                                                 pos);
-                    this.populate(null);
-                    return;
-                }
-            }
-        } catch (DataAccessException e) {
-            LOG.error(e.getMessage());
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-        }
-    }
-
     public void removeWidget(IMatrixApplication ma) {
         try {
             IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
@@ -209,7 +177,7 @@ public class DashBoardBean extends JSFViewer {
 
     public void addMatrixApplication(IMatrixApplication ma,
                                      ViewType viewType) {
-        LOG.info("INICIO INSERCION DE APPLICACION DESDE DOCK o STACK");
+        LOG.info("INICIO INSERCION DE APPLICACION DESDE DOCK");
 
         try {
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
@@ -222,9 +190,6 @@ public class DashBoardBean extends JSFViewer {
                     this.getService().addApplicationFromDock(lb.getUser().getId(),
                                                              -1,
                                                              model.getPropertyValue(Property.PAQUETE));
-                } else if (viewType.equals(ViewType.STACK)) {
-                    this.getService().addApplicationFromStack(lb.getUser().getId(),
-                                                              model.getPropertyValue(Property.CLAVE));
                 }
 
                 this.populate(null);
