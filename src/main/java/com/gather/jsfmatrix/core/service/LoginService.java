@@ -1,14 +1,12 @@
 package com.gather.jsfmatrix.core.service;
 
-import javax.sql.DataSource;
-
-import org.springframework.dao.DataAccessException;
-
 import com.gather.springcommons.services.AdvancedSSPService;
 import com.gather.springcommons.services.IResultSetProvider;
+import org.springframework.dao.DataAccessException;
+
+import javax.sql.DataSource;
 
 public class LoginService {
-
     private final DataSource ds;
 
     private AdvancedSSPService seguridadService;
@@ -52,10 +50,8 @@ public class LoginService {
 
     public IResultSetProvider sesionService(Object userName) throws
                                                              DataAccessException {
-
         this.getSesionService().resetParameter();
-        this.getSesionService().addParameter("1",
-                                             userName);
+        this.getSesionService().addParameter(userName);
         this.getSesionService().executeQuery();
 
         return this.getSesionService();
@@ -64,8 +60,7 @@ public class LoginService {
     public IResultSetProvider claveUsuarioService(Object sesion) throws
                                                                  DataAccessException {
         this.getClaveUsuarioService().resetParameter();
-        this.getClaveUsuarioService().addParameter("1",
-                                                   sesion);
+        this.getClaveUsuarioService().addParameter(sesion);
         this.getClaveUsuarioService().executeQuery();
 
         return this.getClaveUsuarioService();
@@ -76,12 +71,9 @@ public class LoginService {
                                                Object usuario) throws
                                                                DataAccessException {
         this.getSeguridadService().resetParameter();
-        this.getSeguridadService().addParameter("1",
-                                                puerta);
-        this.getSeguridadService().addParameter("2",
-                                                instancia);
-        this.getSeguridadService().addParameter("3",
-                                                usuario);
+        this.getSeguridadService().addParameter(puerta);
+        this.getSeguridadService().addParameter(instancia);
+        this.getSeguridadService().addParameter(usuario);
         this.getSeguridadService().executeQuery();
 
         return this.getSeguridadService();
