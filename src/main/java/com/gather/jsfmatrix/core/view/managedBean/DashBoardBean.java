@@ -17,23 +17,21 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
 import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
 public class DashBoardBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(DashBoardBean.class);
 
-    private final DataSource ds;
     private IApplicationModel applicationModel;
     private MatrixService service;
     private Matrix matrix;
     private Panel selectedPanel;
     private String titleSelectedPanel = "";
 
-    public DashBoardBean(DataSource ds) {
+    public DashBoardBean(MatrixService service) {
         super(new UIDashBoard());
-        this.ds = ds;
+        this.service = service;
     }
 
     public IApplicationModel getApplicationModel() {
@@ -68,20 +66,20 @@ public class DashBoardBean extends JSFViewer {
         return matrix;
     }
 
-    public void setMatrix(Matrix matrix) {
-        this.matrix = matrix;
+    public final void updateThroughBreadCrumb(Object sesion,
+                                              Object matrixID,
+                                              Object javaID) {
+        this.service.updateThroughBreadCrumb(sesion,
+                                             matrixID,
+                                             javaID);
     }
 
-    public MatrixService getService() {
-        if (this.service == null) {
-            this.service = new MatrixService(this.ds);
-        }
-
-        return service;
-    }
-
-    public void setService(MatrixService service) {
-        this.service = service;
+    public final void titleRename(Object sesion,
+                                  Object matrixID,
+                                  Object title) {
+        this.service.titleRename(sesion,
+                                 matrixID,
+                                 title);
     }
 
     private void build() {
@@ -94,7 +92,7 @@ public class DashBoardBean extends JSFViewer {
             IUserBean userBean = (IUserBean) ctx.getBean("userBean");
 
             if (userBean != null && userBean.getUser().getId() != null) {
-                IResultSetProvider resultSetProvider = this.getService().getApplications(userBean.getUser().getId());
+                IResultSetProvider resultSetProvider = service.getApplications(userBean.getUser().getId());
 
                 List<List<Object>> properties = resultSetProvider.getResultSetasListofList(1);
                 List<List<Object>> data = resultSetProvider.getResultSetasListofList(2);
@@ -164,8 +162,8 @@ public class DashBoardBean extends JSFViewer {
     public void removeWidget(IMatrixApplication ma) {
         try {
             IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
-            this.getService().closeWidget(model.getPropertyValue(Property.SESION),
-                                          model.getPropertyValue(Property.MATRIX_ID));
+            service.closeWidget(model.getPropertyValue(Property.SESION),
+                                model.getPropertyValue(Property.MATRIX_ID));
 
             this.populate(null);
         } catch (DataAccessException e) {
@@ -187,9 +185,9 @@ public class DashBoardBean extends JSFViewer {
                 IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
 
                 if (viewType.equals(ViewType.DOCK)) {
-                    this.getService().addApplicationFromDock(lb.getUser().getId(),
-                                                             -1,
-                                                             model.getPropertyValue(Property.PAQUETE));
+                    service.addApplicationFromDock(lb.getUser().getId(),
+                                                   -1,
+                                                   model.getPropertyValue(Property.PAQUETE));
                 }
 
                 this.populate(null);

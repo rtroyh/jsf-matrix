@@ -14,21 +14,19 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
 import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
 public class BreadCrumbBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(BreadCrumbBean.class);
 
-    private final DataSource ds;
     private Matrix matrix;
-    private BreadCrumbService BreadCrumbService;
+    private BreadCrumbService breadCrumbService;
     private IApplicationModel applicationModel;
 
-    public BreadCrumbBean(DataSource ds) {
+    public BreadCrumbBean(BreadCrumbService breadCrumbService) {
         super(new UIBreadCrumb());
-        this.ds = ds;
+        this.breadCrumbService = breadCrumbService;
     }
 
     public IApplicationModel getApplicationModel() {
@@ -51,14 +49,6 @@ public class BreadCrumbBean extends JSFViewer {
         this.matrix = matrix;
     }
 
-    private BreadCrumbService getBreadCrumbService() {
-        if (this.BreadCrumbService == null) {
-            this.BreadCrumbService = new BreadCrumbService(this.ds);
-        }
-
-        return this.BreadCrumbService;
-    }
-
     private void build() {
         LOG.info("INICIO CONSTRUCCION BREADCRUMB");
 
@@ -67,12 +57,11 @@ public class BreadCrumbBean extends JSFViewer {
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
             if (lb != null && lb.getUser().getId() != null) {
-                this.getBreadCrumbService().getHistorialService().resetParameter();
-                this.getBreadCrumbService().getHistorialService().addParameter("1",
-                                                                               lb.getUser().getId());
-                this.getBreadCrumbService().getHistorialService().executeQuery();
+                this.breadCrumbService.getHistorialService().resetParameter();
+                this.breadCrumbService.getHistorialService().addParameter(lb.getUser().getId());
+                this.breadCrumbService.getHistorialService().executeQuery();
 
-                List<List<Object>> data = this.getBreadCrumbService().getHistorialService().getResultSetasListofList();
+                List<List<Object>> data = this.breadCrumbService.getHistorialService().getResultSetasListofList();
 
                 this.getMatrix().getApplications().clear();
 
@@ -109,6 +98,6 @@ public class BreadCrumbBean extends JSFViewer {
 
         this.getUIJSFObject().resetState();
         this.getUIJSFObject().populate(RecipeFactory.createRecipe(Ingredients.APPLICATION_LIST,
-                                                               this.getMatrix().getApplications()));
+                                                                  this.getMatrix().getApplications()));
     }
 }

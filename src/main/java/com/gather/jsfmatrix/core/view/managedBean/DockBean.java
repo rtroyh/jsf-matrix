@@ -14,21 +14,19 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
 import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
 public class DockBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(DockBean.class);
 
-    private final DataSource ds;
     private IApplicationModel applicationModel;
     private Matrix matrix;
     private DockServices dockService;
 
-    public DockBean(DataSource ds) {
+    public DockBean(DockServices dockService) {
         super(new UIDock());
-        this.ds = ds;
+        this.dockService = dockService;
     }
 
     public IApplicationModel getApplicationModel() {
@@ -51,14 +49,6 @@ public class DockBean extends JSFViewer {
         this.matrix = matrix;
     }
 
-    private DockServices getDockServices() {
-        if (this.dockService == null) {
-            this.dockService = new DockServices(this.ds);
-        }
-
-        return this.dockService;
-    }
-
     private void build() {
         LOG.info("INICIO CONSTRUCCION DOCK");
 
@@ -67,12 +57,12 @@ public class DockBean extends JSFViewer {
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
             if (lb != null && lb.getUser().getId() != null) {
-                this.getDockServices().getList().resetParameter();
-                this.getDockServices().getList().addParameter("1",
-                                                              lb.getUser().getId());
-                this.getDockServices().getList().executeQuery();
+                this.dockService.getList().resetParameter();
+                this.dockService.getList().addParameter("1",
+                                                        lb.getUser().getId());
+                this.dockService.getList().executeQuery();
 
-                List<List<Object>> data = this.getDockServices().getList().getResultSetasListofList();
+                List<List<Object>> data = this.dockService.getList().getResultSetasListofList();
 
                 this.getMatrix().getApplications().clear();
 
@@ -105,6 +95,6 @@ public class DockBean extends JSFViewer {
 
         this.getUIJSFObject().resetState();
         this.getUIJSFObject().populate(RecipeFactory.createRecipe(Ingredients.APPLICATION_LIST,
-                                                               this.getMatrix().getApplications()));
+                                                                  this.getMatrix().getApplications()));
     }
 }

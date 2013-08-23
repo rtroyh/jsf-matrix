@@ -1,6 +1,6 @@
 package com.gather.jsfmatrix.core.listener;
 
-import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
+import com.gather.jsfmatrix.core.view.managedBean.DashBoardBean;
 import org.apache.log4j.Logger;
 import org.primefaces.component.panel.Panel;
 import org.primefaces.context.RequestContext;
@@ -25,17 +25,17 @@ public class TitlePopupListener implements AjaxBehaviorListener {
         UIComponent source = event.getComponent().getChildren().get(0);
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
 
-        PortalBean us = (PortalBean) ctx.getBean("portalBean");
+        DashBoardBean db = (DashBoardBean) ctx.getBean("dashboardBean");
 
         UIComponent panel = event.getComponent().getParent();
         while (!(panel instanceof Panel)) {
             panel = panel.getParent();
         }
 
-        us.getDashboardBean().setSelectedPanel((Panel) panel);
+        db.setSelectedPanel((Panel) panel);
 
         if (source instanceof HtmlOutputText && ((HtmlOutputText) source).getTitle() != null) {
-            us.getDashboardBean().setTitleSelectedPanel(((HtmlOutputText) source).getTitle());
+            db.setTitleSelectedPanel(((HtmlOutputText) source).getTitle());
         }
 
         RequestContext.getCurrentInstance().update("innerTitleDialog");

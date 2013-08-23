@@ -1,7 +1,7 @@
 package com.gather.jsfmatrix.core.listener;
 
 import com.gather.jsfmatrix.core.IMatrixApplication;
-import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
+import com.gather.jsfmatrix.core.view.managedBean.DashBoardBean;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
@@ -22,7 +22,7 @@ public class DashBoardPanelCloseListener implements AjaxBehaviorListener {
 
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
         UIComponent source = event.getComponent();
-        PortalBean us = (PortalBean) ctx.getBean("portalBean");
-        us.getDashboardBean().removeWidget((IMatrixApplication) source.getAttributes().get("IMatrixApplicationModel"));
+        DashBoardBean us = (DashBoardBean) ctx.getBean("dashboardBean");
+        us.removeWidget((IMatrixApplication) source.getAttributes().get("IMatrixApplicationModel"));
     }
 }

@@ -2,6 +2,7 @@ package com.gather.jsfmatrix.core.listener;
 
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.view.ViewType;
+import com.gather.jsfmatrix.core.view.managedBean.DashBoardBean;
 import com.gather.jsfmatrix.core.view.managedBean.PortalBean;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
@@ -24,11 +25,12 @@ public class DirectoryListener implements ActionListener {
         UIComponent source = event.getComponent();
         WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
         PortalBean pb = (PortalBean) ctx.getBean("portalBean");
+        DashBoardBean us = (DashBoardBean) ctx.getBean("dashboardBean");
         MenuItem mi = (MenuItem) source;
         IMatrixApplication ma = (IMatrixApplication) mi.getAttributes().get("ma");
 
-        pb.getDashboardBean().addMatrixApplication(ma,
-                                                   ViewType.DOCK);
+        us.addMatrixApplication(ma,
+                                ViewType.DOCK);
         pb.updateView();
     }
 }

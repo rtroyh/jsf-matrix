@@ -17,22 +17,26 @@ import org.springframework.web.jsf.FacesContextUtils;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.sql.DataSource;
 
 public class PortalBean implements INavigation {
     private static final Logger LOG = Logger.getLogger(PortalBean.class);
 
-    private final DataSource ds;
     private DockBean dockBean;
     private DashBoardBean dashboardBean;
     private BreadCrumbBean breadCrumbBean;
+
     private boolean renderDock = true;
     private boolean renderStack = true;
+
     private String body = "desktop";
 
-    public PortalBean(DataSource ds) {
+    public PortalBean(final DockBean dockBean,
+                      final BreadCrumbBean breadCrumbBean,
+                      final DashBoardBean dashboardBean) {
         super();
-        this.ds = ds;
+        this.dockBean = dockBean;
+        this.dashboardBean = dashboardBean;
+        this.breadCrumbBean = breadCrumbBean;
     }
 
     public boolean isRenderStack() {
@@ -76,9 +80,9 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO METODO SURF");
 
         try {
-            this.getDashboardBean().getService().updateThroughBreadCrumb(sesion,
-                                                                         0,
-                                                                         "");
+            this.dashboardBean.updateThroughBreadCrumb(sesion,
+                                                       0,
+                                                       "");
 
             this.setBody("desktop");
             this.renderDock = true;
@@ -96,14 +100,14 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO METODO SURF");
 
         try {
-            this.getDashboardBean().getService().updateThroughBreadCrumb(sesion,
-                                                                         matrixID,
-                                                                         "");
+            this.dashboardBean.updateThroughBreadCrumb(sesion,
+                                                       matrixID,
+                                                       "");
 
-            this.getBreadCrumbBean().populate(null);
+            this.breadCrumbBean.populate(null);
 
             if (javaID.equals(1)) {
-                this.getDashboardBean().populate(null);
+                this.dashboardBean.populate(null);
 
                 this.setBody("desktop");
                 this.renderDock = true;
@@ -143,15 +147,15 @@ public class PortalBean implements INavigation {
     public void handleTitleChange(ActionEvent event) {
         LOG.info("INICIO EVENTO CLICK EN GUARDAR NUEVO TITULO");
 
-        for (IMatrixApplication ma : this.getDashboardBean().getMatrix().getApplications()) {
+        for (IMatrixApplication ma : this.dashboardBean.getMatrix().getApplications()) {
             IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
 
-            if (model.getPropertyValue(Property.JSF_CLIENT_ID).equals(this.getDashboardBean().getSelectedPanel().getId())) {
-                if (this.getDashboardBean().getTitleSelectedPanel() != null) {
-                    this.getDashboardBean().getService().titleRename(model.getPropertyValue(Property.SESION),
-                                                                     model.getPropertyValue(Property.MATRIX_ID),
-                                                                     this.getDashboardBean().getTitleSelectedPanel());
-                    this.getDashboardBean().populate(null);
+            if (model.getPropertyValue(Property.JSF_CLIENT_ID).equals(this.dashboardBean.getSelectedPanel().getId())) {
+                if (this.dashboardBean.getTitleSelectedPanel() != null) {
+                    this.dashboardBean.titleRename(model.getPropertyValue(Property.SESION),
+                                                   model.getPropertyValue(Property.MATRIX_ID),
+                                                   this.dashboardBean.getTitleSelectedPanel());
+                    this.dashboardBean.populate(null);
                     return;
                 }
             }
@@ -171,7 +175,7 @@ public class PortalBean implements INavigation {
             return;
         }
 
-        for (IMatrixApplication ma : this.getDashboardBean().getMatrix().getApplications()) {
+        for (IMatrixApplication ma : this.dashboardBean.getMatrix().getApplications()) {
             if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JSF_CLIENT_ID).equals(d.getId())) {
                 this.updateThroughBreadCrumb(ma);
 
@@ -217,46 +221,10 @@ public class PortalBean implements INavigation {
         IUserBean lb = (IUserBean) ctx.getBean("userBean");
 
         this.updateThroughBreadCrumbHome(lb.getUser().getId());
-        this.getBreadCrumbBean().populate(null);
-        this.getDockBean().populate(null);
-        this.getDashboardBean().populate(null);
+        this.breadCrumbBean.populate(null);
+        this.dockBean.populate(null);
+        this.dashboardBean.populate(null);
 
         this.updateView();
-    }
-
-    public DashBoardBean getDashboardBean() {
-        if (this.dashboardBean == null) {
-            this.dashboardBean = new DashBoardBean(this.ds);
-        }
-
-        return dashboardBean;
-    }
-
-    public void setDashboardBean(DashBoardBean matrixBean) {
-        this.dashboardBean = matrixBean;
-    }
-
-    public BreadCrumbBean getBreadCrumbBean() {
-        if (this.breadCrumbBean == null) {
-            this.breadCrumbBean = new BreadCrumbBean(this.ds);
-        }
-
-        return breadCrumbBean;
-    }
-
-    public void setBreadCrumbBean(BreadCrumbBean beadCrumbBean) {
-        this.breadCrumbBean = beadCrumbBean;
-    }
-
-    public DockBean getDockBean() {
-        if (this.dockBean == null) {
-            this.dockBean = new DockBean(this.ds);
-        }
-
-        return dockBean;
-    }
-
-    public void setDockBean(DockBean dockBean) {
-        this.dockBean = dockBean;
     }
 }
