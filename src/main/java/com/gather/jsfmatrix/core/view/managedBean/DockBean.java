@@ -58,8 +58,7 @@ public class DockBean extends JSFViewer {
 
             if (lb != null && lb.getUser().getId() != null) {
                 this.dockService.getList().resetParameter();
-                this.dockService.getList().addParameter("1",
-                                                        lb.getUser().getId());
+                this.dockService.getList().addParameter(lb.getUser().getId());
                 this.dockService.getList().executeQuery();
 
                 List<List<Object>> data = this.dockService.getList().getResultSetasListofList();

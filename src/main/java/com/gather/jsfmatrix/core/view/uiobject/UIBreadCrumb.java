@@ -73,18 +73,7 @@ public class UIBreadCrumb implements UIJSFObject {
                     List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
 
                     for (IMatrixApplication ma : data) {
-                        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(FacesContext.getCurrentInstance());
-                        item.setId("breadcrumb_item_" +
-                                           FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                           "_" +
-                                           java.util.Calendar.getInstance().getTimeInMillis());
-                        item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
-                        item.setTransient(true);
-                        item.setUpdate("@this");
-                        item.setProcess("@this");
-                        item.getAttributes().put("ma",
-                                                 ma);
-                        item.addActionListener(new BreadCrumbListener());
+                        MenuItem item = getMenuItem(ma);
 
                         this.getMenuModel().addMenuItem(item);
                         this.getBreadCrumb().getChildren().add(item);
@@ -94,6 +83,22 @@ public class UIBreadCrumb implements UIJSFObject {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
+    }
+
+    private MenuItem getMenuItem(IMatrixApplication ma) {
+        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(FacesContext.getCurrentInstance());
+        item.setId("breadcrumb_item_" +
+                           FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
+                           "_" +
+                           java.util.Calendar.getInstance().getTimeInMillis());
+        item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
+        item.setTransient(true);
+        item.setUpdate("@this");
+        item.setProcess("@this");
+        item.getAttributes().put("ma",
+                                 ma);
+        item.addActionListener(new BreadCrumbListener());
+        return item;
     }
 
     public void resetState() {

@@ -40,9 +40,9 @@ import java.util.Map;
 public class UIDashBoard implements UIJSFObject {
     private static final Logger LOG = Logger.getLogger(UIDashBoard.class);
 
-    private IApplicationModel applicationModel;
     private Dashboard dashBoard;
     private DashboardModel dashBoardModel;
+    private IApplicationModel applicationModel;
 
     public IApplicationModel getApplicationModel() {
         if (this.applicationModel == null) {
@@ -172,20 +172,15 @@ public class UIDashBoard implements UIJSFObject {
                 if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
                     item.setClosable(true);
 
-                    AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
-                    ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
-                    ab.setImmediate(true);
-                    ab.setTransient(true);
+                    AjaxBehavior ab = getAjaxBehavior(fc);
 
                     item.addClientBehavior("close",
                                            ab);
                 }
             } else {
                 try {
-                    item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-                    item.setId("hidden_panels_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                    item.setStyle("border: 0; height: " + PrimeFacesUIComponentsFactory.WIDGET_HEIGHT + "px; width: " + PrimeFacesUIComponentsFactory.WIDGET_WIDTH + "px; margin: 5px;");
-                    item.setTransient(true);
+                    item = getPanel(fc,
+                                    timeInMillis);
                 } catch (Exception e) {
                     LOG.error(e.getMessage());
                 }
@@ -235,6 +230,24 @@ public class UIDashBoard implements UIJSFObject {
         }
     }
 
+    private Panel getPanel(FacesContext fc,
+                           long timeInMillis) {
+        Panel item;
+        item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
+        item.setId("hidden_panels_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        item.setStyle("border: 0; height: " + PrimeFacesUIComponentsFactory.WIDGET_HEIGHT + "px; width: " + PrimeFacesUIComponentsFactory.WIDGET_WIDTH + "px; margin: 5px;");
+        item.setTransient(true);
+        return item;
+    }
+
+    private AjaxBehavior getAjaxBehavior(FacesContext fc) {
+        AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
+        ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
+        ab.setImmediate(true);
+        ab.setTransient(true);
+        return ab;
+    }
+
     private void populateWithIcon(FacesContext fc,
                                   List<IMatrixApplication> data,
                                   List<Object> propertiesList,
@@ -246,61 +259,29 @@ public class UIDashBoard implements UIJSFObject {
         }
 
         for (IMatrixApplication ma : data) {
-            Panel item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-            item.setId("WIDGET_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-            item.setStyle("height: 140px; width: " + (950 / Integer.valueOf(propertiesList.get(1).toString()) - 10) + "px; margin: 2px;");
-            item.setStyleClass("ui-dashboard-icon-panel");
-            item.setClosable(false);
-            item.setTransient(true);
-            item.setToggleable(false);
+            Panel item = getPanel(fc,
+                                  propertiesList,
+                                  timeInMillis);
 
-            HtmlGraphicImage imageBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
-            imageBotonQuitar.setId("imagenQuitarWG_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-            imageBotonQuitar.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
-            imageBotonQuitar.setTransient(true);
+            HtmlGraphicImage imageBotonQuitar = getHtmlGraphicImage(fc,
+                                                                    timeInMillis);
 
-            ResourceHandler rh = fc.getApplication().getResourceHandler();
+            aplicarImagen(fc,
+                          ma,
+                          imageBotonQuitar);
 
-            if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
-                Resource r = rh.createResource("images/borrar.png",
-                                               "gather");
-
-                if (r != null) {
-                    imageBotonQuitar.setUrl(r.getRequestPath());
-                }
-            } else {
-                Resource r = rh.createResource("images/vacio5x5.png",
-                                               "gather");
-
-                if (r != null) {
-                    imageBotonQuitar.setUrl(r.getRequestPath());
-                }
-            }
-
-            CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
-            botonQuitar.setId("botonQuitarWidget_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-            botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
-            botonQuitar.addActionListener(new CMDeleteWidgetListener());
-            botonQuitar.getAttributes().put("IMatrixApplicationModel",
-                                            ma);
-            botonQuitar.setTitle("Quitar icono");
-            botonQuitar.setTransient(true);
-            botonQuitar.setUpdate("myForm");
-            botonQuitar.setProcess("@this");
-            botonQuitar.getChildren().add(imageBotonQuitar);
+            CommandLink botonQuitar = getCommandLinkBotonQuitar(fc,
+                                                                timeInMillis,
+                                                                ma,
+                                                                imageBotonQuitar);
 
             if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
                 botonQuitar.setDisabled(true);
             }
 
-            HtmlPanelGrid panelBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
-            panelBotonQuitar.setId("panelBotones_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-            panelBotonQuitar.setStyle("float: right; margin: 0px; border:0; width: 15px; height: 15px; text-align: center;");
-            panelBotonQuitar.setColumns(1);
-            panelBotonQuitar.setCellpadding("0");
-            panelBotonQuitar.setCellspacing("0");
-            panelBotonQuitar.setTransient(true);
-            panelBotonQuitar.getChildren().add(botonQuitar);
+            HtmlPanelGrid panelBotonQuitar = getHtmlPanelGridPanelBotonQuitar(fc,
+                                                                              timeInMillis,
+                                                                              botonQuitar);
 
             item.getChildren().add(panelBotonQuitar);
 
@@ -353,14 +334,9 @@ public class UIDashBoard implements UIJSFObject {
                                                  ab);
                             ol.getChildren().add(ot);
 
-                            HtmlPanelGrid panelTexto = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
-                            panelTexto.setId("panelTexto_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                            panelTexto.setStyle("width: 100%; text-align: center;");
-                            panelTexto.setColumns(1);
-                            panelTexto.setCellpadding("0");
-                            panelTexto.setCellspacing("0");
-                            panelTexto.setTransient(true);
-                            panelTexto.getChildren().add(ol);
+                            HtmlPanelGrid panelTexto = getHtmlPanelGridTexto(fc,
+                                                                             timeInMillis,
+                                                                             ol);
 
                             item.getChildren().add(panelTexto);
                         }
@@ -383,6 +359,96 @@ public class UIDashBoard implements UIJSFObject {
             this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
                                                                     item.getId());
         }
+    }
+
+    private HtmlPanelGrid getHtmlPanelGridTexto(FacesContext fc,
+                                                long timeInMillis,
+                                                HtmlOutputLink ol) {
+        HtmlPanelGrid panelTexto = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
+        panelTexto.setId("panelTexto_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        panelTexto.setStyle("width: 100%; text-align: center;");
+        panelTexto.setColumns(1);
+        panelTexto.setCellpadding("0");
+        panelTexto.setCellspacing("0");
+        panelTexto.setTransient(true);
+        panelTexto.getChildren().add(ol);
+        return panelTexto;
+    }
+
+    private void aplicarImagen(FacesContext fc,
+                               IMatrixApplication ma,
+                               HtmlGraphicImage imageBotonQuitar) {
+        ResourceHandler rh = fc.getApplication().getResourceHandler();
+
+        if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
+            Resource r = rh.createResource("images/borrar.png",
+                                           "gather");
+
+            if (r != null) {
+                imageBotonQuitar.setUrl(r.getRequestPath());
+            }
+        } else {
+            Resource r = rh.createResource("images/vacio5x5.png",
+                                           "gather");
+
+            if (r != null) {
+                imageBotonQuitar.setUrl(r.getRequestPath());
+            }
+        }
+    }
+
+    private HtmlPanelGrid getHtmlPanelGridPanelBotonQuitar(FacesContext fc,
+                                                           long timeInMillis,
+                                                           CommandLink botonQuitar) {
+        HtmlPanelGrid panelBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
+        panelBotonQuitar.setId("panelBotones_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        panelBotonQuitar.setStyle("float: right; margin: 0px; border:0; width: 15px; height: 15px; text-align: center;");
+        panelBotonQuitar.setColumns(1);
+        panelBotonQuitar.setCellpadding("0");
+        panelBotonQuitar.setCellspacing("0");
+        panelBotonQuitar.setTransient(true);
+        panelBotonQuitar.getChildren().add(botonQuitar);
+        return panelBotonQuitar;
+    }
+
+    private CommandLink getCommandLinkBotonQuitar(FacesContext fc,
+                                                  long timeInMillis,
+                                                  IMatrixApplication ma,
+                                                  HtmlGraphicImage imageBotonQuitar) {
+        CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
+        botonQuitar.setId("botonQuitarWidget_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
+        botonQuitar.addActionListener(new CMDeleteWidgetListener());
+        botonQuitar.getAttributes().put("IMatrixApplicationModel",
+                                        ma);
+        botonQuitar.setTitle("Quitar icono");
+        botonQuitar.setTransient(true);
+        botonQuitar.setUpdate("myForm");
+        botonQuitar.setProcess("@this");
+        botonQuitar.getChildren().add(imageBotonQuitar);
+        return botonQuitar;
+    }
+
+    private HtmlGraphicImage getHtmlGraphicImage(FacesContext fc,
+                                                 long timeInMillis) {
+        HtmlGraphicImage imageBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
+        imageBotonQuitar.setId("imagenQuitarWG_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        imageBotonQuitar.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
+        imageBotonQuitar.setTransient(true);
+        return imageBotonQuitar;
+    }
+
+    private Panel getPanel(FacesContext fc,
+                           List<Object> propertiesList,
+                           long timeInMillis) {
+        Panel item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
+        item.setId("WIDGET_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        item.setStyle("height: 140px; width: " + (950 / Integer.valueOf(propertiesList.get(1).toString()) - 10) + "px; margin: 2px;");
+        item.setStyleClass("ui-dashboard-icon-panel");
+        item.setClosable(false);
+        item.setTransient(true);
+        item.setToggleable(false);
+        return item;
     }
 
     @Override
