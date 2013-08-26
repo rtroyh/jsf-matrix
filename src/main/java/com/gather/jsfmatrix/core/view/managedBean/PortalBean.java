@@ -11,8 +11,6 @@ import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.jsf.FacesContextUtils;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -21,6 +19,7 @@ import javax.faces.event.ActionEvent;
 public class PortalBean implements INavigation {
     private static final Logger LOG = Logger.getLogger(PortalBean.class);
 
+    private IUserBean userBean;
     private DockBean dockBean;
     private DashBoardBean dashboardBean;
     private BreadCrumbBean breadCrumbBean;
@@ -30,10 +29,12 @@ public class PortalBean implements INavigation {
 
     private String body = "desktop";
 
-    public PortalBean(final DockBean dockBean,
+    public PortalBean(final IUserBean userBean,
+                      final DockBean dockBean,
                       final BreadCrumbBean breadCrumbBean,
                       final DashBoardBean dashboardBean) {
         super();
+        this.userBean = userBean;
         this.dockBean = dockBean;
         this.dashboardBean = dashboardBean;
         this.breadCrumbBean = breadCrumbBean;
@@ -67,9 +68,6 @@ public class PortalBean implements INavigation {
 
     public void onClickHeader(ActionEvent event) {
         LOG.info("INICIO EVENTO IR A HOME");
-
-        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-        IUserBean userBean = (IUserBean) ctx.getBean("userBean");
 
         this.updateThroughBreadCrumb(userBean.getUser().getId(),
                                      0,
@@ -217,10 +215,7 @@ public class PortalBean implements INavigation {
     private void build() {
         LOG.info("INICIO CARGA COMPONENTES MATRIZ");
 
-        WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-        IUserBean lb = (IUserBean) ctx.getBean("userBean");
-
-        this.updateThroughBreadCrumbHome(lb.getUser().getId());
+        this.updateThroughBreadCrumbHome(userBean.getUser().getId());
         this.breadCrumbBean.populate(null);
         this.dockBean.populate(null);
         this.dashboardBean.populate(null);

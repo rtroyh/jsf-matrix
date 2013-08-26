@@ -11,26 +11,25 @@ import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
 import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
 import org.primefaces.component.panel.Panel;
-import org.springframework.beans.BeansException;
 import org.springframework.dao.DataAccessException;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.jsf.FacesContextUtils;
 
-import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
 
 public class DashBoardBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(DashBoardBean.class);
 
+    private IUserBean userBean;
     private IApplicationModel applicationModel;
     private MatrixService service;
     private Matrix matrix;
     private Panel selectedPanel;
     private String titleSelectedPanel = "";
 
-    public DashBoardBean(MatrixService service) {
+    public DashBoardBean(MatrixService service,
+                         IUserBean userBean) {
         super(new UIDashBoard());
+        this.userBean = userBean;
         this.service = service;
     }
 
@@ -88,51 +87,44 @@ public class DashBoardBean extends JSFViewer {
         try {
             this.getMatrix().getApplications().clear();
 
-            WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-            IUserBean userBean = (IUserBean) ctx.getBean("userBean");
+            IResultSetProvider resultSetProvider = service.getApplications(userBean.getUser().getId());
 
-            if (userBean != null && userBean.getUser().getId() != null) {
-                IResultSetProvider resultSetProvider = service.getApplications(userBean.getUser().getId());
+            List<List<Object>> properties = resultSetProvider.getResultSetasListofList(1);
+            List<List<Object>> data = resultSetProvider.getResultSetasListofList(2);
 
-                List<List<Object>> properties = resultSetProvider.getResultSetasListofList(1);
-                List<List<Object>> data = resultSetProvider.getResultSetasListofList(2);
+            if (Validator.validateList(data) && Validator.validateList(properties)) {
+                this.getMatrix().setProperties(properties);
 
-                if (Validator.validateList(data) && Validator.validateList(properties)) {
-                    this.getMatrix().setProperties(properties);
+                for (List<Object> lo : data) {
+                    if (Validator.validateLong(lo.get(0)) || Validator.validateInteger(lo.get(0))) {
+                        IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
+                        IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
 
-                    for (List<Object> lo : data) {
-                        if (Validator.validateLong(lo.get(0)) || Validator.validateInteger(lo.get(0))) {
-                            IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
-                            IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
+                        model.addProperty(Property.SESION,
+                                          userBean.getUser().getId());
+                        model.addProperty(Property.POSITION,
+                                          lo.get(0));
+                        model.addProperty(Property.MATRIX_ID,
+                                          lo.get(1));
+                        model.addProperty(Property.JAVA_ID,
+                                          lo.get(3));
+                        model.addProperty(Property.INSTANCE,
+                                          lo.get(4));
+                        model.addProperty(Property.TITLE,
+                                          lo.get(5));
+                        model.addProperty(Property.BORRABLE,
+                                          lo.get(7));
+                        model.addProperty(Property.VIEW_PATH,
+                                          lo.get(8));
+                        model.addProperty(Property.ICON_PATH,
+                                          lo.get(9));
+                        model.addProperty(Property.VIEW_TYPE,
+                                          properties.get(0).get(0));
 
-                            model.addProperty(Property.SESION,
-                                              userBean.getUser().getId());
-                            model.addProperty(Property.POSITION,
-                                              lo.get(0));
-                            model.addProperty(Property.MATRIX_ID,
-                                              lo.get(1));
-                            model.addProperty(Property.JAVA_ID,
-                                              lo.get(3));
-                            model.addProperty(Property.INSTANCE,
-                                              lo.get(4));
-                            model.addProperty(Property.TITLE,
-                                              lo.get(5));
-                            model.addProperty(Property.BORRABLE,
-                                              lo.get(7));
-                            model.addProperty(Property.VIEW_PATH,
-                                              lo.get(8));
-                            model.addProperty(Property.ICON_PATH,
-                                              lo.get(9));
-                            model.addProperty(Property.VIEW_TYPE,
-                                              properties.get(0).get(0));
-
-                            this.getMatrix().getApplications().add(ma);
-                        }
+                        this.getMatrix().getApplications().add(ma);
                     }
                 }
             }
-        } catch (BeansException e) {
-            LOG.error(e.getMessage());
         } catch (DataAccessException e) {
             LOG.error(e.getMessage());
         } catch (Exception e) {
@@ -178,24 +170,15 @@ public class DashBoardBean extends JSFViewer {
         LOG.info("INICIO INSERCION DE APPLICACION DESDE DOCK");
 
         try {
-            WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
-            IUserBean lb = (IUserBean) ctx.getBean("userBean");
+            IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
 
-            if (lb != null && ma != null && viewType != null) {
-                IApplicationModel model = ma.getMatrixApplicationHandler().getApplicationModel();
-
-                if (viewType.equals(ViewType.DOCK)) {
-                    service.addApplicationFromDock(lb.getUser().getId(),
-                                                   -1,
-                                                   model.getPropertyValue(Property.PAQUETE));
-                }
-
-                this.populate(null);
+            if (viewType.equals(ViewType.DOCK)) {
+                service.addApplicationFromDock(userBean.getUser().getId(),
+                                               -1,
+                                               model.getPropertyValue(Property.PAQUETE));
             }
-        } catch (BeansException e) {
-            LOG.error(e.getMessage());
-        } catch (DataAccessException e) {
-            LOG.error(e.getMessage());
+
+            this.populate(null);
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
