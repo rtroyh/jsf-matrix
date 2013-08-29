@@ -1,12 +1,18 @@
 package com.gather.jsfmatrix.core.service;
 
+import com.gather.gathercommons.model.IDataTableModel;
+import com.gather.springcommons.dataAccess.resultsetMapper.datatable.DefaultDataTableMapper;
+import com.gather.springcommons.dataAccess.resultsetMapper.datatable.IDataTableMapper;
+import com.gather.springcommons.dataAccess.resultsetMapper.datatable.RareCharacterDataTableMapperDecorator;
 import com.gather.springcommons.services.AdvancedSSPService;
 import com.gather.springcommons.services.IResultSetProvider;
+import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
 
 public class MatrixService {
+    private static final Logger LOG = Logger.getLogger(MatrixService.class);
     private DataSource ds;
 
     private AdvancedSSPService headerService;
@@ -144,8 +150,8 @@ public class MatrixService {
         return this.applicationsService;
     }
 
-    public final IResultSetProvider getApplications(Object sesion) throws
-                                                                   DataAccessException {
+    private IResultSetProvider getApplications(Object sesion) throws
+                                                              DataAccessException {
         final AdvancedSSPService ssp = this.getApplicationsService();
         ssp.resetParameter();
         ssp.addParameter(sesion);
@@ -153,4 +159,19 @@ public class MatrixService {
 
         return ssp;
     }
+
+    public final IDataTableModel getApplicationsModel(Object sesion) throws
+                                                                     DataAccessException {
+        try {
+            IResultSetProvider rp = this.getApplications(sesion);
+
+            IDataTableMapper mapper = new RareCharacterDataTableMapperDecorator(new DefaultDataTableMapper());
+            return mapper.executeMapper(rp);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+
+        return null;
+    }
+
 }

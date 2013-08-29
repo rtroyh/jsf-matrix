@@ -2,6 +2,7 @@ package com.gather.jsfmatrix.core.view.uiobject;
 
 import com.gather.gathercommons.util.Validator;
 import com.gather.jsfmatrix.core.IMatrixApplication;
+import com.gather.jsfmatrix.core.IMatrixApplicationHandler;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
 import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
@@ -33,6 +34,7 @@ import javax.faces.component.html.HtmlOutputLink;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorListener;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -66,11 +68,9 @@ public class UIDashBoard implements UIJSFObject {
 
     Dashboard getDashBoard() {
         if (this.dashBoard == null) {
-            this.dashBoard = PrimeFacesUIComponentsFactory.createMainDashboard(FacesContext.getCurrentInstance());
-            this.dashBoard.setId("myDashBoard" +
-                                         FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                         "_" +
-                                         java.util.Calendar.getInstance().getTimeInMillis());
+            final FacesContext currentInstance = FacesContext.getCurrentInstance();
+            this.dashBoard = PrimeFacesUIComponentsFactory.createMainDashboard(currentInstance);
+            this.dashBoard.setId("myDashBoard" + currentInstance.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
             this.dashBoard.setModel(this.getDashBoardModel());
             this.dashBoard.setTransient(true);
         }
@@ -172,7 +172,8 @@ public class UIDashBoard implements UIJSFObject {
                 if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
                     item.setClosable(true);
 
-                    AjaxBehavior ab = getAjaxBehavior(fc);
+                    AjaxBehavior ab = getAjaxBehavior(fc,
+                                                      new DashBoardPanelCloseListener());
 
                     item.addClientBehavior("close",
                                            ab);
@@ -240,9 +241,10 @@ public class UIDashBoard implements UIJSFObject {
         return item;
     }
 
-    private AjaxBehavior getAjaxBehavior(FacesContext fc) {
+    private AjaxBehavior getAjaxBehavior(FacesContext fc,
+                                         AjaxBehaviorListener listener) {
         AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
-        ab.addAjaxBehaviorListener(new DashBoardPanelCloseListener());
+        ab.addAjaxBehaviorListener(listener);
         ab.setImmediate(true);
         ab.setTransient(true);
         return ab;
@@ -275,7 +277,9 @@ public class UIDashBoard implements UIJSFObject {
                                                                 ma,
                                                                 imageBotonQuitar);
 
-            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
+            final IMatrixApplicationHandler matrixApplicationHandler = ma.getMatrixApplicationHandler();
+
+            if (!matrixApplicationHandler.getPropertyValue(Property.BORRABLE).equals(1)) {
                 botonQuitar.setDisabled(true);
             }
 
@@ -285,44 +289,42 @@ public class UIDashBoard implements UIJSFObject {
 
             item.getChildren().add(panelBotonQuitar);
 
-            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
-                                                                               item.getId());
+            matrixApplicationHandler.getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
+                                                                       item.getId());
 
-            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).equals(0)) {
+            if (!matrixApplicationHandler.getPropertyValue(Property.MATRIX_ID).equals(0)) {
 
                 //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
-                if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
+                if (matrixApplicationHandler.getPropertyValue(Property.VIEW_PATH) != null) {
                     try {
                         Object maBean = BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                         ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
+                                                         matrixApplicationHandler.getPropertyValue(Property.VIEW_PATH).toString());
                         if (maBean != null) {
 
                             IMatrixApplication maInst = (IMatrixApplication) maBean;
 
-                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
+                            MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
                                                            maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
 
-                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
+                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(matrixApplicationHandler.getPropertyValue(Property.MATRIX_ID).toString());
 
-                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
+                            MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
                                                            v.getUIJSFObject().getApplicationModel().getPropertyMap());
 
                             v.getUIJSFObject().populate(null);
 
                             item.getChildren().add(v.getUIJSFObject().getComponent());
 
-                            String title = ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString();
+                            final String title = matrixApplicationHandler.getPropertyValue(Property.TITLE).toString();
                             HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
                                                                                                    title.length() > 20 ? title.substring(0,
                                                                                                                                          19) + "..." : title);
-                            ot.setTitle(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE).toString());
+                            ot.setTitle(matrixApplicationHandler.getPropertyValue(Property.TITLE).toString());
                             ot.setStyleClass("ui-dashboard-icon-panel");
                             ot.setTransient(true);
 
-                            AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
-                            ab.addAjaxBehaviorListener(new TitlePopupListener());
-                            ab.setImmediate(true);
-                            ab.setTransient(true);
+                            AjaxBehavior ab = getAjaxBehavior(fc,
+                                                              new TitlePopupListener());
 
                             HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
                             ol.setId("link_de_panelcito_cli_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
@@ -352,7 +354,7 @@ public class UIDashBoard implements UIJSFObject {
 
             this.getDashBoard().getChildren().add(item);
 
-            Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
+            Integer item_pos = (Integer) matrixApplicationHandler.getApplicationModel().getPropertyValue(Property.POSITION) - 1;
             Integer col_index = item_pos % (Integer) propertiesList.get(1);
             Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
 

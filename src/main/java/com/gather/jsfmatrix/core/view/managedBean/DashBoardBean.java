@@ -1,19 +1,14 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
+import com.gather.gathercommons.model.IDataTableModel;
 import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.IMatrixApplication;
-import com.gather.jsfmatrix.core.Ingredients;
-import com.gather.jsfmatrix.core.Matrix;
-import com.gather.jsfmatrix.core.MatrixApplicationFactory;
-import com.gather.jsfmatrix.core.Property;
-import com.gather.jsfmatrix.core.RecipeFactory;
+import com.gather.jsfmatrix.core.*;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.MatrixService;
 import com.gather.jsfmatrix.core.view.JSFViewer;
 import com.gather.jsfmatrix.core.view.ViewType;
 import com.gather.jsfmatrix.core.view.uiobject.UIDashBoard;
-import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
 import org.primefaces.component.panel.Panel;
 import org.springframework.dao.DataAccessException;
@@ -94,10 +89,10 @@ public class DashBoardBean extends JSFViewer {
             final List<IMatrixApplication> matrixApplicationList = matrix1.getApplications();
             matrixApplicationList.clear();
 
-            IResultSetProvider resultSetProvider = service.getApplications(userBean.getUser().getId());
+            IDataTableModel matrixModel = service.getApplicationsModel(userBean.getUser().getId());
 
-            List<List<Object>> properties = resultSetProvider.getResultSetasListofList(1);
-            List<List<Object>> data = resultSetProvider.getResultSetasListofList(2);
+            List<List<Object>> properties = matrixModel.getTitles();
+            List<List<Object>> data = matrixModel.getHeaders();
 
             if (Validator.validateList(data) && Validator.validateList(properties)) {
                 matrix1.setProperties(properties);
