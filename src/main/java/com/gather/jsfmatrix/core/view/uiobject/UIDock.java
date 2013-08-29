@@ -76,26 +76,8 @@ public class UIDock implements UIJSFObject {
 
                     for (IMatrixApplication ma : data) {
                         FacesContext fc = FacesContext.getCurrentInstance();
-                        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(fc);
-                        item.setTransient(true);
-                        item.setId("dock_" + fc.getViewRoot().createUniqueId());
-                        item.setValue(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE));
-
-                        ResourceHandler rh = fc.getApplication().getResourceHandler();
-                        Resource r = rh.createResource("images/" + ma.getMatrixApplicationHandler().getPropertyValue(Property.ICON_PATH),
-                                                       "gather");
-
-                        if (r == null) {
-                            r = rh.createResource("images/vacio5x5.png",
-                                                  "gather");
-                        }
-
-                        item.setIcon(r.getRequestPath());
-                        item.getAttributes().put("ma",
-                                                 ma);
-                        item.addActionListener(new DockListener());
-                        item.setUpdate(":myForm");
-                        item.setProcess("@this");
+                        MenuItem item = getMenuItem(ma,
+                                                    fc);
 
                         this.getMenuModel().addMenuItem(item);
                         this.getDock().getChildren().add(item);
@@ -105,6 +87,38 @@ public class UIDock implements UIJSFObject {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
+    }
+
+    private MenuItem getMenuItem(IMatrixApplication ma,
+                                 FacesContext fc) {
+        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(fc);
+        item.setTransient(true);
+        item.setId("dock_" + fc.getViewRoot().createUniqueId());
+        item.setValue(ma.getMatrixApplicationHandler().getPropertyValue(Property.TITLE));
+
+        Resource r = getResource(ma,
+                                 fc);
+
+        item.setIcon(r.getRequestPath());
+        item.getAttributes().put("ma",
+                                 ma);
+        item.addActionListener(new DockListener());
+        item.setUpdate(":myForm");
+        item.setProcess("@this");
+        return item;
+    }
+
+    private Resource getResource(IMatrixApplication ma,
+                                 FacesContext fc) {
+        ResourceHandler rh = fc.getApplication().getResourceHandler();
+        Resource r = rh.createResource("images/" + ma.getMatrixApplicationHandler().getPropertyValue(Property.ICON_PATH),
+                                       "gather");
+
+        if (r == null) {
+            r = rh.createResource("images/vacio5x5.png",
+                                  "gather");
+        }
+        return r;
     }
 
     public void resetState() {
