@@ -14,7 +14,7 @@ public class DockServices {
         this.ds = ds;
     }
 
-    public AdvancedSSPService getList() {
+    public final AdvancedSSPService getList() {
         if (this.list == null) {
             this.list = new AdvancedSSPService(ds,
                                                "PORTAL.DOCK",

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.dao.DataAccessException;
 
 import javax.annotation.PostConstruct;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -124,9 +125,10 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO METODO SURF");
 
         if (ma != null && ma.updateBreadCrumb()) {
-            this.updateThroughBreadCrumb(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.SESION),
-                                         ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.MATRIX_ID),
-                                         ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JAVA_ID));
+            final IApplicationModel applicationModel = ma.getMatrixApplicationHandler().getApplicationModel();
+            this.updateThroughBreadCrumb(applicationModel.getPropertyValue(Property.SESION),
+                                         applicationModel.getPropertyValue(Property.MATRIX_ID),
+                                         applicationModel.getPropertyValue(Property.JAVA_ID));
         }
     }
 
@@ -164,10 +166,11 @@ public class PortalBean implements INavigation {
         LOG.info("INICIO EVENTO HANDLE VIEW");
 
         Panel d;
-        if (event.getComponent().getParent() instanceof Panel) {
-            d = (Panel) event.getComponent().getParent();
-        } else if (event.getComponent().getParent().getParent() instanceof Panel) {
-            d = (Panel) event.getComponent().getParent().getParent();
+        final UIComponent parent = event.getComponent().getParent();
+        if (parent instanceof Panel) {
+            d = (Panel) parent;
+        } else if (parent.getParent() instanceof Panel) {
+            d = (Panel) parent.getParent();
         } else {
             LOG.info("PANEL NO ENCONTRADO");
             return;

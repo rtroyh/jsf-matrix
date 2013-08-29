@@ -1,23 +1,21 @@
 package com.gather.jsfmatrix.core.service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import com.gather.gathercommons.enums.DS;
 import com.gather.gathercommons.util.Printer;
 import com.gather.gathercommons.util.Validator;
 import com.gather.springcommons.dataAccess.rowmappers.ListMapper;
 import com.gather.springcommons.services.AdvancedSSPService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.faces.context.FacesContext;
+import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public final class QueryHandler {
 
@@ -99,8 +97,7 @@ public final class QueryHandler {
                                                         " " +
                                                         Arrays.toString(param));
 
-        if (Validator.validateString(query) &&
-                param != null) {
+        if (Validator.validateString(query) && param != null) {
             return this.getJdbcTemplate().queryForList(query.trim(),
                                                        param,
                                                        Object.class);
@@ -118,8 +115,7 @@ public final class QueryHandler {
                                                         " " +
                                                         Arrays.toString(param));
 
-        if (Validator.validateString(query) &&
-                param != null) {
+        if (Validator.validateString(query) && param != null) {
             return this.getJdbcTemplate().query(query.trim(),
                                                 param,
                                                 new ListMapper());
@@ -190,8 +186,7 @@ public final class QueryHandler {
                                                         " " +
                                                         Arrays.toString(param));
 
-        if (Validator.validateString(query) &&
-                param != null) {
+        if (Validator.validateString(query) && param != null) {
             this.getJdbcTemplate().update(query.trim(),
                                           param);
         } else {

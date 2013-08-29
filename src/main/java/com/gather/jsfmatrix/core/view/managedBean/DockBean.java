@@ -64,19 +64,14 @@ public class DockBean extends JSFViewer {
 
             List<List<Object>> data = this.dockService.getList().getResultSetasListofList();
 
-            this.getMatrix().getApplications().clear();
+            final List<IMatrixApplication> matrixApplicationList = this.getMatrix().getApplications();
+            matrixApplicationList.clear();
 
             if (Validator.validateList(data)) {
                 for (List<Object> lo : data) {
-                    IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
-                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
-                                                                                       lo.get(0));
-                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
-                                                                                       lo.get(1));
-                    ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
-                                                                                       lo.get(2));
+                    IMatrixApplication ma = createMatrixApplication(lo);
 
-                    this.getMatrix().getApplications().add(ma);
+                    matrixApplicationList.add(ma);
                 }
             }
         } catch (BeansException e) {
@@ -86,6 +81,17 @@ public class DockBean extends JSFViewer {
         } catch (Exception e) {
             LOG.error(e.getMessage());
         }
+    }
+
+    private IMatrixApplication createMatrixApplication(List<Object> lo) {
+        IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
+        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
+                                                                           lo.get(0));
+        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
+                                                                           lo.get(1));
+        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
+                                                                           lo.get(2));
+        return ma;
     }
 
     @Override

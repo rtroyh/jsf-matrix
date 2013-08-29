@@ -14,15 +14,14 @@ public class LoginService {
     private AdvancedSSPService claveUsuarioService;
 
     public LoginService(DataSource ds) {
-        super();
         this.ds = ds;
     }
 
     private AdvancedSSPService getSeguridadService() {
-        if (this.sesionService == null) {
-            this.sesionService = new AdvancedSSPService(ds,
-                                                        "SEG.ACCESO_SP",
-                                                        1);
+        if (this.seguridadService == null) {
+            this.seguridadService = new AdvancedSSPService(ds,
+                                                           "SEG.ACCESO_SP",
+                                                           1);
         }
 
         return seguridadService;
@@ -48,35 +47,37 @@ public class LoginService {
         return this.claveUsuarioService;
     }
 
-    public IResultSetProvider sesionService(Object userName) throws
-                                                             DataAccessException {
-        this.getSesionService().resetParameter();
-        this.getSesionService().addParameter(userName);
-        this.getSesionService().executeQuery();
+    public final IResultSetProvider sesionService(Object userName) throws
+                                                                   DataAccessException {
+        final AdvancedSSPService service = this.getSesionService();
+        service.resetParameter();
+        service.addParameter(userName);
+        service.executeQuery();
 
-        return this.getSesionService();
+        return service;
     }
 
-    public IResultSetProvider claveUsuarioService(Object sesion) throws
-                                                                 DataAccessException {
-        this.getClaveUsuarioService().resetParameter();
-        this.getClaveUsuarioService().addParameter(sesion);
-        this.getClaveUsuarioService().executeQuery();
+    public final IResultSetProvider claveUsuarioService(Object sesion) throws
+                                                                       DataAccessException {
+        final AdvancedSSPService service = this.getClaveUsuarioService();
+        service.resetParameter();
+        service.addParameter(sesion);
+        service.executeQuery();
 
-        return this.getClaveUsuarioService();
+        return service;
     }
 
-    public IResultSetProvider seguridadService(Object puerta,
-                                               Object instancia,
-                                               Object usuario) throws
-                                                               DataAccessException {
-        this.getSeguridadService().resetParameter();
-        this.getSeguridadService().addParameter(puerta);
-        this.getSeguridadService().addParameter(instancia);
-        this.getSeguridadService().addParameter(usuario);
-        this.getSeguridadService().executeQuery();
+    public final IResultSetProvider seguridadService(Object puerta,
+                                                     Object instancia,
+                                                     Object usuario) throws
+                                                                     DataAccessException {
+        final AdvancedSSPService service = this.getSeguridadService();
+        service.resetParameter();
+        service.addParameter(puerta);
+        service.addParameter(instancia);
+        service.addParameter(usuario);
+        service.executeQuery();
 
-        return this.getSeguridadService();
+        return service;
     }
-
 }

@@ -1,7 +1,12 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
 import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.*;
+import com.gather.jsfmatrix.core.IMatrixApplication;
+import com.gather.jsfmatrix.core.Ingredients;
+import com.gather.jsfmatrix.core.Matrix;
+import com.gather.jsfmatrix.core.MatrixApplicationFactory;
+import com.gather.jsfmatrix.core.Property;
+import com.gather.jsfmatrix.core.RecipeFactory;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.MatrixService;
@@ -85,7 +90,9 @@ public class DashBoardBean extends JSFViewer {
         LOG.info("INICIO CONSTRUCCION DASHBOARD");
 
         try {
-            this.getMatrix().getApplications().clear();
+            final Matrix matrix1 = this.getMatrix();
+            final List<IMatrixApplication> matrixApplicationList = matrix1.getApplications();
+            matrixApplicationList.clear();
 
             IResultSetProvider resultSetProvider = service.getApplications(userBean.getUser().getId());
 
@@ -93,7 +100,7 @@ public class DashBoardBean extends JSFViewer {
             List<List<Object>> data = resultSetProvider.getResultSetasListofList(2);
 
             if (Validator.validateList(data) && Validator.validateList(properties)) {
-                this.getMatrix().setProperties(properties);
+                matrix1.setProperties(properties);
 
                 for (List<Object> lo : data) {
                     if (Validator.validateLong(lo.get(0)) || Validator.validateInteger(lo.get(0))) {
@@ -121,7 +128,7 @@ public class DashBoardBean extends JSFViewer {
                         model.addProperty(Property.VIEW_TYPE,
                                           properties.get(0).get(0));
 
-                        this.getMatrix().getApplications().add(ma);
+                        matrixApplicationList.add(ma);
                     }
                 }
             }
@@ -135,6 +142,7 @@ public class DashBoardBean extends JSFViewer {
     @Override
     public void populate(Map<Ingredients, Object> recipe) {
         LOG.info("INICIO POBLAMIENTO DASHBOARD");
+
         try {
             this.build();
 
