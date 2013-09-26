@@ -86,11 +86,9 @@ public class UIBreadCrumb implements UIJSFObject {
     }
 
     private MenuItem getMenuItem(IMatrixApplication ma) {
-        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(FacesContext.getCurrentInstance());
-        item.setId("breadcrumb_item_" +
-                           FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                           "_" +
-                           java.util.Calendar.getInstance().getTimeInMillis());
+        final FacesContext currentInstance = FacesContext.getCurrentInstance();
+        MenuItem item = PrimeFacesUIComponentsFactory.createMenuItem(currentInstance);
+        item.setId("breadcrumb_item_" + currentInstance.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
         item.setValue(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE));
         item.setTransient(true);
         item.setUpdate("@this");

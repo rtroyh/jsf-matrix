@@ -299,8 +299,8 @@ public class UIDashBoard implements UIJSFObject {
                     try {
                         Object maBean = BeanUtil.getBean(FacesContext.getCurrentInstance(),
                                                          matrixApplicationHandler.getPropertyValue(Property.VIEW_PATH).toString());
-                        if (maBean != null) {
 
+                        if (maBean != null) {
                             IMatrixApplication maInst = (IMatrixApplication) maBean;
 
                             MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
@@ -315,26 +315,9 @@ public class UIDashBoard implements UIJSFObject {
 
                             item.getChildren().add(v.getUIJSFObject().getComponent());
 
-                            final String title = matrixApplicationHandler.getPropertyValue(Property.TITLE).toString();
-                            HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
-                                                                                                   title.length() > 20 ? title.substring(0,
-                                                                                                                                         19) + "..." : title);
-                            ot.setTitle(matrixApplicationHandler.getPropertyValue(Property.TITLE).toString());
-                            ot.setStyleClass("ui-dashboard-icon-panel");
-                            ot.setTransient(true);
-
-                            AjaxBehavior ab = getAjaxBehavior(fc,
-                                                              new TitlePopupListener());
-
-                            HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
-                            ol.setId("link_de_panelcito_cli_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-                            ol.setStyle("text-decoration: none;");
-                            ol.setTransient(true);
-                            ol.setValue("#");
-                            ol.setOnmouseup("titleChangeWidgetdialog.show(); return false;");
-                            ol.addClientBehavior("click",
-                                                 ab);
-                            ol.getChildren().add(ot);
+                            HtmlOutputLink ol = getHtmlOutputLink(fc,
+                                                                  timeInMillis,
+                                                                  matrixApplicationHandler);
 
                             HtmlPanelGrid panelTexto = getHtmlPanelGridTexto(fc,
                                                                              timeInMillis,
@@ -361,6 +344,32 @@ public class UIDashBoard implements UIJSFObject {
             this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
                                                                     item.getId());
         }
+    }
+
+    private HtmlOutputLink getHtmlOutputLink(FacesContext fc,
+                                             long timeInMillis,
+                                             IMatrixApplicationHandler matrixApplicationHandler) {
+        final String title = matrixApplicationHandler.getPropertyValue(Property.TITLE).toString();
+        HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
+                                                                               title.length() > 20 ? title.substring(0,
+                                                                                                                     19) + "..." : title);
+        ot.setTitle(matrixApplicationHandler.getPropertyValue(Property.TITLE).toString());
+        ot.setStyleClass("ui-dashboard-icon-panel");
+        ot.setTransient(true);
+
+        AjaxBehavior ab = getAjaxBehavior(fc,
+                                          new TitlePopupListener());
+
+        HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
+        ol.setId("link_de_panelcito_cli_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
+        ol.setStyle("text-decoration: none;");
+        ol.setTransient(true);
+        ol.setValue("#");
+        ol.setOnmouseup("titleChangeWidgetdialog.show(); return false;");
+        ol.addClientBehavior("click",
+                             ab);
+        ol.getChildren().add(ot);
+        return ol;
     }
 
     private HtmlPanelGrid getHtmlPanelGridTexto(FacesContext fc,
