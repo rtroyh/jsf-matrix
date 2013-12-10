@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class QueryHandler {
-
     private AdvancedSSPService advancedSSPService;
     private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
