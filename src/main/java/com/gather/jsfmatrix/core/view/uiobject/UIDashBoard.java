@@ -7,7 +7,6 @@ import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
 import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
 import com.gather.jsfmatrix.core.listener.DashBoardPanelCloseListener;
-import com.gather.jsfmatrix.core.listener.TitlePopupListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.IViewer;
@@ -30,7 +29,6 @@ import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlGraphicImage;
-import javax.faces.component.html.HtmlOutputLink;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
@@ -315,13 +313,9 @@ public class UIDashBoard implements UIJSFObject {
 
                             item.getChildren().add(v.getUIJSFObject().getComponent());
 
-                            HtmlOutputLink ol = getHtmlOutputLink(fc,
-                                                                  timeInMillis,
-                                                                  matrixApplicationHandler);
-
                             HtmlPanelGrid panelTexto = getHtmlPanelGridTexto(fc,
                                                                              timeInMillis,
-                                                                             ol);
+                                                                             matrixApplicationHandler);
 
                             item.getChildren().add(panelTexto);
                         }
@@ -346,35 +340,19 @@ public class UIDashBoard implements UIJSFObject {
         }
     }
 
-    private HtmlOutputLink getHtmlOutputLink(FacesContext fc,
-                                             long timeInMillis,
-                                             IMatrixApplicationHandler matrixApplicationHandler) {
-        final String title = matrixApplicationHandler.getPropertyValue(Property.TITLE).toString();
-        HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
-                                                                               title.length() > 20 ? title.substring(0,
-                                                                                                                     19) + "..." : title);
-        ot.setTitle(matrixApplicationHandler.getPropertyValue(Property.TITLE).toString());
-        ot.setStyleClass("ui-dashboard-icon-panel");
-        ot.setTransient(true);
-
-        AjaxBehavior ab = getAjaxBehavior(fc,
-                                          new TitlePopupListener());
-
-        HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
-        ol.setId("link_de_panelcito_cli_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-        ol.setStyle("text-decoration: none;");
-        ol.setTransient(true);
-        ol.setValue("#");
-        ol.setOnmouseup("titleChangeWidgetdialog.show(); return false;");
-        ol.addClientBehavior("click",
-                             ab);
-        ol.getChildren().add(ot);
-        return ol;
-    }
-
     private HtmlPanelGrid getHtmlPanelGridTexto(FacesContext fc,
                                                 long timeInMillis,
-                                                HtmlOutputLink ol) {
+                                                IMatrixApplicationHandler matrixApplicationHandler) {
+        final String title = matrixApplicationHandler.getPropertyValue(Property.TITLE).toString();
+        HtmlOutputText htmlOutputText = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
+                                                                                           title.length() > 20 ? title.substring(0,
+                                                                                                                                 19) + "..." : title
+        );
+
+        htmlOutputText.setTitle(matrixApplicationHandler.getPropertyValue(Property.TITLE).toString());
+        htmlOutputText.setStyleClass("ui-dashboard-icon-panel");
+        htmlOutputText.setTransient(true);
+
         HtmlPanelGrid panelTexto = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(fc);
         panelTexto.setId("panelTexto_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
         panelTexto.setStyle("width: 100%; text-align: center;");
@@ -382,7 +360,7 @@ public class UIDashBoard implements UIJSFObject {
         panelTexto.setCellpadding("0");
         panelTexto.setCellspacing("0");
         panelTexto.setTransient(true);
-        panelTexto.getChildren().add(ol);
+        panelTexto.getChildren().add(htmlOutputText);
         return panelTexto;
     }
 
