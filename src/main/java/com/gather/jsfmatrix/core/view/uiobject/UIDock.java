@@ -118,6 +118,7 @@ public class UIDock implements UIJSFObject {
             r = rh.createResource("images/vacio5x5.png",
                                   "gather");
         }
+
         return r;
     }
 

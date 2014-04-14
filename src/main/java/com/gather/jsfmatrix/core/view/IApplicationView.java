@@ -4,12 +4,12 @@ import java.util.Map;
 
 public interface IApplicationView {
 
-    public Map<String, IViewer> getViews();
+    public Map<String, JSFViewer> getViews();
 
-    public IViewer getView(String key);
+    public JSFViewer getView(String key);
 
     public void removeView(String key);
 
     public void addView(String key,
-                        IViewer ui);
+                        JSFViewer ui);
 }

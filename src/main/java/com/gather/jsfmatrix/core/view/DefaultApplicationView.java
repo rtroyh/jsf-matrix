@@ -7,11 +7,11 @@ import java.util.Map;
 
 public class DefaultApplicationView implements IApplicationView {
     private static final Logger LOG = Logger.getLogger(DefaultApplicationView.class);
-    private Map<String, IViewer> views;
+    private Map<String, JSFViewer> views;
 
     @Override
     public void addView(String key,
-                        IViewer ui) {
+                        JSFViewer ui) {
         LOG.debug("INICIO ADDVIEW CON KEY = " + key + " EN UN TOTAL DE " + this.getViews().size());
 
         this.getViews().put(key,
@@ -19,7 +19,7 @@ public class DefaultApplicationView implements IApplicationView {
     }
 
     @Override
-    public IViewer getView(String key) {
+    public JSFViewer getView(String key) {
         LOG.debug("INICIO GETVIEW CON KEY = " + key + " EN UN TOTAL DE " + this.getViews().size());
 
         try {
@@ -45,9 +45,9 @@ public class DefaultApplicationView implements IApplicationView {
     }
 
     @Override
-    public Map<String, IViewer> getViews() {
+    public Map<String, JSFViewer> getViews() {
         if (this.views == null) {
-            this.views = new LinkedHashMap<String, IViewer>();
+            this.views = new LinkedHashMap<String, JSFViewer>();
         }
 
         return views;

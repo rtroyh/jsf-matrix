@@ -213,15 +213,14 @@ public class PortalBean implements INavigation {
         }
     }
 
-    @SuppressWarnings("unused")
     @PostConstruct
     private void build() {
         LOG.info("INICIO CARGA COMPONENTES MATRIZ");
 
         this.updateThroughBreadCrumbHome(userBean.getUser().getId());
         this.breadCrumbBean.populate(null);
-        this.dockBean.populate(null);
         this.dashboardBean.populate(null);
+        this.dockBean.populate(null);
 
         this.updateView();
     }

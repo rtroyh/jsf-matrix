@@ -9,7 +9,7 @@ import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
 import com.gather.jsfmatrix.core.listener.DashBoardPanelCloseListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
-import com.gather.jsfmatrix.core.view.IViewer;
+import com.gather.jsfmatrix.core.view.JSFViewer;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
 import com.gather.jsfmatrix.util.MapPropertyUtil;
 import com.gather.jsfspringcommons.utils.BeanUtil;
@@ -199,7 +199,7 @@ public class UIDashBoard implements UIJSFObject {
                                                                                               ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
                                                            maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
-                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
+                            JSFViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
 
                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
                                                            v.getUIJSFObject().getApplicationModel().getPropertyMap());
@@ -304,7 +304,7 @@ public class UIDashBoard implements UIJSFObject {
                             MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
                                                            maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
 
-                            IViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(matrixApplicationHandler.getPropertyValue(Property.MATRIX_ID).toString());
+                            JSFViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(matrixApplicationHandler.getPropertyValue(Property.MATRIX_ID).toString());
 
                             MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
                                                            v.getUIJSFObject().getApplicationModel().getPropertyMap());

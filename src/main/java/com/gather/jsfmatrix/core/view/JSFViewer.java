@@ -1,8 +1,9 @@
 package com.gather.jsfmatrix.core.view;
 
+import com.gather.jsfmatrix.core.IPopulable;
 import com.gather.jsfmatrix.core.view.uiobject.UIJSFObject;
 
-public abstract class JSFViewer implements IViewer {
+public abstract class JSFViewer implements IPopulable {
     protected UIJSFObject uiObject;
 
     protected JSFViewer() {
@@ -25,5 +26,4 @@ public abstract class JSFViewer implements IViewer {
     public void resetState() {
         this.getUIJSFObject().resetState();
     }
-
 }
