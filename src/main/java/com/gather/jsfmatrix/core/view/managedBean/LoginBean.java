@@ -1,21 +1,20 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
-import javax.faces.context.FacesContext;
-import javax.sql.DataSource;
-
+import com.gather.gathercommons.util.Validator;
+import com.gather.jsfmatrix.core.service.LoginService;
+import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import com.gather.gathercommons.util.Validator;
-import com.gather.jsfmatrix.core.service.LoginService;
-import com.gather.springcommons.services.IResultSetProvider;
+import javax.faces.context.FacesContext;
+import javax.sql.DataSource;
 
 class LoginBean {
     private static final Logger LOG = Logger.getLogger(LoginBean.class);
 
-    private final DataSource ds;
+    private DataSource ds;
     private LoginService loginService;
     private String userName;
     private String password;
@@ -38,6 +37,7 @@ class LoginBean {
 
             WebApplicationContext ctx = FacesContextUtils.getWebApplicationContext(FacesContext.getCurrentInstance());
             IUserBean lb = (IUserBean) ctx.getBean("userBean");
+
             if (rp != null) {
                 if (Validator.validateList(rp.getResultSetasListofList()) &&
                         Validator.validateList(rp.getResultSetasListofList().get(0)) &&

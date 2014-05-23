@@ -30,7 +30,6 @@ public class PrimeFacesUIComponentsFactory {
 
     public static final int WIDGET_WIDTH = 315;
     public static final int WIDGET_HEIGHT = 220;
-    public static final int CALENDAR_WIDTH = 300;
 
     public static UIOutput createUIOutput(FacesContext fc) {
         Application application = fc.getApplication();
@@ -106,10 +105,7 @@ public class PrimeFacesUIComponentsFactory {
         ot.setEscape(false);
 
         String output = "<ui:include ";
-        output += "src=\"./app/" +
-                url +
-                "\"";
-
+        output += "src=\"./app/" + url + "\"";
         output += "></ui:include>";
 
         ot.setValue(output);
@@ -123,16 +119,10 @@ public class PrimeFacesUIComponentsFactory {
         ot.setEscape(false);
 
         String output = "<iframe ";
-        output += "src=\"./app/" +
-                url +
-                "/widget.xhtml" +
-                "\"";
-
+        output += "src=\"./app/" + url + "/widget.xhtml" + "\"";
         output += " height=\"100%\"";
         output += " width=\"100%\"";
-
         output += " scrolling=\"no\"";
-
         output += " />";
 
         ot.setValue(output);
@@ -149,9 +139,7 @@ public class PrimeFacesUIComponentsFactory {
     public static HtmlOutputText createHtmlOutputText(FacesContext fc,
                                                       String text) {
         HtmlOutputText o = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc);
-        o.setId(fc.getViewRoot().createUniqueId() +
-                        "_" +
-                        java.util.Calendar.getInstance().getTimeInMillis());
+        o.setId(fc.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
         o.setValue(text);
 
         return o;
@@ -194,9 +182,7 @@ public class PrimeFacesUIComponentsFactory {
     }
 
     public static Dashboard createMainDashboard(FacesContext fc) {
-        Dashboard d = PrimeFacesUIComponentsFactory.createDashboard(fc);
-
-        return d;
+        return PrimeFacesUIComponentsFactory.createDashboard(fc);
     }
 
     public static Panel createPanel(FacesContext fc) {
@@ -216,21 +202,15 @@ public class PrimeFacesUIComponentsFactory {
     public static Panel createDefaultWidgetPanel(FacesContext fc,
                                                  String title) {
         Panel p = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-        p.setId("panelcito_" +
-                        fc.getViewRoot().createUniqueId() +
-                        "_" +
-                        java.util.Calendar.getInstance().getTimeInMillis());
+        p.setId("panelcito_" + fc.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
         p.setTransient(true);
 
         HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
-                                                                               title.length() > 30
-                                                                                       ? title.substring(0,
-                                                                                                         29) +
-                                                                                       "..."
-                                                                                       : title);
-        ot.setId(fc.getViewRoot().createUniqueId() +
-                         "_" +
-                         java.util.Calendar.getInstance().getTimeInMillis());
+                                                                               title.length() > 30 ? title.substring(0,
+                                                                                                                     29) + "..." : title
+        );
+
+        ot.setId(fc.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
         ot.setTitle(title);
         ot.setTransient(true);
 
@@ -239,9 +219,7 @@ public class PrimeFacesUIComponentsFactory {
         ab.setImmediate(true);
 
         HtmlOutputLink ol = PrimeFacesUIComponentsFactory.createHtmlOutputLink(fc);
-        ol.setId("link_de_panelcito_cli" +
-                         fc.getViewRoot().createUniqueId() +
-                         java.util.Calendar.getInstance().getTimeInMillis());
+        ol.setId("link_de_panelcito_cli" + fc.getViewRoot().createUniqueId() + java.util.Calendar.getInstance().getTimeInMillis());
         ol.setTransient(true);
         ol.setValue("#");
         ol.setStyle("text-decoration: none;");
@@ -265,8 +243,7 @@ public class PrimeFacesUIComponentsFactory {
 
         HtmlOutputText otf = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
                                                                                 footer);
-        otf.setId(fc.getViewRoot().createUniqueId() +
-                          java.util.Calendar.getInstance().getTimeInMillis());
+        otf.setId(fc.getViewRoot().createUniqueId() + java.util.Calendar.getInstance().getTimeInMillis());
         otf.setTransient(true);
 
         p.getFacets().put("footer",
@@ -291,72 +268,54 @@ public class PrimeFacesUIComponentsFactory {
     public static Stack createStack(FacesContext fc) {
         Application application = fc.getApplication();
 
-        Stack d = (Stack) application.createComponent(Stack.COMPONENT_TYPE);
-
-        return d;
+        return (Stack) application.createComponent(Stack.COMPONENT_TYPE);
     }
 
     public static BreadCrumb createbreadCrumb(FacesContext fc) {
         Application application = fc.getApplication();
 
-        BreadCrumb d = (BreadCrumb) application.createComponent(BreadCrumb.COMPONENT_TYPE);
-
-        return d;
+        return (BreadCrumb) application.createComponent(BreadCrumb.COMPONENT_TYPE);
     }
 
     public static InputMask createInputMask(FacesContext fc) {
         Application application = fc.getApplication();
 
-        InputMask d = (InputMask) application.createComponent(InputMask.COMPONENT_TYPE);
-
-        return d;
+        return (InputMask) application.createComponent(InputMask.COMPONENT_TYPE);
     }
 
     public static HtmlOutputLabel createHtmlOutputLabel(FacesContext fc) {
         Application application = fc.getApplication();
 
-        HtmlOutputLabel d = (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
-
-        return d;
+        return (HtmlOutputLabel) application.createComponent(HtmlOutputLabel.COMPONENT_TYPE);
     }
 
     public static HtmlSelectOneMenu createHtmlSelectOneMenu(FacesContext fc) {
         Application application = fc.getApplication();
 
-        HtmlSelectOneMenu d = (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
-
-        return d;
+        return (HtmlSelectOneMenu) application.createComponent(HtmlSelectOneMenu.COMPONENT_TYPE);
     }
 
     public static UISelectItems createUISelectItems(FacesContext fc) {
         Application application = fc.getApplication();
 
-        UISelectItems d = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-
-        return d;
+        return (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
     }
 
     public static Dialog createDialog(FacesContext fc) {
         Application application = fc.getApplication();
 
-        Dialog d = (Dialog) application.createComponent(Dialog.COMPONENT_TYPE);
-
-        return d;
+        return (Dialog) application.createComponent(Dialog.COMPONENT_TYPE);
     }
 
     public static DataTable createDataTable(FacesContext fc) {
         Application application = fc.getApplication();
 
-        DataTable d = (DataTable) application.createComponent(DataTable.COMPONENT_TYPE);
-
-        return d;
+        return (DataTable) application.createComponent(DataTable.COMPONENT_TYPE);
     }
 
     public static UISelectItems creatUISelectItems(FacesContext fc) {
         Application application = fc.getApplication();
 
-        UISelectItems d = (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
-
-        return d;
+        return (UISelectItems) application.createComponent(UISelectItems.COMPONENT_TYPE);
     }
 }

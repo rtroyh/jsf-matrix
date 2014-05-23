@@ -12,6 +12,7 @@ import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.service.DockServices;
 import com.gather.jsfmatrix.core.view.JSFViewer;
 import com.gather.jsfmatrix.core.view.uiobject.UIDock;
+import com.gather.springcommons.services.IResultSetProvider;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.dao.DataAccessException;
@@ -58,11 +59,8 @@ public class DockBean extends JSFViewer {
         LOG.info("INICIO CONSTRUCCION DOCK");
 
         try {
-            this.dockService.getList().resetParameter();
-            this.dockService.getList().addParameter(userBean.getUser().getId());
-            this.dockService.getList().executeQuery();
-
-            List<List<Object>> data = this.dockService.getList().getResultSetasListofList();
+            IResultSetProvider listResultSetProvider = this.dockService.getListResultSetProvider(userBean.getUser().getId());
+            List<List<Object>> data = listResultSetProvider.getResultSetasListofList();
 
             final List<IMatrixApplication> matrixApplicationList = this.getMatrix().getApplications();
             matrixApplicationList.clear();

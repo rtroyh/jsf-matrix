@@ -7,7 +7,7 @@ import org.springframework.dao.DataAccessException;
 import javax.sql.DataSource;
 
 public class LoginService {
-    private final DataSource ds;
+    private DataSource ds;
 
     private AdvancedSSPService seguridadService;
     private AdvancedSSPService sesionService;

@@ -4,9 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Matrix {
-
-    private List<IMatrixApplication> applications;
     private List<List<Object>> Properties;
+    private List<IMatrixApplication> applications;
 
     public List<IMatrixApplication> getApplications() {
         if (this.applications == null) {
@@ -35,5 +34,4 @@ public class Matrix {
     public void setProperties(List<List<Object>> properties) {
         Properties = properties;
     }
-
 }
