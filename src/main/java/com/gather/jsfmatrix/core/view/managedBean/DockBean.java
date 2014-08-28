@@ -24,9 +24,9 @@ public class DockBean extends JSFViewer {
     private static final Logger LOG = Logger.getLogger(DockBean.class);
 
     private IUserBean userBean;
-    private IApplicationModel applicationModel;
     private Matrix matrix;
     private DockServices dockService;
+    private IApplicationModel applicationModel;
 
     public DockBean(DockServices dockService,
                     IUserBean userBean) {
@@ -83,12 +83,21 @@ public class DockBean extends JSFViewer {
 
     private IMatrixApplication createMatrixApplication(List<Object> lo) {
         IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
-        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.PAQUETE,
-                                                                           lo.get(0));
-        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.TITLE,
-                                                                           lo.get(1));
-        ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.ICON_PATH,
-                                                                           lo.get(2));
+        final IApplicationModel applicationModel = ma.getMatrixApplicationHandler().getApplicationModel();
+        applicationModel.addProperty(Property.PAQUETE,
+                                      lo.get(0));
+        applicationModel.addProperty(Property.TITLE,
+                                      lo.get(1));
+        applicationModel.addProperty(Property.ICON_PATH,
+                                      lo.get(2));
+
+        if (lo.size() == 5) {  //POR MODIFICACION PARA LINKS EXTERNOS
+            applicationModel.addProperty(Property.JAVA_ID,
+                                          lo.get(3));
+            applicationModel.addProperty(Property.VIEW_PATH,
+                                          lo.get(4));
+        }
+
         return ma;
     }
 

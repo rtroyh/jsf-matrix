@@ -1,5 +1,6 @@
 package com.gather.jsfmatrix.core.view.uiobject;
 
+import com.gather.gathercommons.util.Validator;
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
@@ -102,9 +103,22 @@ public class UIDock implements UIJSFObject {
         item.setIcon(r.getRequestPath());
         item.getAttributes().put("ma",
                                  ma);
-        item.addActionListener(new DockListener());
-        item.setUpdate(":myForm");
+
+        if (Validator.validateInteger(ma.getMatrixApplicationHandler().getPropertyValue(Property.JAVA_ID),
+                                      -1)) {
+            final Object viewPath = ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH);
+            item.setUrl(Validator.validateString(viewPath) ? viewPath.toString() : "blank");
+
+            item.setTarget("#");
+            item.setUpdate("@none");
+        } else {
+            item.addActionListener(new DockListener());
+            item.setUpdate(":myForm");
+        }
+
         item.setProcess("@this");
+        item.setPartialSubmit(true);
+
         return item;
     }
 
