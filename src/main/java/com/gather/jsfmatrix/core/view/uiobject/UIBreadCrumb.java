@@ -93,6 +93,7 @@ public class UIBreadCrumb implements UIJSFObject {
         item.setTransient(true);
         item.setUpdate("@this");
         item.setProcess("@this");
+        item.setPartialSubmit(true);
         item.getAttributes().put("ma",
                                  ma);
         item.addActionListener(new BreadCrumbListener());

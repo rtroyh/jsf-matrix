@@ -6,7 +6,6 @@ import com.gather.jsfmatrix.core.IMatrixApplicationHandler;
 import com.gather.jsfmatrix.core.Ingredients;
 import com.gather.jsfmatrix.core.Property;
 import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
-import com.gather.jsfmatrix.core.listener.DashBoardPanelCloseListener;
 import com.gather.jsfmatrix.core.model.ApplicationModelFactory;
 import com.gather.jsfmatrix.core.model.IApplicationModel;
 import com.gather.jsfmatrix.core.view.JSFViewer;
@@ -27,12 +26,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
 import javax.faces.component.UIComponent;
-import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorListener;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -131,121 +128,16 @@ public class UIDashBoard implements UIJSFObject {
                 }
 
                 if (validateData && validateProperties && validatePropertiesList) {
-
                     final long timeInMillis = Calendar.getInstance().getTimeInMillis();
                     if (Validator.validateInteger(propertiesList.get(0)) && Validator.validateInteger(propertiesList.get(1)) && propertiesList.get(0).equals(2)) {//1=widget, 2=iconos
                         populateWithIcon(fc,
                                          data,
                                          propertiesList,
                                          timeInMillis);
-                    } else {
-                        populateWithPanels(fc,
-                                           data,
-                                           propertiesList,
-                                           timeInMillis);
                     }
                 }
             }
         }
-    }
-
-    private void populateWithPanels(FacesContext fc,
-                                    List<IMatrixApplication> data,
-                                    List<Object> propertiesList,
-                                    long timeInMillis) {
-        Integer total = (Integer) propertiesList.get(1) - this.getDashBoardModel().getColumnCount();
-
-        for (int x = 0; x < total; x++) {
-            this.getDashBoardModel().addColumn(new DefaultDashboardColumn());
-        }
-
-        for (IMatrixApplication ma : data) {
-            Panel item = null;
-
-            if (!ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.JAVA_ID).equals(0)) {
-                item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc,
-                                                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.TITLE).toString());
-
-                item.setStyle(item.getStyle() + " background: white;");
-                if (ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.BORRABLE).equals(1)) {
-                    item.setClosable(true);
-
-                    AjaxBehavior ab = getAjaxBehavior(fc,
-                                                      new DashBoardPanelCloseListener());
-
-                    item.addClientBehavior("close",
-                                           ab);
-                }
-            } else {
-                try {
-                    item = getPanel(fc,
-                                    timeInMillis);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage());
-                }
-            }
-
-            ma.getMatrixApplicationHandler().getApplicationModel().addProperty(Property.JSF_CLIENT_ID,
-                                                                               item.getId());
-
-            if (!ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).equals(0)) {
-
-                //LA OBTENCION DE VIEWER MULTIPLES CON UN UNICO MANAGEDBEAN DEBE SER HECHO ACA Y SOLO ACA.
-                if (ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH) != null) {
-                    try {
-                        if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                             ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
-                            IMatrixApplication maInst = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                                                              ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
-                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                           maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
-                            JSFViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(ma.getMatrixApplicationHandler().getPropertyValue(Property.MATRIX_ID).toString());
-
-                            MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
-
-                            v.getUIJSFObject().populate(null);
-
-                            item.getChildren().add(v.getUIJSFObject().getComponent());
-                        }
-                    } catch (BeanCreationException e) {
-                        LOG.warn(e.getMessage());
-                    } catch (NoSuchBeanDefinitionException e) {
-                        LOG.warn(e.getMessage());
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage());
-                    }
-                }
-            }
-
-            this.getDashBoard().getChildren().add(item);
-
-            Integer item_pos = (Integer) ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.POSITION) - 1;
-            Integer col_index = item_pos % (Integer) propertiesList.get(1);
-            Integer item_index = (item_pos - col_index) / (Integer) propertiesList.get(1);
-
-            this.getDashBoardModel().getColumn(col_index).addWidget(item_index,
-                                                                    item.getId());
-        }
-    }
-
-    private Panel getPanel(FacesContext fc,
-                           long timeInMillis) {
-        Panel item;
-        item = PrimeFacesUIComponentsFactory.createDefaultWidgetPanel(fc);
-        item.setId("hidden_panels_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-        item.setStyle("border: 0; height: " + PrimeFacesUIComponentsFactory.WIDGET_HEIGHT + "px; width: " + PrimeFacesUIComponentsFactory.WIDGET_WIDTH + "px; margin: 5px;");
-        item.setTransient(true);
-        return item;
-    }
-
-    private AjaxBehavior getAjaxBehavior(FacesContext fc,
-                                         AjaxBehaviorListener listener) {
-        AjaxBehavior ab = (AjaxBehavior) fc.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
-        ab.addAjaxBehaviorListener(listener);
-        ab.setImmediate(true);
-        ab.setTransient(true);
-        return ab;
     }
 
     private void populateWithIcon(FacesContext fc,
@@ -263,17 +155,9 @@ public class UIDashBoard implements UIJSFObject {
                                   propertiesList,
                                   timeInMillis);
 
-            HtmlGraphicImage imageBotonQuitar = getHtmlGraphicImage(fc,
-                                                                    timeInMillis);
-
-            aplicarImagen(fc,
-                          ma,
-                          imageBotonQuitar);
-
             CommandLink botonQuitar = getCommandLinkBotonQuitar(fc,
                                                                 timeInMillis,
-                                                                ma,
-                                                                imageBotonQuitar);
+                                                                ma);
 
             final IMatrixApplicationHandler matrixApplicationHandler = ma.getMatrixApplicationHandler();
 
@@ -299,19 +183,19 @@ public class UIDashBoard implements UIJSFObject {
                                                          matrixApplicationHandler.getPropertyValue(Property.VIEW_PATH).toString());
 
                         if (maBean != null) {
-                            IMatrixApplication maInst = (IMatrixApplication) maBean;
+                            IMatrixApplication matrixApplicationFromBean = (IMatrixApplication) maBean;
 
                             MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
-                                                           maInst.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
+                                                           matrixApplicationFromBean.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
 
-                            JSFViewer v = maInst.getMatrixApplicationHandler().getIApplicationView().getView(matrixApplicationHandler.getPropertyValue(Property.MATRIX_ID).toString());
+                            JSFViewer jsfViewer = matrixApplicationFromBean.getMatrixApplicationHandler().getIApplicationView().getView(matrixApplicationHandler.getPropertyValue(Property.MATRIX_ID).toString());
 
                             MapPropertyUtil.copyProperties(matrixApplicationHandler.getApplicationModel().getPropertyMap(),
-                                                           v.getUIJSFObject().getApplicationModel().getPropertyMap());
+                                                           jsfViewer.getUIJSFObject().getApplicationModel().getPropertyMap());
 
-                            v.getUIJSFObject().populate(null);
+                            jsfViewer.getUIJSFObject().populate(null);
 
-                            item.getChildren().add(v.getUIJSFObject().getComponent());
+                            item.getChildren().add(jsfViewer.getUIJSFObject().getComponent());
 
                             HtmlPanelGrid panelTexto = getHtmlPanelGridTexto(fc,
                                                                              timeInMillis,
@@ -346,8 +230,7 @@ public class UIDashBoard implements UIJSFObject {
         final String title = matrixApplicationHandler.getPropertyValue(Property.TITLE).toString();
         HtmlOutputText htmlOutputText = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
                                                                                            title.length() > 20 ? title.substring(0,
-                                                                                                                                 19) + "..." : title
-        );
+                                                                                                                                 19) + "..." : title);
 
         htmlOutputText.setTitle(matrixApplicationHandler.getPropertyValue(Property.TITLE).toString());
         htmlOutputText.setStyleClass("ui-dashboard-icon-panel");
@@ -362,28 +245,6 @@ public class UIDashBoard implements UIJSFObject {
         panelTexto.setTransient(true);
         panelTexto.getChildren().add(htmlOutputText);
         return panelTexto;
-    }
-
-    private void aplicarImagen(FacesContext fc,
-                               IMatrixApplication ma,
-                               HtmlGraphicImage imageBotonQuitar) {
-        ResourceHandler rh = fc.getApplication().getResourceHandler();
-
-        if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
-            Resource r = rh.createResource("images/borrar.png",
-                                           "gather");
-
-            if (r != null) {
-                imageBotonQuitar.setUrl(r.getRequestPath());
-            }
-        } else {
-            Resource r = rh.createResource("images/vacio5x5.png",
-                                           "gather");
-
-            if (r != null) {
-                imageBotonQuitar.setUrl(r.getRequestPath());
-            }
-        }
     }
 
     private HtmlPanelGrid getHtmlPanelGridPanelBotonQuitar(FacesContext fc,
@@ -402,11 +263,14 @@ public class UIDashBoard implements UIJSFObject {
 
     private CommandLink getCommandLinkBotonQuitar(FacesContext fc,
                                                   long timeInMillis,
-                                                  IMatrixApplication ma,
-                                                  HtmlGraphicImage imageBotonQuitar) {
-        CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(FacesContext.getCurrentInstance());
+                                                  IMatrixApplication ma) {
+        HtmlGraphicImage imageBotonQuitar = getHtmlGraphicImageBotonQuitar(fc,
+                                                                           ma,
+                                                                           timeInMillis);
+
+        CommandLink botonQuitar = PrimeFacesUIComponentsFactory.createCommandLink(fc);
         botonQuitar.setId("botonQuitarWidget_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
-        botonQuitar.setStyle("float: right; margin: 0px; border:0; text-decoration: none;");
+        botonQuitar.setStyle("float: right; margin: 0px; border: 0; text-decoration: none;");
         botonQuitar.addActionListener(new CMDeleteWidgetListener());
         botonQuitar.getAttributes().put("IMatrixApplicationModel",
                                         ma);
@@ -418,12 +282,32 @@ public class UIDashBoard implements UIJSFObject {
         return botonQuitar;
     }
 
-    private HtmlGraphicImage getHtmlGraphicImage(FacesContext fc,
-                                                 long timeInMillis) {
+    private HtmlGraphicImage getHtmlGraphicImageBotonQuitar(FacesContext fc,
+                                                            IMatrixApplication ma,
+                                                            long timeInMillis) {
         HtmlGraphicImage imageBotonQuitar = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(FacesContext.getCurrentInstance());
         imageBotonQuitar.setId("imagenQuitarWG_" + fc.getViewRoot().createUniqueId() + "_" + timeInMillis);
         imageBotonQuitar.setStyle("width: 15px; height: 15px; margin: 0px; border:0; text-decoration: none;");
         imageBotonQuitar.setTransient(true);
+
+        ResourceHandler rh = fc.getApplication().getResourceHandler();
+
+        if (ma.getMatrixApplicationHandler().getPropertyValue(Property.BORRABLE).equals(1)) {
+            Resource r = rh.createResource("images/borrar.png",
+                                           "gather");
+
+            if (r != null) {
+                imageBotonQuitar.setUrl(r.getRequestPath());
+            }
+        } else {
+            Resource r = rh.createResource("images/vacio5x5.png",
+                                           "gather");
+
+            if (r != null) {
+                imageBotonQuitar.setUrl(r.getRequestPath());
+            }
+        }
+
         return imageBotonQuitar;
     }
 

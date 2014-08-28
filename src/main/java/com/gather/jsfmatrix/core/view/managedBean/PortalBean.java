@@ -184,18 +184,18 @@ public class PortalBean implements INavigation {
                     try {
                         if (BeanUtil.getBean(FacesContext.getCurrentInstance(),
                                              ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString()) != null) {
-                            IMatrixApplication lb = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
-                                                                                          ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
-                            lb.getMatrixApplicationHandler().getApplicationModel().getPropertyMap().clear();
+                            IMatrixApplication selectedMatrixApplication = (IMatrixApplication) BeanUtil.getBean(FacesContext.getCurrentInstance(),
+                                                                                                                 ma.getMatrixApplicationHandler().getPropertyValue(Property.VIEW_PATH).toString());
+                            selectedMatrixApplication.getMatrixApplicationHandler().getApplicationModel().getPropertyMap().clear();
 
                             MapPropertyUtil.copyProperties(ma.getMatrixApplicationHandler().getApplicationModel().getPropertyMap(),
-                                                           lb.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
+                                                           selectedMatrixApplication.getMatrixApplicationHandler().getApplicationModel().getPropertyMap());
 
-                            this.setRenderDock(lb.showDock());
-                            this.setRenderStack(lb.showStack());
+                            this.setRenderDock(selectedMatrixApplication.showDock());
+                            this.setRenderStack(selectedMatrixApplication.showStack());
 
                             LOG.info("LLAMANDO A METODO ONSTART ESPECIFICO DEL BEAN: " + ma.getMatrixApplicationHandler().getApplicationModel().getPropertyValue(Property.VIEW_PATH).toString());
-                            lb.onStart();
+                            selectedMatrixApplication.onStart();
                         }
                     } catch (BeanCreationException e) {
                         LOG.warn(e.getMessage());

@@ -38,8 +38,7 @@ public class DirectoryUIWidget implements UIJSFObject {
     public HtmlPanelGrid getPanel() {
         if (this.component == null) {
             this.component = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(FacesContext.getCurrentInstance());
-            this.component.setId(FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                         java.util.Calendar.getInstance().getTimeInMillis());
+            this.component.setId(FacesContext.getCurrentInstance().getViewRoot().createUniqueId() + java.util.Calendar.getInstance().getTimeInMillis());
             this.component.setStyle("margin: 0px;");
             this.component.setCellspacing("0");
             this.component.setCellpadding("0");
@@ -65,8 +64,7 @@ public class DirectoryUIWidget implements UIJSFObject {
     public HtmlPanelGrid getMatrix() {
         if (this.matrix == null) {
             this.matrix = PrimeFacesUIComponentsFactory.createHtmlPanelGrid(FacesContext.getCurrentInstance());
-            this.matrix.setId(FacesContext.getCurrentInstance().getViewRoot().createUniqueId() +
-                                      java.util.Calendar.getInstance().getTimeInMillis());
+            this.matrix.setId(FacesContext.getCurrentInstance().getViewRoot().createUniqueId() + java.util.Calendar.getInstance().getTimeInMillis());
             this.matrix.setStyle("height: 140px; width: 280px;");
             this.matrix.setTransient(true);
             this.matrix.setColumns(3);
@@ -83,21 +81,15 @@ public class DirectoryUIWidget implements UIJSFObject {
         if (this.botonIngresar == null) {
             FacesContext fc = FacesContext.getCurrentInstance();
             this.botonIngresar = PrimeFacesUIComponentsFactory.createCommandLink(fc);
-            this.botonIngresar.setId("botonIngresar_" +
-                                             fc.getViewRoot().createUniqueId() +
-                                             "_" +
-                                             java.util.Calendar.getInstance().getTimeInMillis());
+            this.botonIngresar.setId("botonIngresar_" + fc.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
             this.botonIngresar.setTransient(true);
             this.botonIngresar.setProcess("@this");
             this.botonIngresar.setUpdate("@none");
+            this.botonIngresar.setPartialSubmit(true);
 
             HtmlGraphicImage image = PrimeFacesUIComponentsFactory.createHtmlGraphicImage(fc);
-            image.setId("image_DirectoryUIWidget_" +
-                                fc.getViewRoot().createUniqueId() +
-                                java.util.Calendar.getInstance().getTimeInMillis());
-            image.setTitle(Validator.validateString(this.getApplicationModel().getPropertyValue(Property.TITLE))
-                                   ? this.getApplicationModel().getPropertyValue(Property.TITLE).toString()
-                                   : "");
+            image.setId("image_DirectoryUIWidget_" + fc.getViewRoot().createUniqueId() + java.util.Calendar.getInstance().getTimeInMillis());
+            image.setTitle(Validator.validateString(this.getApplicationModel().getPropertyValue(Property.TITLE)) ? this.getApplicationModel().getPropertyValue(Property.TITLE).toString() : "");
             image.setTransient(true);
 
             ResourceHandler rh = fc.getApplication().getResourceHandler();
