@@ -207,8 +207,7 @@ public class PrimeFacesUIComponentsFactory {
 
         HtmlOutputText ot = PrimeFacesUIComponentsFactory.createHtmlOutputText(fc,
                                                                                title.length() > 30 ? title.substring(0,
-                                                                                                                     29) + "..." : title
-        );
+                                                                                                                     29) + "..." : title);
 
         ot.setId(fc.getViewRoot().createUniqueId() + "_" + java.util.Calendar.getInstance().getTimeInMillis());
         ot.setTitle(title);

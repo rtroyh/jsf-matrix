@@ -15,6 +15,6 @@ public class RecipeFactory {
     }
 
     public static Map<Ingredients, Object> createRecipe() {
-       return new HashMap<Ingredients, Object>();
+        return new HashMap<Ingredients, Object>();
     }
 }

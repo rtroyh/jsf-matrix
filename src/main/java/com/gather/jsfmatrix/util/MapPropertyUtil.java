@@ -14,8 +14,7 @@ public class MapPropertyUtil {
     public static synchronized void copyProperties(EnumMap<Property, Object> origin,
                                                    EnumMap<Property, Object> destiny) {
         try {
-            if ((origin != null && destiny != null) &&
-                    origin != destiny) {
+            if ((origin != null && destiny != null) && origin != destiny) {
                 destiny.clear();
                 Set<?> set = origin.entrySet();
 

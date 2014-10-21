@@ -85,17 +85,17 @@ public class DockBean extends JSFViewer {
         IMatrixApplication ma = MatrixApplicationFactory.createGeneric();
         final IApplicationModel applicationModel = ma.getMatrixApplicationHandler().getApplicationModel();
         applicationModel.addProperty(Property.PAQUETE,
-                                      lo.get(0));
+                                     lo.get(0));
         applicationModel.addProperty(Property.TITLE,
-                                      lo.get(1));
+                                     lo.get(1));
         applicationModel.addProperty(Property.ICON_PATH,
-                                      lo.get(2));
+                                     lo.get(2));
 
         if (lo.size() == 5) {  //POR MODIFICACION PARA LINKS EXTERNOS
             applicationModel.addProperty(Property.JAVA_ID,
-                                          lo.get(3));
+                                         lo.get(3));
             applicationModel.addProperty(Property.VIEW_PATH,
-                                          lo.get(4));
+                                         lo.get(4));
         }
 
         return ma;
