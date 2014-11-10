@@ -1,15 +1,14 @@
 package com.gather.jsfmatrix.util;
 
-import javax.faces.context.FacesContext;
-
-import org.primefaces.component.contextmenu.ContextMenu;
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.component.panel.Panel;
-
 import com.gather.jsfmatrix.core.IMatrixApplication;
 import com.gather.jsfmatrix.core.Property;
 import com.gather.jsfmatrix.core.listener.CMDeleteWidgetListener;
 import com.gather.jsfmatrix.core.view.PrimeFacesUIComponentsFactory;
+import org.primefaces.component.contextmenu.ContextMenu;
+import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.component.panel.Panel;
+
+import javax.faces.context.FacesContext;
 
 public class MatrixApplicationUtil {
 

@@ -1,12 +1,11 @@
 package com.gather.jsfmatrix.util;
 
+import com.gather.jsfmatrix.core.Property;
+import org.apache.log4j.Logger;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
-
-import com.gather.jsfmatrix.core.Property;
 
 public class MapPropertyUtil {
 

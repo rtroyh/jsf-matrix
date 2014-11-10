@@ -1,8 +1,8 @@
 package com.gather.jsfmatrix.core.model;
 
-import java.util.EnumMap;
-
 import com.gather.jsfmatrix.core.Property;
+
+import java.util.EnumMap;
 
 public class DefaultApplicationModel implements IApplicationModel {
 

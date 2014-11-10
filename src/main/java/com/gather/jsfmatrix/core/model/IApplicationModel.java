@@ -1,9 +1,9 @@
 package com.gather.jsfmatrix.core.model;
 
-import java.util.EnumMap;
-
 import com.gather.jsfmatrix.core.IValueHolder;
 import com.gather.jsfmatrix.core.Property;
+
+import java.util.EnumMap;
 
 public interface IApplicationModel extends IValueHolder {
 
