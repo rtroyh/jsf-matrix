@@ -51,7 +51,7 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <verbose>true</verbose>
+                    <verbose>false</verbose>
                     <optimize>true</optimize>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
