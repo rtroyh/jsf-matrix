@@ -32,9 +32,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.primefaces</groupId>
+            <groupId>com.gather</groupId>
+            <artifactId>jsfcommons</artifactId>
+            <version>2.1.28</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+        <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>${primefaces.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gather</groupId>
+            <artifactId>springcommons</artifactId>
+            <version>4.1.1.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -45,38 +57,8 @@
         </dependency>
         <dependency>
             <groupId>com.gather</groupId>
-            <artifactId>springcommons</artifactId>
-            <version>4.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>4.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>4.1.1.RELEASE</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gather</groupId>
             <artifactId>gathercommons</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-            <version>2.1.28</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
