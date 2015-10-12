@@ -91,11 +91,13 @@ public class DashBoardBean extends JSFViewer {
 
             IDataTableModel matrixModel = service.getApplicationsModel(userBean.getUser().getId());
 
-            List<List<Object>> properties = matrixModel.getTitles();
+            List<List<Object>> properties = matrixModel.getRows();
             List<List<Object>> data = matrixModel.getHeaders();
+            List<List<Object>> messages = matrixModel.getRows();
 
             if (Validator.validateList(data) && Validator.validateList(properties)) {
                 matrix1.setProperties(properties);
+                matrix1.setMessages(messages);
 
                 for (List<Object> lo : data) {
                     if (Validator.validateLong(lo.get(0)) || Validator.validateInteger(lo.get(0))) {
@@ -146,6 +148,8 @@ public class DashBoardBean extends JSFViewer {
                           this.getMatrix().getApplications());
             theRecipe.put(Ingredients.UNIDIMENSIONAL_LIST,
                           this.getMatrix().getProperties());
+            theRecipe.put(Ingredients.MESSAGES,
+                          this.getMatrix().getMessages());
 
             this.getUIJSFObject().resetState();
             this.getUIJSFObject().populate(theRecipe);

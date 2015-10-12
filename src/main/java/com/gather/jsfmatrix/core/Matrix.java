@@ -4,8 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Matrix {
-    private List<List<Object>> Properties;
+    private List<List<Object>> properties;
     private List<IMatrixApplication> applications;
+    private List<List<Object>> messages;
 
     public List<IMatrixApplication> getApplications() {
         if (this.applications == null) {
@@ -24,14 +25,22 @@ public class Matrix {
     }
 
     public List<List<Object>> getProperties() {
-        if (this.Properties == null) {
-            this.Properties = new LinkedList<List<Object>>();
+        if (this.properties == null) {
+            this.properties = new LinkedList<List<Object>>();
         }
 
-        return Properties;
+        return properties;
     }
 
     public void setProperties(List<List<Object>> properties) {
-        Properties = properties;
+        this.properties = properties;
+    }
+
+    public List<List<Object>> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<List<Object>> messages) {
+        this.messages = messages;
     }
 }

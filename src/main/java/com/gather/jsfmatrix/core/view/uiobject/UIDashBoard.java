@@ -100,11 +100,25 @@ public class UIDashBoard implements UIJSFObject {
 
                 List<IMatrixApplication> data = (List<IMatrixApplication>) recipe.get(Ingredients.APPLICATION_LIST);
                 List<List<Object>> properties = (List<List<Object>>) recipe.get(Ingredients.UNIDIMENSIONAL_LIST);
+                List<List<Object>> messages = (List<List<Object>>) recipe.get(Ingredients.MESSAGES);
 
                 final List<Object> propertiesList = properties.get(0);
                 final Boolean validateData = Validator.validateList(data);
                 final Boolean validateProperties = Validator.validateList(properties);
                 final Boolean validatePropertiesList = Validator.validateList(propertiesList);
+
+
+                final Boolean validateMessages = Validator.validateList(messages);
+
+                if (validateMessages) {
+                    for (List<Object> message : messages) {
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                                            message.get(0).toString(),
+                                                            message.get(1).toString());
+                        fc.addMessage("noticia",
+                                      msg);
+                    }
+                }
 
                 if (validateProperties) {
                     if (Validator.validateList(propertiesList,
