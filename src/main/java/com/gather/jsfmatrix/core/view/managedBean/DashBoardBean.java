@@ -91,7 +91,7 @@ public class DashBoardBean extends JSFViewer {
 
             IDataTableModel matrixModel = service.getApplicationsModel(userBean.getUser().getId());
 
-            List<List<Object>> properties = matrixModel.getRows();
+            List<List<Object>> properties = matrixModel.getTitles();
             List<List<Object>> data = matrixModel.getHeaders();
             List<List<Object>> messages = matrixModel.getRows();
 
