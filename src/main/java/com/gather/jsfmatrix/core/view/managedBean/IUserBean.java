@@ -1,7 +1,7 @@
 package com.gather.jsfmatrix.core.view.managedBean;
 
-import com.gather.gathercommons.bo.User;
+import com.gather.gathercommons.domain.User;
 
 public interface IUserBean {
-    public User getUser();
+    User getUser();
 }

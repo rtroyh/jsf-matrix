@@ -6,13 +6,15 @@
 
     <groupId>com.gather</groupId>
     <artifactId>jsfmatrix2</artifactId>
-    <version>2.1.28.3.5.25.4.1.1.RELEASE</version>
+    <version>2.1.29.3.5.25.4.2.3.RELEASE</version>
     <packaging>jar</packaging>
     <name>jsfmatrix2</name>
-    <url>http://maven.apache.org</url>
+    <url>http://www.gather.cl</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <primefaces.version>3.5.25</primefaces.version>
     </properties>
 
@@ -28,13 +30,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jsfspringcommons</artifactId>
-            <version>2.1.28.4.1.1.RELEASE</version>
+            <version>2.1.29.4.2.3.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.gather</groupId>
             <artifactId>jsfcommons</artifactId>
-            <version>2.1.28</version>
+            <version>2.1.29</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -46,13 +48,13 @@
         <dependency>
             <groupId>com.gather</groupId>
             <artifactId>springcommons</artifactId>
-            <version>4.1.1.RELEASE</version>
+            <version>4.2.3.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>6.0</version>
+            <version>7.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -70,8 +72,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
                     <verbose>false</verbose>
                     <optimize>true</optimize>
                     <showWarnings>true</showWarnings>
