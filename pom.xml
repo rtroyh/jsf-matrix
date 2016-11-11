@@ -11,6 +11,21 @@
     <name>jsfmatrix2</name>
     <url>http://www.gather.cl</url>
 
+    <distributionManagement>
+        <site>
+            <id>s3.site</id>
+            <url>s3://maven.gather.com/site</url>
+        </site>
+        <repository>
+            <id>s3.release</id>
+            <url>s3://maven.gather.com/release</url>
+        </repository>
+        <snapshotRepository>
+            <id>s3.snapshot</id>
+            <url>s3://maven.gather.com/snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -19,6 +34,10 @@
     </properties>
 
     <repositories>
+        <repository>
+            <id>s3.release</id>
+            <url>s3://maven.gather.com/release</url>
+        </repository>
         <repository>
             <id>glassfish-maven-repository.dev.java.net</id>
             <name>GlassFish Maven Repository</name>
@@ -40,7 +59,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-        <groupId>org.primefaces</groupId>
+            <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>${primefaces.version}</version>
             <scope>provided</scope>
@@ -66,6 +85,14 @@
     </dependencies>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.kuali.maven.wagons</groupId>
+                <artifactId>maven-s3-wagon</artifactId>
+                <version>1.2.1</version>
+            </extension>
+        </extensions>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
