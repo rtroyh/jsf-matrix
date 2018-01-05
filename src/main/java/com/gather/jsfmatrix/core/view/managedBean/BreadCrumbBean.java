@@ -84,9 +84,7 @@ public class BreadCrumbBean extends JSFViewer {
                     this.getMatrix().getApplications().add(ma);
                 }
             }
-        } catch (BeansException e) {
-            LOG.error(e.getMessage());
-        } catch (DataAccessException e) {
+        } catch (BeansException | DataAccessException e) {
             LOG.error(e.getMessage());
         }
     }
